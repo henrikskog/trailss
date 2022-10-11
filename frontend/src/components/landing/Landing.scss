@@ -1,0 +1,28 @@
+@import "../../general-variables.scss";
+
+.landing{
+    background-color: $secondary-color;
+    height: 100vh;
+    width: 100vw;
+}
+
+.content {
+    display: flex;
+    height: 100%;
+}
+
+.top-bar{
+    background-color: $principal-color;
+    height: 50px;   
+}
+
+.left-bar{
+    // background-color: $secondary-color;
+    background: linear-gradient(to bottom, $principal-color, $secondary-color);
+    width: 30%;
+}
+
+.right-bar{
+    background-color: yellow;
+    width: 70%;
+}
