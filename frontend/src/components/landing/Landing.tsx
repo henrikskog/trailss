@@ -10,7 +10,7 @@ export default function Landing() {
         </div>
         <div className='content'>
             <div className='left-bar'><Form></Form></div>
-            <div className='right-bar'><p>test2</p></div>
+            <div className='right-bar'></div>
         </div>
     </div>
   );

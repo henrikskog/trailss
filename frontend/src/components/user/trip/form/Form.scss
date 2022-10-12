@@ -2,12 +2,12 @@
 
 h1 {
     text-decoration: solid;
-    color: white;
+    color: pink;
 }
 
 .form {
     // background: linear-gradient(to bottom, $principal-color, $secondary-color);
-    height: 30vh;
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -17,22 +17,41 @@ h1 {
 input {
     outline: 0;
     border-width: 0px 0px 2px 0px;
-    border-color: white;
+    border-color: $secondary-color;
     height :5vh;
     width: 100%;
     background-color: rgba($color: #000000, $alpha: 0);
-    color: white;
+    color: $secondary-color;
 }
 input:focus {
-    border-color: $principal-color;
+    color: pink;
+    border-color: pink;
+}
+input::placeholder {
+    color: $secondary-color;
+}
+input:focus::placeholder {
+    color: pink;
 }
 
 button {
     margin-top: 5vh;
     width: 101%;
+    height: 50px;
     overflow: hidden;
+    border-radius: 20px;
+    border-width: 0;
+    color: $principal-color;
+    background-color: $secondary-color;
+}
+button:hover {
+    background-color: pink;
 }
 
 .search-form {
     margin: 5%;
+}
+
+.date-label{
+    color: $secondary-color;
 }

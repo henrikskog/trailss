@@ -18,11 +18,11 @@
 
 .left-bar{
     // background-color: $secondary-color;
-    background: linear-gradient(to bottom, $principal-color, $secondary-color);
+    background: $principal-color;
     width: 30%;
 }
 
 .right-bar{
-    background-color: yellow;
+    background-color: $secondary-color;
     width: 70%;
 }
