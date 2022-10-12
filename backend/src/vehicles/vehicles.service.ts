@@ -1,14 +1,15 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { lastValueFrom } from "rxjs";
+import { VehicleFuelType } from "./entities/vehicle.entity";
 
 @Injectable()
 export class VehiclesService {
   constructor(private readonly httpService: HttpService) {}
 
   /**
-   * Fetch the fuel consumption for a given car NOW RETURNS THE MINIMUM CONSUMTION OF A MODEL
-   *
+   * Fetch the fuel consumption for a given car
+   * Note: Gives the consumptions for the car with the minimum consumption should the API return multiple models
    * Uses API: https://www.fueleconomy.gov/feg/ws/
    * @param make
    * @param model
@@ -51,7 +52,7 @@ export class VehiclesService {
    * @param consumption The average fuel consumption per 100km
    * @returns Grams of CO2 emitted per km
    */
-  getEmissions(fuelType: "diesel" | "petrol" | "LPG", consumption: number) {
+  getEmissions(fuelType: VehicleFuelType, consumption: number) {
     //         Diesel:
     //         1 liter of diesel weighs 835 grammes. Diesel consist for 86,2% of carbon, or 720 grammes of carbon per liter diesel. In order to combust this carbon to CO2, 1920 grammes of oxygen is needed. The sum is then 720 + 1920 = 2640 grammes of CO2/liter diesel.
     //         An average consumption of 5 liters/100 km then corresponds to 5 l x 2640 g/l / 100 (per km) = 132 g CO2/km.
