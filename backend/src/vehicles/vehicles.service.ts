@@ -42,7 +42,7 @@ export class VehiclesService {
       throw new NotFoundException("There was an error handling data from the CAR API");
     }
 
-    return emissions;
+    return Number(emissions);
   }
 
   /**
