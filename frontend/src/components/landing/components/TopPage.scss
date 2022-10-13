@@ -1,0 +1,22 @@
+@import "../../../general-variables.scss";
+
+.toppage {
+    display: flex;
+    flex-direction: row;
+    .toppage-left {
+        flex: 2;
+        background-color: $principal_color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .toppage-right {
+        flex: 3;
+        background-color: $secondary-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
