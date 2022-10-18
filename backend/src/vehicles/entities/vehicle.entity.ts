@@ -1,4 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger"
+import {z} from 'zod'
+
+export const vehicleFuelSchema = z.literal("diesel").or(z.literal("petrol")).or(z.literal("LPG"));
+export type VehicleFuelType = z.infer<typeof vehicleFuelSchema>;
+
 
 export class Vehicle {
     @ApiProperty()
@@ -15,6 +20,9 @@ export class Vehicle {
 
     @ApiProperty()
     consumptions?: number;
+
+    @ApiProperty()
+    fuelType?: VehicleFuelType;
 
     @ApiProperty()
     personalName?: string

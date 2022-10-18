@@ -8,10 +8,13 @@ export class Vehicle {
   type: string;
 
   @Prop()
-  brand: string;
+  make: string;
 
   @Prop()
   model: string;
+
+  @Prop()
+  year: number;
 
   @Prop()
   emissions: number;
