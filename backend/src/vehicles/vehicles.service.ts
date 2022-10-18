@@ -1,10 +1,35 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
 import { lastValueFrom } from "rxjs";
+import { CreateVehicleDto } from "./dto/create-vehicle.dto";
+import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
+import { VehicleDocument } from "./vehicles.schema";
 
 @Injectable()
 export class VehiclesService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService, @InjectModel('vehicle') private readonly vehiclesModel: Model<VehicleDocument>) {}
+
+  create(createVehicleDto: CreateVehicleDto) {
+    return 'This action adds a new vehicle';
+  }
+
+  findAll() {
+    return `This action returns all vehicles`;
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} vehicle`;
+  }
+
+  update(id: number, updateVehicleDto: UpdateVehicleDto) {
+    return `This action updates a #${id} vehicle`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} vehicle`;
+  }
 
   /**
    * Fetch the fuel consumption for a given car NOW RETURNS THE MINIMUM CONSUMTION OF A MODEL
