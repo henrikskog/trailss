@@ -17,7 +17,7 @@ export class VehiclesService {
   async fetchFuelConsumption(
     make: string,
     model: string,
-    year: string
+    year: number
   ): Promise<number> {
     const apiRoot = "https://www.fueleconomy.gov/";
 
