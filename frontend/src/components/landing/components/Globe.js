@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { useLoader } from '@react-three/fiber'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { useGLTF, Html, OrbitControls, Environment, ContactShadows } from '@react-three/drei'
-import urlGlobe from './scene.gltf';
 
 function Model(props) {
   /*
@@ -13,16 +10,21 @@ function Model(props) {
   source: https://sketchfab.com/3d-models/lowpoly-earth-ce0cce9b528b47c7984bf0b2b600d705
   title: LowPoly Earth
   */
-  const { nodes, materials } = useLoader(GLTFLoader, urlGlobe)
+  const { nodes, materials } = useGLTF('/earth.gltf')
   return (
     <group rotation={[-Math.PI / 2, 0, Math.PI]} {...props} dispose={null}>
       <mesh geometry={nodes['URF-Height_Lampd_Ice_0'].geometry} material={materials.Lampd_Ice} />
       <mesh geometry={nodes['URF-Height_watr_0'].geometry} material={materials.watr} material-roughness={0} />
-      <mesh geometry={nodes['URF-Height_Lampd_0'].geometry} material={materials.Lampd} material-color="lightgreen">
+      <mesh geometry={nodes['URF-Height_Lampd_0'].geometry} material={materials.Lampd} material-color="#00c800">
+        
+        <group position={[0, 0, 1.3]} rotation={[0, 0, Math.PI]}>
+          
+        </group>
       </mesh>
     </group>
   )
 }
+
 
 
 export default function Viewer() {

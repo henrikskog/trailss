@@ -20,30 +20,25 @@ export default function Form() {
 
 
   return (
-    <div>
         <div className='search-form'>
+            <h1>Your trip</h1>
             <form className='form' onSubmit={handleSubmit(onSubmit)}>    
-                <h1>Your trip</h1>
-                <label>
-                    <input type="text" placeholder='Origin' {...register("origin")}></input>
+                <label className="top-input">
+                    <input  type="text" placeholder='Origin' {...register("origin")}></input>
                 </label>
                 <label>
                     <input type="text" placeholder='Destination' {...register("destination")}></input>
                 </label>
-                <label>
-                    <label className='date-label'>Date</label>
+                <label className='double-line'>
                     <input type="date" placeholder='Date' {...register("date")} ></input>
+                    <input type="number" placeholder='Passengers' {...register("passenger_number")}></input>
                 </label>
                 <label>
-                    <input type="text"
+                    <input type="text" className='bottom-input'
                     placeholder='COMPONENTE DE LOS VEHÍCULOS' {...register("vehicle")}></input>
-                </label>
-                <label>
-                    <input type="text" placeholder='Nº of passengers' {...register("passenger_number")}></input>
                 </label>
                 <button>Search</button>
             </form>
         </div>
-    </div>
   );
 }

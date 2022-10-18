@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './TopPage.scss';
 import Form from '../../user/trip/form/Form';
-import Globe from './Globe';
+import Viewer from './Globe';
 
 export default function BottomPage() {
   return (
@@ -10,6 +10,7 @@ export default function BottomPage() {
         <Form />
        </div>
        <div className='toppage-right'>
+        <Viewer />
        </div>
     </div>
   );
