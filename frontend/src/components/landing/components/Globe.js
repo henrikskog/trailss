@@ -29,7 +29,7 @@ function Model(props) {
 
 export default function Viewer() {
   return (
-    <Canvas camera={{ position: [5, 0, 0], fov: 50 }}>
+    <Canvas camera={{ position: [4, 0, 0], fov: 50 }}>
       <ambientLight intensity={0.5} />
       <Model position={[0, 0.25, 0]} />
       <Environment preset="city" />
