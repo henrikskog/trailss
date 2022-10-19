@@ -1,0 +1,21 @@
+@import "../../../general-variables.scss";
+
+.toppage {
+    display: flex;
+    flex-direction: row;
+    .toppage-left {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .toppage-right {
+        flex: 1.2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+}
+
