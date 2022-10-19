@@ -14,7 +14,7 @@ export class VehiclesController {
     return this.vehiclesService.create(createVehicleDto);
   }
 
-  @Post("Unfinished post")
+  @Post("Unfinished-post")
 
   @ApiQuery({ name: "car-make", required: true, description: "E.g. volvo" })
   @ApiQuery({ name: "car-model", required: true, description: "E.g. XC90" })
@@ -24,9 +24,9 @@ export class VehiclesController {
   @ApiQuery({ name: "personalName", required: false, description: "E.g. Rayo McQueen" })
 
   createUnfinished(
-    @Query('make') make: string, 
-    @Query('model') model: string, 
-    @Query('year') year: number,
+    @Query('car-make') make: string, 
+    @Query('car-model') model: string, 
+    @Query('car-model-year') year: number,
     @Query('consumptions') consumptions: number,
     @Query('fuel-type') fuelType: string,
     @Query('personalName') personalName: string) {
