@@ -15,7 +15,7 @@ export default function Form() {
         console.log(d["date"])
         console.log(d["vehicle"])
         console.log(d["passenger_number"])
-        navigate("/normal");
+        navigate("/map");
       }
 
 

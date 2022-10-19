@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import './Landing.scss';
-import Form from '../user/trip/form/Form';
-import { Link } from "react-router-dom";
 
 import TopPage from './components/TopPage';
 import MidPage from './components/MidPage';
