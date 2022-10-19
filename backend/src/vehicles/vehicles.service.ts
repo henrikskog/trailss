@@ -25,12 +25,14 @@ export class VehiclesService {
     return this.vehiclesModel.findById(id)
   }
 
-  update(id: number, updateVehicleDto: UpdateVehicleDto) {
-    return this.vehiclesModel.findByIdAndUpdate(id, updateVehicleDto)
+  update(id: string, updateVehicleDto: UpdateVehicleDto) {
+    this.vehiclesModel.findByIdAndUpdate(id, updateVehicleDto)
+    return "Vehicle updated successfully"
   }
 
-  remove(id: number) {
-    return this.vehiclesModel.findByIdAndRemove(id)
+  remove(id: string) {
+    this.vehiclesModel.findByIdAndRemove(id)
+    return 'Vehicle removed successfully'
   }
 
   /**
