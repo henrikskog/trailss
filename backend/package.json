@@ -41,12 +41,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-<<<<<<< HEAD
     "swagger-ui-express": "^4.5.0"
-=======
-    "swagger-ui-express": "^4.5.0",
-    "zod": "^3.19.1"
->>>>>>> c229fb0ade82dafc0631eb5f3b9bb9341f81c24e
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
