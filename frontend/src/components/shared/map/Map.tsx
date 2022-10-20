@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import './Map.scss';
 import Form from '../../user/trip/form/Form';
+import CalculationsBar from "../../user/trip/calculations/CalculationsBar";
 import { Link } from "react-router-dom";
 
 export default function Map() {
   const [count, setCount] = useState(0);
   return (
-    <div className='container'>
+    <div className='map-container'>
       <div className='overlay-left form'>
         <Form />
+      </div>
+      <div className='overlay-calculations calculations'>
+        <CalculationsBar />
       </div>
       <div className='background-map'>
         <iframe
@@ -19,6 +23,7 @@ export default function Map() {
               &q=Albalat+de+la+Ribera,Maria+mulet+21">
           </iframe>
       </div>
+
       
     </div>
     
