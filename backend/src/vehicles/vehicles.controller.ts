@@ -66,6 +66,33 @@ export class VehiclesController {
     return this.vehiclesService.update(id, updateVehicleDto);
   }
 
+  @Patch('Unfinished-patch')
+  @ApiQuery({ name: "id", required: true, description: "Vehicle ID" })
+  @ApiQuery({ name: "car-make", required: false, description: "E.g. volvo" })
+  @ApiQuery({ name: "car-model", required: false, description: "E.g. XC90" })
+  @ApiQuery({ name: "car-model-year", required: false, description: "E.g. 2020" })
+  @ApiQuery({ name: "consumptions", required: false, description: "Liters fuel per kilometer (L/km)" })
+  @ApiQuery({ name: "fuel-type", required: false, description: "Type of fuel. (diesel, petrol, LPG)" })
+  @ApiQuery({ name: "personalName", required: false, description: "E.g. Rayo McQueen" })
+
+  pathUnfinished(
+    @Param('id') id: string,
+    @Query('car-make') make: string, 
+    @Query('car-model') model: string, 
+    @Query('car-model-year') year: number,
+    @Query('consumptions') consumptions: number,
+    @Query('fuel-type') fuelType: string,
+    @Query('personalName') personalName: string) {
+    var uVD = new UpdateVehicleDto()
+    uVD.make = make;
+    uVD.model = model;
+    uVD.year = year;
+    uVD.consumptions = consumptions;
+    uVD.fuelType = fuelType;
+    uVD.personalName = personalName;
+    return this.vehiclesService.update(id, uVD);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.vehiclesService.remove(id);
