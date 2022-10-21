@@ -1,10 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { VehiclesService } from '../vehicles/vehicles.service';
+import { Model } from "mongoose";
+import { InjectModel } from "@nestjs/mongoose";
+import { TripDocument } from "./trips.model";
 import { vehicleFuelSchema, VehicleFuelType } from '../vehicles/entities/vehicle.entity';
 
 @Injectable()
 export class TripsService {
-  constructor( private readonly vehicleService: VehiclesService) {}
+  constructor( private readonly vehicleService: VehiclesService, @InjectModel('user') private readonly tripModel: Model<TripDocument>) {}
     /**
    * Fetch the fuel consumption for a given car 
    * Note: Gives the consumptions for the car with the minimum consumption should the API return multiple models

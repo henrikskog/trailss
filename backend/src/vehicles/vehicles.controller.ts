@@ -36,11 +36,13 @@ export class VehiclesController {
     return this.vehiclesService.findOne(req.userId);
   }
 
+  @UseGuards(JwtStrategy)
   @Patch(":id")
   update(@Body() updateVehicleDto: UpdateVehicleDto) {
     return this.vehiclesService.update(updateVehicleDto);
   }
 
+  @UseGuards(JwtStrategy)
   @Delete(":id")
   remove(@Param("id") id: string) {
     return this.vehiclesService.remove(id);
