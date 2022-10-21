@@ -1,100 +1,48 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
-import { VehiclesService } from './vehicles.service';
-import { CreateVehicleDto } from './dto/create-vehicle.dto';
-import { UpdateVehicleDto } from './dto/update-vehicle.dto';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Request,
+} from "@nestjs/common";
+import { VehiclesService } from "./vehicles.service";
+import { CreateVehicleDto } from "./dto/create-vehicle.dto";
+import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
+import { ApiAcceptedResponse, ApiBody, ApiExtraModels, ApiProperty, ApiTags, getSchemaPath } from "@nestjs/swagger";
+import { JwtStrategy } from '../auth/jwt.strategy';
+import { Vehicle } from "./entities/vehicle.entity";
+import { VehicleSchema } from "./vehicles.schema";
 
-@ApiTags('Vehicles')
-@Controller('vehicles')
+@ApiTags("Vehicles")
+@Controller("vehicles")
 export class VehiclesController {
   constructor(private readonly vehiclesService: VehiclesService) {}
 
   @Post()
+  @ApiAcceptedResponse({description: "hallloooo"})
+  @ApiExtraModels()
+  @ApiBody({schema: {$ref: getSchemaPath(Vehicle), example: {"name": "hello", "make": "volvo"}} })
   create(@Body() createVehicleDto: CreateVehicleDto) {
     return this.vehiclesService.create(createVehicleDto);
   }
 
-  @Post("Unfinished-post")
-
-  @ApiQuery({ name: "car-make", required: true, description: "E.g. volvo" })
-  @ApiQuery({ name: "car-model", required: true, description: "E.g. XC90" })
-  @ApiQuery({ name: "car-model-year", required: true, description: "E.g. 2020" })
-  @ApiQuery({ name: "consumptions", required: true, description: "Liters fuel per kilometer (L/km)" })
-  @ApiQuery({ name: "fuel-type", required: true, description: "Type of fuel. (diesel, petrol, LPG)" })
-  @ApiQuery({ name: "personalName", required: false, description: "E.g. Rayo McQueen" })
-
-  createUnfinished(
-    @Query('car-make') make: string, 
-    @Query('car-model') model: string, 
-    @Query('car-model-year') year: number,
-    @Query('consumptions') consumptions: number,
-    @Query('fuel-type') fuelType: string,
-    @Query('personalName') personalName: string) {
-    var v = new CreateVehicleDto()
-    v.make = make;
-    v.model = model;
-    v.year = year;
-    v.consumptions = consumptions;
-    v.fuelType = fuelType;
-    v.personalName = personalName;
-    return this.vehiclesService.create(v);
-  }
-
-  @Get("testing")
-  create2() {
-    const t = new CreateVehicleDto()
-    t.consumptions = 100;
-    t.make = "Volvo";
-    t.model = "XC90";
-    t.year = 202;
-    t.personalName = "Henriks Car";
-    return this.vehiclesService.create(t);
-  }
-
+  @UseGuards(JwtStrategy)
   @Get()
-  findAll() {
-    return this.vehiclesService.findAll();
+  findOne(@Request() req: any) {
+    return this.vehiclesService.findOne(req.userId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.vehiclesService.findOne(id);
+  @Patch(":id")
+  update(@Body() updateVehicleDto: UpdateVehicleDto) {
+    return this.vehiclesService.update(updateVehicleDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
-    return this.vehiclesService.update(id, updateVehicleDto);
-  }
-
-  @Patch('Unfinished-patch')
-  @ApiQuery({ name: "id", required: true, description: "Vehicle ID" })
-  @ApiQuery({ name: "car-make", required: false, description: "E.g. volvo" })
-  @ApiQuery({ name: "car-model", required: false, description: "E.g. XC90" })
-  @ApiQuery({ name: "car-model-year", required: false, description: "E.g. 2020" })
-  @ApiQuery({ name: "consumptions", required: false, description: "Liters fuel per kilometer (L/km)" })
-  @ApiQuery({ name: "fuel-type", required: false, description: "Type of fuel. (diesel, petrol, LPG)" })
-  @ApiQuery({ name: "personalName", required: false, description: "E.g. Rayo McQueen" })
-
-  pathUnfinished(
-    @Param('id') id: string,
-    @Query('car-make') make: string, 
-    @Query('car-model') model: string, 
-    @Query('car-model-year') year: number,
-    @Query('consumptions') consumptions: number,
-    @Query('fuel-type') fuelType: string,
-    @Query('personalName') personalName: string) {
-    var uVD = new UpdateVehicleDto()
-    uVD.make = make;
-    uVD.model = model;
-    uVD.year = year;
-    uVD.consumptions = consumptions;
-    uVD.fuelType = fuelType;
-    uVD.personalName = personalName;
-    return this.vehiclesService.update(id, uVD);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.vehiclesService.remove(id);
   }
 }
