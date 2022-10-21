@@ -19,7 +19,7 @@ describe('VehiclesService', () => {
   });
 
   it('Fetches fuel consuptions', async () => {
-    const res = await service.fetchFuelConsumption("Honda", "Civic", "2000")
+    const res = await service.fetchFuelConsumption("Honda", "Civic", 2000)
     expect(res).toBe(27);
   });
 

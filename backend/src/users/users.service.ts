@@ -12,6 +12,11 @@ export class UsersService {
             password,
         });
     }
+
+    async getUserById(id: string ): Promise<User> {
+        return this.userModel.findById(id);
+    }
+
     async getUser(query: object ): Promise<User> {
         return this.userModel.findOne(query);
     }

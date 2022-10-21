@@ -32,6 +32,12 @@ export class VehiclesController {
 
   @UseGuards(JwtStrategy)
   @Get()
+  findAll(@Request() req: any) {
+    return this.vehiclesService.findAll(req.userId);
+  }
+  
+  @UseGuards(JwtStrategy)
+  @Get(";id")
   findOne(@Request() req: any) {
     return this.vehiclesService.findOne(req.userId);
   }

@@ -7,18 +7,20 @@ import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
 import { VehicleDocument } from "./vehicles.schema";
 import { VehicleFuelType } from "./entities/vehicle.entity";
 import { lastValueFrom } from "rxjs";
+import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class VehiclesService {
-  constructor(private readonly httpService: HttpService, @InjectModel('vehicle') private readonly vehiclesModel: Model<VehicleDocument>) {}
+  constructor(private readonly httpService: HttpService, private readonly usersService: UsersService, @InjectModel('vehicle') private readonly vehiclesModel: Model<VehicleDocument>) {}
 
   create(createVehicleDto: CreateVehicleDto) {
     this.vehiclesModel.create(createVehicleDto)
     return 'Added a new vehicle';
   }
 
-  findAll() {
-    return this.vehiclesModel.find()
+  async findAll(id: string) {
+    const user = this.usersService.getUserById(id);
+    return (await user).vehicles
   }
 
   findOne(id: string) {

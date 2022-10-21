@@ -17,7 +17,7 @@ export class User {
   email: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' })
-  vechiles: [Vehicle]
+  vehicles: [Vehicle]
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Trip' })
   trips: [Trip]
