@@ -2,6 +2,7 @@ import React from 'react';
 import './Form.scss';
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import VehiclePicker from '../../../shared/vehicle-picker/VehiclePicker';
 
 export default function Form() {
     const navigate = useNavigate();
@@ -33,9 +34,8 @@ export default function Form() {
                     <input type="date" placeholder='Date' {...register("date")} ></input>
                     <input type="number" placeholder='Passengers' {...register("passenger_number")}></input>
                 </label>
-                <label>
-                    <input type="text" className='bottom-input'
-                    placeholder='COMPONENTE DE LOS VEHÍCULOS' {...register("vehicle")}></input>
+                <label className='picker'>
+                    <VehiclePicker />
                 </label>
                 <button>Search</button>
             </form>

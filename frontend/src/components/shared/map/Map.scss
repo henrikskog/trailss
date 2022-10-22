@@ -16,10 +16,11 @@
 }
 
 .overlay-left {
-    top: 10px;
-    left: 0;
+    top: 30px;
+    left: 10px;
     position: absolute;
     z-index: 2;
     display: flex;
     min-width: 400px;
+    align-items: center;
 }
