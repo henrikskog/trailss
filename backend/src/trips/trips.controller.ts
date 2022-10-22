@@ -9,9 +9,7 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller("trips")
 export class TripsController {
   constructor(
-    private readonly tripsService: TripsService,
-    vehicleService: VehiclesService
-  ) {}
+    private readonly tripsService: TripsService ) {}
 
   @Get("calculate")
   /**

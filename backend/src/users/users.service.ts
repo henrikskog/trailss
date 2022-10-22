@@ -6,10 +6,11 @@ import { User, UserDocument } from './users.model';
 @Injectable()
 export class UsersService {
     constructor(@InjectModel('user') private readonly userModel: Model<UserDocument>) { }
-    async createUser(username: string, password: string): Promise<User> {
+    async createUser(username: string, password: string, email: string): Promise<User> {
         return this.userModel.create({
             username,
             password,
+            email
         });
     }
 
@@ -17,7 +18,11 @@ export class UsersService {
         return this.userModel.findById(id);
     }
 
-    async getUser(query: object ): Promise<User> {
+    async getUserByUserName(query: {username: string} ): Promise<User> {
+        return this.userModel.findOne(query);
+    }
+
+    async getUserByEmail(query: {email: string} ): Promise<User> {
         return this.userModel.findOne(query);
     }
 }

@@ -7,7 +7,7 @@ import { VehicleSchema } from './vehicles.schema';
 import { VehiclesService } from './vehicles.service';
 
 @Module({
-  imports: [HttpModule, MongooseModule.forFeature([{ name: "vehicle", schema: VehicleSchema }]), UsersModule ],
+  imports: [UsersModule, HttpModule, MongooseModule.forFeature([{ name: "vehicle", schema: VehicleSchema }])],
   providers: [VehiclesService],
   controllers: [VehiclesController],
   exports: [VehiclesService]

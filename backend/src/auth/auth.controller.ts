@@ -1,4 +1,5 @@
 import { Controller, Request, Post, UseGuards } from '@nestjs/common';
+import { ApiQuery} from "@nestjs/swagger";
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
@@ -10,7 +11,11 @@ export class AuthController {
 
     @UseGuards(AuthGuard('local'))
     @Post('auth/login')
-    async login(@Request() req) {
+    @ApiQuery({ name: "username", required: true, description: "E.g. manolete97"})
+    @ApiQuery({ name: "password", required: true, description: "E.g. asD2349pyN" })    
+    async login(
+        @Request() req,     
+    ) {        
         return this.authService.login(req.user);
     }
 }

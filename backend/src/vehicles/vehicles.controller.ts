@@ -37,7 +37,7 @@ export class VehiclesController {
   }
   
   @UseGuards(JwtStrategy)
-  @Get(";id")
+  @Get(":id")
   findOne(@Request() req: any) {
     return this.vehiclesService.findOne(req.userId);
   }
