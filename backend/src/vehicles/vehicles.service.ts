@@ -1,11 +1,11 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable, NotFoundException, VERSION_NEUTRAL } from "@nestjs/common";
+import { Injectable, NotFoundException, VERSION_NEUTRAL, UnauthorizedException } from "@nestjs/common";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
 import { VehicleDocument } from "./vehicles.schema";
-import { VehicleFuelType } from "./entities/vehicle.entity";
+import { Vehicle, VehicleFuelType } from "./entities/vehicle.entity";
 import { lastValueFrom } from "rxjs";
 import { UsersService } from "src/users/users.service";
 
@@ -13,18 +13,15 @@ import { UsersService } from "src/users/users.service";
 export class VehiclesService {
   constructor(private readonly httpService: HttpService, private readonly usersService: UsersService, @InjectModel('vehicle') private readonly vehiclesModel: Model<VehicleDocument>) {}
 
-  create(createVehicleDto: CreateVehicleDto) {
-    this.vehiclesModel.create(createVehicleDto)
+  create(req: any, createVehicleDto: CreateVehicleDto) {
+    const vehicle = this.vehiclesModel.create(createVehicleDto)
+    req.vehicles.push(vehicle)
+    req.save()
     return 'Added a new vehicle';
   }
 
-  async findAll(id: string) {
-    const user = this.usersService.getUserById(id);
-    return (await user).vehicles
-  }
-
-  findOne(id: string) {
-    return this.vehiclesModel.findById(id)
+  findOne(vehicles: any, id: string) {
+    return vehicles.filter(vehicle => vehicle._id.toString() == id)
   }
 
   update(updateVehicleDto: UpdateVehicleDto) {
@@ -32,7 +29,11 @@ export class VehiclesService {
     return "Vehicle updated successfully"
   }
 
-  remove(id: string) {
+  remove(vehicles: any, id: string) {
+    const vehicle = vehicles.filter(vehicle => vehicle._id.toString() == id)
+
+    if (!vehicle) throw new NotFoundException("No car with the given id was found");
+
     this.vehiclesModel.findByIdAndRemove(id)
     return 'Vehicle removed successfully'
   }
