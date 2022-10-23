@@ -1,0 +1,53 @@
+@import "../../../general-variables.scss";
+
+.user-settings {
+    color: $principal-color;
+    display: flex;
+    flex-direction: column;
+    padding: 70px 30px 30px 30px;
+    max-width: 370px;
+    
+    h4 {
+        display: flex;
+    }
+
+    input {
+        font-weight: 600;
+        border: none;
+        outline: none;
+        border-bottom: 1px solid $grey;
+        height :5vh;
+        color: $secondary-color;
+        align-self: center;
+    }
+
+    button {
+        display: flex;
+        margin-top: 20px;
+        padding: 10px 15px;
+        border-radius: 0.6rem;
+        border-width: 0;
+        color: $white;
+        font-weight: 800;
+        font-size: medium;
+        background-color: $principal-color;
+        align-self: auto;
+        align-items: center;
+    }
+
+    button:hover {
+        background-color: $secondary-color;
+    }
+
+    .change-user {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .change-password {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
