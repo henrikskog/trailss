@@ -11,7 +11,6 @@ function AppRouter() {
                 <Route path="/" element={<Landing />} />
                 <Route path="/map" element={<Map />} />
             </Routes>
-
         </div>
     )
 }
