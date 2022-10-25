@@ -49,8 +49,8 @@ const Model: React.FC<Props> = ({ position, rotation }) => {
 };
 
 export default function Viewer() {
-  const [rotation, setRotation] = useState<[number, number, number]>([-Math.PI / 2, 0, Math.PI])
-  const ROT_SPEED = 0.001
+  const [rotation, setRotation] = useState<[number, number, number]>([-1.5, 0.5, Math.PI+1])
+  const ROT_SPEED = 0.002
 
   // Function that gets ran for every frame in animation loop. Deltatime is the time since the function was last called.
   const animate = () =>{
@@ -59,12 +59,12 @@ export default function Viewer() {
       setRotation((prevRotation) => {
         const [px, py, pz] = prevRotation
 
-        return [px+ROT_SPEED, py+ROT_SPEED, pz+ROT_SPEED]
+        return [px+0, py+ROT_SPEED*2, pz+0]
       })
 
   }
 
-    useAnimationFrame(animate, 30)
+    //useAnimationFrame(animate, 30)
 
   return (
     <>

@@ -5,7 +5,7 @@ import './LandingHamburger.scss';
 export default function LandingHamburger() {
   return (
     <div className="landing-hamburger">
-      <Menu {...props}>
+      <Menu>
         <a className="menu-item" href="/">
           Home
         </a>

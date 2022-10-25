@@ -19,7 +19,6 @@ export default function Form() {
         navigate("/map");
       }
 
-
   return (
         <div className='search-form'>
             <h1>Your trip</h1>
