@@ -27,7 +27,8 @@ export class VehiclesService {
   update(vehicles: any, id: string, updateVehicleDto: UpdateVehicleDto) {
     const vehicle = vehicles.filter(vehicle => vehicle._id.toString() == id)
 
-    if (!vehicle) throw new NotFoundException("No car with the given id was found")
+    if (!vehicle) throw new NotFoundException("No car with the given id was found");
+    
     this.vehiclesModel.findByIdAndUpdate(updateVehicleDto.id, updateVehicleDto)
     return "Vehicle updated successfully"
   }
