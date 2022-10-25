@@ -27,6 +27,7 @@ export class VehiclesController {
   @ApiAcceptedResponse({description: "hallloooo"})
   @ApiExtraModels()
   @ApiBody({schema: {$ref: getSchemaPath(Vehicle), example: {"name": "hello", "make": "volvo"}} })
+  @ApiBearerAuth()
   create(@Request() req: any, @Body() createVehicleDto: CreateVehicleDto) {
     return this.vehiclesService.create(req, createVehicleDto);
   }
@@ -48,7 +49,7 @@ export class VehiclesController {
   @UseGuards(JwtStrategy)
   @Patch(":id")
   @ApiBearerAuth()
-  update(@Request() req: any, @Body("id") id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
+  update(@Request() req: any, @Param("id") id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
     return this.vehiclesService.update(req.vehicles, id, updateVehicleDto);
   }
 

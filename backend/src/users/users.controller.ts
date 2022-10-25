@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Param, ParseIntPipe, Query, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Post, Get, Param, ParseIntPipe, Query, UseGuards, Request, Patch, Delete } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery } from "@nestjs/swagger";
 import { UsersService } from './users.service';
 import { User } from './users.model';
@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -37,4 +38,18 @@ export class UsersController {
     getUserByToken(@Request() req: any) {
         return this.usersService.getUserByToken(req.user)
     }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Patch(":id")
+    @ApiBearerAuth()
+    updateUserByToken(@Request() req: any, @Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
+        return this.usersService.updateUserByToken(req.user, id, updateUserDto)
+    }
+
+    @UseGuards(JwtStrategy)
+    @Delete(":id")
+    @ApiBearerAuth()
+    remove(@Request() req: any, @Param("id") id: string) {
+    return this.usersService.removeUserByToken(req.user, id);
+  }
 }

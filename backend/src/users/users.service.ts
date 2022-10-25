@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './users.model';
 
 @Injectable()
@@ -29,4 +30,22 @@ export class UsersService {
     getUserByToken(user: any) {
         return {username: user.username, email: user.email}
     }
+    
+    updateUserByToken(user: any, id: string, updateUserDto: UpdateUserDto) {
+        const updatedUser = user.filter(updatedUser => updatedUser._id.toString() == id)
+
+        if (!updatedUser) throw new NotFoundException("No user with the given id was found");
+
+        this.userModel.findByIdAndUpdate(updatedUser._id, updateUserDto)
+        return "User updated successfully"
+    }
+
+    removeUserByToken(user: any, id: string) {
+        const removedUser = user.filter(removedUser => removedUser._id.toString() == id)
+    
+        if (!removedUser) throw new NotFoundException("No user with the given id was found");
+    
+        this.userModel.findByIdAndRemove(id)
+        return 'User removed successfully'
+      }
 }
