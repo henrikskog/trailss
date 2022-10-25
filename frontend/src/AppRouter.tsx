@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Landing from "./components/landing/Landing";
 import Map from './components/shared/map/Map';
-import UserSettings from './components/user/settings/UserSettings';
 
 function AppRouter() {
     return (
@@ -11,7 +10,7 @@ function AppRouter() {
             <Routes>
                 <Route path="/" element={<Landing />} />
                 <Route path="/map" element={<Map />} />
-                <Route path='/user/settings' element={<UserSettings />} />
+                <Route path='/user/settings' element={<Map />} />
             </Routes>
         </div>
     )

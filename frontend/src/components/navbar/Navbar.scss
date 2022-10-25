@@ -5,7 +5,7 @@
   width: 100%;
   z-index: 10;
   padding: 8px 20px;
-  height: 32px;
+  height: 35px;
   list-style-type: none;
   overflow: hidden;
   background-color: $principal_color;
@@ -14,9 +14,9 @@
   align-items: center;
 
   .logo {
-    height: 50px;
-    margin-top: 4px;
-    margin-right: 10px;
+    height: 17px;
+    margin-right: 20px;
+    margin-bottom: 1px;
   }
 }
 
@@ -62,10 +62,10 @@
       text-decoration: none;
       box-shadow: none;
       border-radius: 4px;
-      font-family: Montserrat, Arial;
-      font-weight: 600;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 500;
       line-height: 1.5rem;
-      font-size: 0.875rem;
+      font-size: 1rem;
       padding: 6px 12px;
       color: #F1F1F3;
       padding: 6px 8px;

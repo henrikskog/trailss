@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import './UserSettings.scss';
 
-
 export default function UserSettings() {
-  const [count, setCount] = useState(0);
 
   return (
     <div className='user-settings'>
