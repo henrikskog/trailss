@@ -47,8 +47,8 @@ export class VehiclesController {
 
   @UseGuards(JwtStrategy)
   @Patch(":id")
-  update(@Body() updateVehicleDto: UpdateVehicleDto) {
-    return this.vehiclesService.update(updateVehicleDto);
+  update(@Request() req: any, @Body("id") id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
+    return this.vehiclesService.update(req.vehicles, id, updateVehicleDto);
   }
 
   @UseGuards(JwtStrategy)
