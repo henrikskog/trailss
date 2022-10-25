@@ -47,12 +47,14 @@ export class VehiclesController {
 
   @UseGuards(JwtStrategy)
   @Patch(":id")
+  @ApiBearerAuth()
   update(@Request() req: any, @Body("id") id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
     return this.vehiclesService.update(req.vehicles, id, updateVehicleDto);
   }
 
   @UseGuards(JwtStrategy)
   @Delete(":id")
+  @ApiBearerAuth()
   remove(@Request() req: any, @Param("id") id: string) {
     return this.vehiclesService.remove(req.vehicles, id);
   }

@@ -25,4 +25,8 @@ export class UsersService {
     async getUserByEmail(query: {email: string} ): Promise<User> {
         return this.userModel.findOne(query);
     }
+
+    getUserByToken(user: any) {
+        return {username: user.username, email: user.email}
+    }
 }
