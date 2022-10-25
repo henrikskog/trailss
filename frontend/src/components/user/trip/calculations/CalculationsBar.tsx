@@ -8,10 +8,16 @@ export default function Form() {
         <div className='calculations-bar'>
             <div className='upper'>
                 <div>
-                    <p>Length</p>
+                    <p className='subheader'>Length</p>
+                    <div>
+                        <p >374km</p>
+                    </div>
                 </div>
                 <div>
-                    <p>Emissions</p>
+                    <p className='subheader'>Emissions</p>
+                    <div>
+                        <p>2070g</p>
+                    </div>
                 </div>
             </div>
             <div className='underline'>
