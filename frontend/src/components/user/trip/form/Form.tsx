@@ -9,19 +9,6 @@ import { Select } from '@mantine/core';
 import VehiclePicker from '../../../shared/vehicle-picker/VehiclePicker';
 
 export default function Form() {
-    /* const navigate = useNavigate();
-
-    const {register, handleSubmit} = useForm();
-
-    const onSubmit = (d : any) => {
-        console.log(d)
-        console.log(d["origin"])
-        console.log(d["destination"])
-        console.log(d["date"])
-        console.log(d["vehicle"])
-        console.log(d["passenger_number"])
-        navigate("/map");
-      } */
 
     const CurrentYear = new Date().getFullYear()
 
@@ -71,24 +58,23 @@ export default function Form() {
                 />
                 <div className='double-line'>
                     <div className='double-line-div margin'>
-                <Select
-                    mt="sm"
-                    label="Car Make:"
-                    searchable
-                    clearable
-                    data={['React', 'Angular', 'Svelte', 'Vue']}
-                />
-                </div>
-                <div className='double-line-div'>
-
-                <Select
-                    mt="sm"
-                    label="Car model:"
-                    searchable
-                    clearable
-                    data={['React', 'Angular', 'Svelte', 'Vue']}
-                />
-                </div>
+                        <Select
+                            mt="sm"
+                            label="Car Make:"
+                            searchable
+                            clearable
+                            data={['React', 'Angular', 'Svelte', 'Vue']}
+                        />
+                    </div>
+                    <div className='double-line-div'>
+                        <Select
+                            mt="sm"
+                            label="Car model:"
+                            searchable
+                            clearable
+                            data={['React', 'Angular', 'Svelte', 'Vue']}
+                        />
+                    </div>
                 </div>
                 <div className='submit'>
                     <Button type="submit" mt="sm">
@@ -96,23 +82,6 @@ export default function Form() {
                     </Button>
                 </div>
             </form>
-            {/* <form className='form' onSubmit={handleSubmit(onSubmit)}>    
-                <label className="top-input">
-                    <input  type="text" placeholder='Origin' {...register("origin")}></input>
-                </label>
-                <label>
-                    <input type="text" placeholder='Destination' {...register("destination")}></input>
-                </label>
-                <label className='double-line'>
-                    <input type="date" placeholder='Date' {...register("date")} ></input>
-                    <input type="number" placeholder='Passengers' {...register("passenger_number")}></input>
-                </label>
-                <label className='picker'>
-                    <input type="number" placeholder="Year"></input>
-                    <VehiclePicker />
-                </label>
-                <button>Search</button>
-            </form> */}
         </div>
     );
 }
