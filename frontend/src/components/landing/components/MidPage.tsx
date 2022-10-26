@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './MidPage.scss';
-import Snippet from '../media/telescope.svg';
+import Snippet from '../media/environment.svg';
 
 export default function MidPage() {
 

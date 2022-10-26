@@ -11,6 +11,8 @@
     justify-content: center;
 
     .landing-midpage-left {
+	  margin-right: 10%;
+	  text-align: right;
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -19,19 +21,18 @@
 
     .landing-midpage-left-title {
         margin-bottom: 5%;
-        text-align: left;
+
         font-size: $fontSizeTitle1;
-        background: linear-gradient(30deg, #c850c0, #ffcc70);
+        color: $white;
         font-weight: $fontWeightBold;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        
     }
 
     .landing-midpage-left-text {
         font-size: $fontSizeText!important;
-        text-align: left;
+
         font-weight: $fontWeightBold;
-        margin-right: 10%;
+        
         line-height: $lineHeight;
         
         a{
@@ -61,9 +62,9 @@
         height: 100%;
         flex: 1;
         display: flex;
-        justify-content: center;
+        justify-content: base;
         align-items: center;
-        margin-left: 3%;
+        margin-left: 0;
         margin-top: 5%;
         .snippet-title {
             margin-bottom: -4%;
@@ -74,7 +75,7 @@
             font-weight: $fontWeightBold;
         }
         .snippet {            
-            height: 30%;
+            height: 400px;
             filter: $shadowBig;
             transition: filter .3s;
         }
