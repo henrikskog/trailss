@@ -1,18 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import Landing from './components/landing/Landing';
-import './App.css';
-import AppRouter from './AppRouter';
-import Navbar from './components/navbar/Navbar';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './components/user/auth/login/Login';
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
 
-function App() {
+import Landing from "./components/landing/Landing";
+import Map from "./components/shared/map/Map";
+import Login from "./components/user/auth/login/Login";
+import Register from "./components/user/auth/register/Register";
+
+function AppRouter() {
   return (
-    <div>
-      <Login></Login>
+    <div className="main">
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/map" element={<Map />} />
+        <Route path="/user/settings" element={<Map />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Register />} />
+      </Routes>
     </div>
   );
 }
 
-export default App;
+export default AppRouter;

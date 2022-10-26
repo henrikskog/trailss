@@ -1,18 +1,10 @@
-import React, {useState} from 'react';
-import './Login.scss';
-import { Link, useNavigate } from "react-router-dom";
+import { Anchor, Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { NumberInput, TextInput, Button, Anchor } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
-import { Select } from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
-import axios from 'axios';
+import './Login.scss';
 
 export default function Login() {
   const form = useForm({
     initialValues: { username: '', password: '' },
-
-    // functions will be used to validate values at corresponding key
     validate: {
       username: (value: string) => (value.length > 3 && value.length < 50 ? null : 'Insert a valid username'),
       password: (value: string) => (value.length > 3 && value.length < 50 ? null : 'Insert a valid password'),
@@ -38,7 +30,7 @@ export default function Login() {
           size="xs"
           mt="xs"
         >
-          Forget password?
+          Forgot password?
         </Anchor>
           
         <Anchor
