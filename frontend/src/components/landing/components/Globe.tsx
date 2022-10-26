@@ -2,7 +2,8 @@ import {
   ContactShadows,
   Environment,
   OrbitControls,
-  useGLTF
+  useGLTF,
+  Bounds
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import React, { useState } from "react";
@@ -68,8 +69,11 @@ export default function Viewer() {
   return (
     <>
     <Canvas camera={{ position: [4, 0, 0], fov: 50 }}>
+    <Bounds fit clip observe damping={6} margin={0.7}>
       <ambientLight intensity={0.5} />
-      <Model position={[0, 0.25, 0]} rotation={rotation} />
+      
+      <Model position={[0, 0.3, 0]} rotation={rotation} />
+      
       <Environment preset="city" />
       {/* @ts-ignore */}
       <ContactShadows
@@ -82,8 +86,10 @@ export default function Viewer() {
         color="#204080"
       />
       <OrbitControls
+      makeDefault
       enableZoom={false}
       />
+      </Bounds>
     </Canvas>
 
     </>

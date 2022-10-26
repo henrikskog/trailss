@@ -17,9 +17,6 @@ export default function Landing() {
         <div className='landing-mid'>
           <MidPage />
         </div>
-        <div className='landing-bottom'>
-          <BottomPage />
-        </div>
     </div>
   );
 }
