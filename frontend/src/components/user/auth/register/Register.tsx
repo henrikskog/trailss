@@ -1,25 +1,64 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Login.scss';
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from '@mantine/form';
+import { NumberInput, TextInput, Button, Anchor } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
+import { Select } from '@mantine/core';
+import { useDebouncedValue } from '@mantine/hooks';
+import axios from 'axios';
 
-export default function Login() {
+
+export default function Register() {
+  const form = useForm({
+    initialValues: { username: '', password: '' },
+
+    // functions will be used to validate values at corresponding key
+    validate: {
+      username: (value: string) => (value.length > 3 && value.length < 50 ? null : 'Insert a valid username'),
+      password: (value: string) => (value.length > 3 && value.length < 50 ? null : 'Insert a valid password'),
+    },
+  });
+
+
+
+
   return (
     <div className="container">
-      <h1>Login</h1>
-        <form className="login-form">
-          <label>
-            <input type="text" placeholder="Username" required></input>
-          </label>
-          <label>
-            <input type="text" placeholder="E-Mail" required></input>
-          </label>
-          <label>
-            <input type="password" placeholder="Password" required></input>
-          </label>
-          <button>Register</button> 
-        </form>
-        <div className="login">
-            You already have an account? <a href="INCLUDE_LINK_HERE">Login</a> 
+      <form className='form' onSubmit={form.onSubmit((values: any) => (console.log(values)))}>
+        <h1 id="header">Log in</h1>
+        <TextInput placeholder="Username" {...form.getInputProps('username')} mb={"sm"} />
+        <TextInput placeholder="Password" {...form.getInputProps('password')} />
+        <TextInput placeholder="e-Mail" {...form.getInputProps('e-Mail')}/>
+        <div className='submit'>
+          <Button type="submit" mt="sm" className="submitButton">
+            Register
+          </Button>
         </div>
+        <Anchor
+          component="button"
+          type="button"
+          color="dimmed"
+          onClick={() => { }}
+          size="xs"
+          mt="xs"
+        >
+          Already have an account? Login 
+        </Anchor>
+          
+        <Anchor
+          component="button"
+          type="button"
+          color="dimmed"
+          onClick={() => { }}
+          size="xs"
+          mt="xs"
+        >
+          
+          Don't have an account? Register
+        </Anchor>
+
+      </form>
     </div>
   );
 }
