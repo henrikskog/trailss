@@ -1,0 +1,86 @@
+@import "src/general-variables.scss";
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    text-align: center;
+}
+
+.login-form {
+    border-radius: 0.6rem;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    color: #000000;
+    text-align: left;
+    
+    button {
+        height: 50px;
+        overflow: hidden;
+        border-bottom-left-radius: 0.6rem;
+        border-bottom-right-radius: 0.6rem;
+        border-width: 0;
+        color: white;
+        font-weight: 800;
+        background-color: $principal-color;
+        width: 100%;
+    }
+
+    input {
+        font-weight: 600;
+        font-size: 1rem;
+        border: none;
+        padding: 3% 0;
+        outline: none;
+        border-bottom: 1px solid $grey;
+        height: 5vh;
+        width: 100%;
+    }
+
+    label {
+        padding: 0 5%;
+    }
+
+}
+
+.center h1 {
+    text-align: center;
+    padding: 0 0 20px 0;
+    border-bottom: 1px solid silver;
+}
+
+.center form {
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+
+form .txt_field {
+    position: relative;
+    border-bottom: 2px solid #adadad;
+    margin: 30px 0;
+}
+
+.txt_field input {
+    width: 100%;
+    padding: 5px;
+    height: 40px;
+    font-size: 16px;
+    // son necesarios?
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.txt_field label {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    color: #adadad;
+    transform: translateY(-50%);
+    font-size: 16px;
+    // necesario ? 
+    pointer-events: none;
+}
+
+
