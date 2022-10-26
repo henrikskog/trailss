@@ -40,16 +40,16 @@ export class UsersController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Patch(":id")
+    @Patch()
     @ApiBearerAuth()
-    updateUserByToken(@Request() req: any, @Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
-        return this.usersService.updateUserByToken(req.user, id, updateUserDto)
+    updateUserByToken(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
+        return this.usersService.updateUserByToken(req.user, updateUserDto)
     }
 
     @UseGuards(JwtStrategy)
-    @Delete(":id")
+    @Delete()
     @ApiBearerAuth()
-    remove(@Request() req: any, @Param("id") id: string) {
-    return this.usersService.removeUserByToken(req.user, id);
+    remove(@Request() req: any) {
+    return this.usersService.removeUserByToken(req.user);
   }
 }

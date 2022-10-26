@@ -31,21 +31,17 @@ export class UsersService {
         return {username: user.username, email: user.email}
     }
     
-    updateUserByToken(user: any, id: string, updateUserDto: UpdateUserDto) {
-        const updatedUser = user.filter(updatedUser => updatedUser._id.toString() == id)
+    updateUserByToken(user: any, updateUserDto: UpdateUserDto) {
+        if (!user) throw new NotFoundException("User not found");
 
-        if (!updatedUser) throw new NotFoundException("No user with the given id was found");
-
-        this.userModel.findByIdAndUpdate(updatedUser._id, updateUserDto)
+        this.userModel.findByIdAndUpdate(user._id, updateUserDto)
         return "User updated successfully"
     }
 
-    removeUserByToken(user: any, id: string) {
-        const removedUser = user.filter(removedUser => removedUser._id.toString() == id)
+    removeUserByToken(user: any) {
+        if (!user) throw new NotFoundException("User not found");
     
-        if (!removedUser) throw new NotFoundException("No user with the given id was found");
-    
-        this.userModel.findByIdAndRemove(id)
+        this.userModel.findByIdAndRemove(user._id)
         return 'User removed successfully'
       }
 }
