@@ -10,6 +10,7 @@ function AppRouter() {
             <Routes>
                 <Route path="/" element={<Landing />} />
                 <Route path="/map" element={<Map />} />
+                <Route path='/user/settings' element={<Map />} />
             </Routes>
         </div>
     )

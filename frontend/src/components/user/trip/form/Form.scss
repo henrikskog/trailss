@@ -4,6 +4,7 @@
 
 
 .search-form {
+    text-align: left;
     margin: 5%;
     max-width: 400px;
     width: 80%;
@@ -14,22 +15,42 @@
     }
     .form {
         // background: linear-gradient(to bottom, $principal-color, $secondary-color);
+        padding: 5%;
         height: 100%;
         width: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         border-radius: 0.6rem;
-        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        box-shadow: rgba(0, 0, 0, 0.441) 0px 0px 2px;
         background-color: white;
     }
 
+    .submit {
+        button{
+            background-color: $principal-color;
+        }
+    }
+    
     .double-line {
         display: flex;
         justify-content: space-between;
+        align-items: center;
+
+        .double-line-div {
+            div {
+                margin-top: 0;
+            }
+            
+            margin-top: 12px;
+        }
+        .margin {
+            margin-right: 10px;
+        }
     }
     
-    input {
+
+  /*   input {
         font-weight: 600;
         font-size: 1rem;
         border: none;
@@ -39,9 +60,9 @@
         height :5vh;
         width: 100%;
         color: $secondary-color;
-    }
+    } */
 
-    label {
+/*     label {
         padding: 0 5%;
     }
 
@@ -55,9 +76,9 @@
     }
     .bottom-input{
         border: 0;
-    }
-
-    button {
+    } */
+    
+/*     button {
         height: 50px;
         overflow: hidden;
         border-bottom-left-radius: 0.6rem;
@@ -68,10 +89,10 @@
         background-color: $principal-color;
     }
     button:hover {
-        
+        background-color: $secondary-color;
     }
     .date-label{
         color: $secondary-color;
-    }
+    } */
 }
 

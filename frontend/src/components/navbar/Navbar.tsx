@@ -11,6 +11,7 @@ export default function Navbar() {
             <Link to="/"><img src={logo} className="logo" alt="Logo" /></Link>
             <ul id='nav-list'>
                 <li><Link to="map">Map</Link></li>
+                <li><Link to="user/settings">Profile</Link></li>
             </ul>
         </header>
     );
