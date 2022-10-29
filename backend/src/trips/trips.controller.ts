@@ -3,13 +3,13 @@ import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { VehicleFuelType } from "src/vehicles/entities/vehicle.entity";
 import { VehiclesService } from "src/vehicles/vehicles.service";
 import { TripsService } from "./trips.service";
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Trips')
 @Controller("trips")
 export class TripsController {
   constructor(
-    private readonly tripsService: TripsService,
-    vehicleService: VehiclesService
-  ) {}
+    private readonly tripsService: TripsService ) {}
 
   @Get("calculate")
   /**
