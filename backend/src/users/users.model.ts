@@ -3,6 +3,7 @@ import mongoose, { Document } from 'mongoose';
 import { Vehicle } from 'src/vehicles/vehicles.schema';
 import { Trip } from 'src/trips/trips.model';
 
+
 export type UserDocument = User & Document;
 
 @Schema()

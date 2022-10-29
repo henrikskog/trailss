@@ -1,0 +1,112 @@
+@import "../../../general-variables.scss";
+
+.midpage {
+    position: relative;
+    color: $white;
+    background-color: $principal-color;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .landing-midpage-left {
+	  margin-right: 10%;
+	  text-align: right;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .landing-midpage-left-title {
+        margin-bottom: 5%;
+
+        font-size: $fontSizeTitle1;
+        color: $white;
+        font-weight: $fontWeightBold;
+        
+    }
+
+    .landing-midpage-left-text {
+        font-size: $fontSizeText!important;
+
+        font-weight: $fontWeightBold;
+        
+        line-height: $lineHeight;
+        
+        a{
+            text-decoration: none;
+            cursor: pointer;
+            color: $white;
+            border-bottom: #dd7fa2 0em solid;
+            transition: border-bottom 0.1s;
+            transition: background-color 0.1s;
+            background-color: rgba(255, 255, 255, 0.267);
+            padding: 5px;
+            border-radius: 0.2em;
+        }
+        a:hover{
+            color: rgba(30, 30, 30, 0.95);
+            border-bottom: #dd7fa2 0.2em solid;
+            transition: border-bottom 0.1s;
+            transition: background-color 0.1s;
+            background-color: rgba(255, 255, 255, 0.817);
+        }
+        a:active {
+            background-color: #c850c035;
+        } 
+    }
+
+    .landing-midpage-right {
+        height: 100%;
+        flex: 1;
+        display: flex;
+        justify-content: base;
+        align-items: center;
+        margin-left: 0;
+        margin-top: 5%;
+        .snippet-title {
+            margin-bottom: -4%;
+            text-align: left;
+            margin-left: 5%;
+            font-size: $fontSizeTextSmall;
+            color: $white;
+            font-weight: $fontWeightBold;
+        }
+        .snippet {            
+            height: 400px;
+            filter: $shadowBig;
+            transition: filter .3s;
+        }
+        .snippet:hover {
+            filter: $shadowSmall;
+            
+            transition: filter .3s;
+        }
+    }
+
+    .logo {
+        position: absolute;
+        width: 20vh;
+        bottom: -10vh;
+        left: 6%;
+    }
+    .logoUPV {
+        position: absolute;
+        width: 250px;
+        bottom: 20px;
+        right: 65px;
+    }
+
+
+    .landing-midpage-icons {
+        position: absolute;
+        top: 40px;
+        right: 80px;
+    }
+}
+
+.midpage-left {
+    height: 50vh;
+}
