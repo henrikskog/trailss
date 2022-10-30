@@ -5,12 +5,14 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const options = new DocumentBuilder()
+
+  const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('MongoDB Carbon tracker REST API')
     .setDescription('API REST para el carbon tracker')
     .setVersion('1.0')
     .build();
-  const document = SwaggerModule.createDocument(app, options);
+  const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
   await app.listen(3000);
