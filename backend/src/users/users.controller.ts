@@ -2,7 +2,6 @@ import { Body, Controller, Post, Get, Param, ParseIntPipe, Query, UseGuards, Req
 import { ApiBearerAuth, ApiOperation, ApiQuery } from "@nestjs/swagger";
 import { UsersService } from './users.service';
 import { User } from './users.model';
-import { ApiTags } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
