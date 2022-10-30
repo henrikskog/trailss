@@ -1,11 +1,7 @@
-import {
-  createContext,
-  ReactNode,
-  useContext, useMemo,
-  useState
-} from "react";
-import useLocalStorage from "../../../shared/hooks/useLocalStorage";
-import { JwtTokenResponse, User, UserSchema } from "../../types";
+import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useLocalStorage from '../../../shared/hooks/useLocalStorage';
+import { JwtTokenResponse, RegisteredUserResponse, User, UserSchema } from '../../types';
 
 type FetchParams = [input: RequestInfo | URL, init?: RequestInit | undefined];
 
@@ -18,97 +14,95 @@ interface AuthContextType {
   login: (email: string, password: string) => void;
   register: (email: string, name: string, password: string) => void;
   logout: () => void;
-  authenticatedRequest: (...fetchParams: FetchParams) => Promise<User | null>
+  authenticatedRequest: (...fetchParams: FetchParams) => Promise<User | null>;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 // Export the provider as we need to wrap the entire app with it
-export function AuthProvider({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element {
-  const [user, setUser] = useLocalStorage<User | null>("user", null);
-  const [error, setError] = useState<any>("ingen error");
+export function AuthProvider({ children }: { children: ReactNode }): JSX.Element {
+  const [user, setUser] = useLocalStorage<User | null>('user', null);
+  const [error, setError] = useState<any>('ingen error');
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
+  type LoginParams = {
+    username: string;
+    password: string;
+  };
 
+  type RegisterParams = {
+    username: string;
+    email: string;
+    password: string;
+  };
 
-type LoginParams = {
-  username: string;
-  password: string;
-};
+  const authApi = () => {
+    const API_ROOT = 'http://localhost:5000';
+    const LOGIN_PART = '/user/login';
+    const REGISTER_PART = '/user/register';
 
-type RegisterParams = {
-  username: string;
-  email: string;
-  password: string;
-};
+    return {
+      login: async ({ username, password }: LoginParams): Promise<string | null> => {
+        const response = await fetch(API_ROOT + LOGIN_PART + `?username=${username}&password=${password}`);
 
+        const data = await response.json();
+        const parsedData = JwtTokenResponse.safeParse(data);
 
-const authApi = () => {
-  const API_ROOT = "http://localhost:5000";
-  const LOGIN_PART = "/user/login";
-  const REGISTER_PART = "/register";
+        if (parsedData.success) {
+          return parsedData.data.access_token;
+        } else {
+          return null;
+        }
+      },
 
-  return {
-    login: async ({
-      username, password,
-    }: LoginParams): Promise<string | null> => {
-      const response = await fetch(API_ROOT + LOGIN_PART, {
-        method: "POST",
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-      });
+      register: async ({
+        email,
+        username,
+        password,
+      }: RegisterParams): Promise<{ username: string; email: string } | null> => {
+        const response = await fetch(API_ROOT + REGISTER_PART, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            username,
+            password,
+          }),
+        });
 
-      const data = await response.json();
-      const parsedData = JwtTokenResponse.safeParse(data.data);
+        const data = await response.json();
+        const parsedData = RegisteredUserResponse.safeParse(data);
 
-      if (parsedData.success) {
-        return parsedData.data.access_token;
-      } else {
-        return null;
-      }
-    },
+        console.log(data)
+        console.log(parsedData)
 
-    register: async ({email, username, password}: RegisterParams): Promise<User | null> => {
-      const response = await fetch(API_ROOT + REGISTER_PART, {
-        body: JSON.stringify({
-          email,
-          username,
-          password,
-        }),
-      });
-      const data = await response.json();
-      const parsedData = UserSchema.safeParse(data.data);
+        if (parsedData.success) {
+          return { username, email };
+        } else {
+          return null;
+        }
+      },
 
-      if (parsedData.success) {
-        return parsedData.data;
-      } else {
-        return null;
-      }
-    },
+      authenticatedRequest: async (...fetchParams: FetchParams): Promise<User | null> => {
+        if (user?.accessToken === null) {
+          setError('user not signed in');
+          console.log('user not signed in');
+        }
 
-    authenticatedRequest: async (...fetchParams: FetchParams): Promise<User | null> => {
-      if(user?.accessToken === null) {
-        setError("user not signed in")
-        console.log("user not signed in")
-      }
+        const response = await fetch(fetchParams[0], {
+          headers: { Authorization: `Bearer ${user?.accessToken}` },
+          body: fetchParams[1]?.body,
+        });
 
-      const response = await fetch(fetchParams[0], {
-        headers: {"Authorization" : `Bearer ${user?.accessToken}`},
-        body: fetchParams[1]?.body,
-      });
-
-      const data = await response.json();
-      return data;
-    },
-  }
-
-};
+        const data = await response.json();
+        return data;
+      },
+    };
+  };
 
   // Flags the component loading state and posts the login
   // data to the server.
@@ -122,24 +116,21 @@ const authApi = () => {
     setLoading(true);
 
     authApi()
-      .login({username, password})
+      .login({ username, password })
       .then((token) => {
-        if(token === null) {
-      setError("Invalid credentials")
+        console.log("token:", token)
+        if (token === null) {
+          setError('Invalid credentials');
         } else {
-        setUser({accessToken: token, username: username});
-
+          setUser({ accessToken: token, username: username });
         }
-
       })
-      .catch((error: Error) =>  {
-      setError(error.message)
-      }
-      
-      )
+      .catch((error: Error) => {
+        setError(error.message);
+      })
       .finally(() => {
-        setLoading(false)}
-        );
+        setLoading(false);
+      });
   }
 
   // Sends sign up details to the server. On success we just apply
@@ -150,14 +141,18 @@ const authApi = () => {
     authApi()
       .register({ email, username, password })
       .then((user) => {
-        setUser(user);
+        if (user === null) {
+          setError('Could not create user');
+        } else {
+          navigate('/login');
+        }
       })
-      .catch((error) => setError(error))
+      .catch((error: Error) => setError(error.message))
       .finally(() => setLoading(false));
   }
 
   function logout() {
-    setUser(null)
+    setUser(null);
   }
 
   // Make the provider update only when it should.
@@ -177,18 +172,14 @@ const authApi = () => {
       login,
       register,
       logout,
-      authenticatedRequest: authApi().authenticatedRequest
+      authenticatedRequest: authApi().authenticatedRequest,
     }),
     [user, loading, error]
   );
 
   // We only want to render the underlying app after we
   // assert for the presence of a current user.
-  return (
-    <AuthContext.Provider value={memoedValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={memoedValue}>{children}</AuthContext.Provider>;
 }
 
 // Let's only export the `useAuth` hook instead of the context.

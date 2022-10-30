@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Dashboard.scss';
 import { MenuBar } from './components/menubar/MenuBar';
 import Map  from "../../shared/map/Map"
+import useAuth from '../auth/AuthContext/AuthProvider';
 
 export default function Dashboard() {
     const [content, setContent] = useState("")
@@ -9,9 +10,9 @@ export default function Dashboard() {
     function renderSwitch(param: string) {
         switch (param) {
             case 'History':
-                return <div>asdasd</div>;
+                return <div>History</div>;
             case 'Account':
-                return <Map />;    
+                return <div>Account</div>;    
             default:
                 return <Map />;
         }

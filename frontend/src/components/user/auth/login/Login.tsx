@@ -1,29 +1,41 @@
 import { Anchor, Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../AuthContext/AuthProvider';
 import './Login.scss';
 
 export default function Login() {
-  const navigate = useNavigate()
-  const { login, error } = useAuth()
+  const navigate = useNavigate();
+  const { login, error, user } = useAuth();
+
+  useEffect(() => {
+    if (user !== null) {
+      navigate('/dashboard');
+    }
+  }, [user]);
 
   const form = useForm({
     initialValues: { username: '', password: '' },
     validate: {
-      username: (value: string) => (value.length > 3 && value.length < 50 ? null : 'Insert a valid username'),
-      password: (value: string) => (value.length > 3 && value.length < 50 ? null : 'Insert a valid password'),
+      username: (value: string) =>
+        value.length > 3 && value.length < 50 ? null : 'Insert a valid username',
+      password: (value: string) =>
+        value.length > 3 && value.length < 50 ? null : 'Insert a valid password',
     },
   });
 
   return (
     <div className="container">
-      <form className='form' onSubmit={form.onSubmit((values: any) => (login(values['username'], values['password'])))}>
+      <form
+        className="form"
+        onSubmit={form.onSubmit((values: any) => login(values['username'], values['password']))}
+      >
         {error}
         <h1 id="header">Log in</h1>
-        <TextInput placeholder="Username" {...form.getInputProps('username')} mb={"sm"} />
+        <TextInput placeholder="Username" {...form.getInputProps('username')} mb={'sm'} />
         <TextInput placeholder="Password" {...form.getInputProps('password')} />
-        <div className='submit'>
+        <div className="submit">
           <Button type="submit" mt="sm" className="submitButton">
             Login
           </Button>
@@ -34,22 +46,21 @@ export default function Login() {
           color="dimmed"
           size="xs"
           mt="xs"
-          onClick={() => navigate("/register") }
+          onClick={() => navigate('/register')}
         >
           Forgot password?
         </Anchor>
-          
+
         <Anchor
           component="button"
           type="button"
           color="dimmed"
-          onClick={() => navigate("/register") }
+          onClick={() => navigate('/register')}
           size="xs"
           mt="xs"
         >
           Don't have an account? Register
         </Anchor>
-
       </form>
     </div>
   );

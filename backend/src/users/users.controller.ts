@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Get, Param, ParseIntPipe, Query, UseGuards, Request, Patch, Delete } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiQuery, PickType } from "@nestjs/swagger";
 import { UsersService } from './users.service';
 import { User } from './users.model';
 import * as bcrypt from 'bcrypt';
@@ -8,32 +8,29 @@ import { AuthGuard } from '@nestjs/passport';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @ApiTags('User')
 @Controller('user')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
-    @Post('/signup')
-    @ApiQuery({ name: "username", required: true, description: "E.g. manolete97" })
-    @ApiQuery({ name: "password", required: true, description: "E.g. asD2349pyN" })
-    @ApiQuery({ name: "email", required: true, description: "E.g. manolo@gmail.com" })
+    @Post('/register')
     async createUser(
-        @Query("username") username: string,
-        @Query("password") password: string,
-        @Query("email") email: string
+        @Body() user: CreateUserDto
     ): Promise<UserEntity> {
         const saltOrRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltOrRounds);
+        const hashedPassword = await bcrypt.hash(user.password, saltOrRounds);
 
         // strip away password from returned user
-        const {password: ignorePassword, ...result} = await this.usersService.createUser(
-            username,
+        // TODO: look if this sends correct HTTP response on failure
+        await this.usersService.createUser(
+            user.username,
             hashedPassword,
-            email
+            user.email
         );
 
-        return result;
+        return {username: user.username, email: user.email};
     }
 
     @UseGuards(AuthGuard('jwt'))

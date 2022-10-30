@@ -40,12 +40,10 @@ export default function Form() {
 
 
     useEffect(() => {
-        console.log("data")
         handleYear()
     }, [yearValue]);
 
     useEffect(() => {
-        console.log("data2")
         handleMake()
     }, [searchMakeValue]);
 

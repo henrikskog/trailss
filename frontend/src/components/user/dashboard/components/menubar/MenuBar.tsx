@@ -10,6 +10,7 @@ import {
     IconSwitchHorizontal,
 } from '@tabler/icons';
 import { Link } from 'react-router-dom';
+import useAuth from '../../../auth/AuthContext/AuthProvider';
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -50,6 +51,7 @@ const mockdata = [
 
 export function MenuBar(props: any) {
     const [active, setActive] = useState(2);
+    const {logout} = useAuth()
 
     const links = mockdata.map((link, index) => (
         <NavbarLink
@@ -85,7 +87,7 @@ export function MenuBar(props: any) {
             <Navbar.Section>
                 <Stack justify="center" spacing={0}>
                     <NavbarLink icon={IconSwitchHorizontal} label="Change account" />
-                    <NavbarLink icon={IconLogout} label="Logout" />
+                    <NavbarLink icon={IconLogout} label="Logout" onClick={() => logout()} />
                 </Stack>
             </Navbar.Section>
         </Navbar>
