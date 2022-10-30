@@ -7,21 +7,22 @@
     iframe {
         border: 0;
     }
-}
 
-.background-map {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-}
+    .background-map {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+    }
 
-.overlay-left {
-    top: 50%;
-    transform: translateY(-50%);
-    left: 10px;
-    position: absolute;
-    z-index: 2;
-    display: flex;
-    min-width: 400px;
-    align-items: center;
+    .overlay-left {
+        top: 50%;
+        transform: translateY(-50%);
+        left: 10px;
+        position: absolute;
+        z-index: 2;
+        display: flex;
+        min-width: 400px;
+        align-items: center;
+    }
+
 }

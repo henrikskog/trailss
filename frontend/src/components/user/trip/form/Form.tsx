@@ -83,7 +83,9 @@ export default function Form() {
     return (
         <div className='search-form'>
             <h1>Your trip</h1>
-            <form className='form' onSubmit={form.onSubmit((values: any) => (console.log(values)))}>
+            <form className='form' onSubmit={form.onSubmit((values: any) => {
+                
+            })}>
                 <TextInput label="Origin:" placeholder="E.g. Times Square" {...form.getInputProps('origin')} />
                 <TextInput mt="sm" label="Destination:" placeholder="E.g. Vegas" {...form.getInputProps('destination')} />
                 <div className='double-line'>
