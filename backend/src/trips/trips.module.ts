@@ -8,6 +8,7 @@ import { TripSchema } from './trips.model';
 @Module({
   imports: [VehiclesModule, MongooseModule.forFeature([{ name: "trip", schema: TripSchema }])],
   providers: [TripsService],
-  controllers: [TripsController]
+  controllers: [TripsController],
+  exports: [TripsService]
 })
 export class TripsModule {}

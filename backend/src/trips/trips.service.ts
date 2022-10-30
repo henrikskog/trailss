@@ -1,9 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { VehiclesService } from '../vehicles/vehicles.service';
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { TripDocument } from "./trips.model";
 import { vehicleFuelSchema, VehicleFuelType } from '../vehicles/entities/vehicle.entity';
+import { CreateTripDto } from './dto/create-trip.dto';
+import { UpdateTripDto } from './dto/update-trip.dto';
 
 @Injectable()
 export class TripsService {
@@ -50,4 +52,32 @@ export class TripsService {
     return tripEmssions;
   }
 
+  create(user: any, createTripDto: CreateTripDto){
+    const trip = this.tripModel.create(createTripDto)
+    user.trips.push(trip)
+    user.save()
+    return "Created a new trip"
+  }
+
+  findOne(user: any, id: string){
+      return user.trips.filter(trip => trip._id.toString() == id)
+  }
+
+  update(user: any, id: string, updateTripDto: UpdateTripDto) {
+    const trip = user.trip.filter(vehicle => vehicle._id.toString() == id)
+
+    if (!trip) throw new NotFoundException("No trip with the given id was found");
+
+    this.tripModel.findByIdAndUpdate(trip._id, updateTripDto)
+    return "Trip updated successfully"
+  }
+
+  remove(user: any, id: string) {
+    const trip = user.trip.filter(vehicle => vehicle._id.toString() == id)
+
+    if (!trip) throw new NotFoundException("No trip with the given id was found");
+
+    this.tripModel.findByIdAndRemove(trip._id)
+    return "Trip updated successfully"
+  }
 }
