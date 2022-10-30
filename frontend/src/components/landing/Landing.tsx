@@ -3,12 +3,9 @@ import './Landing.scss';
 
 import TopPage from './components/TopPage';
 import MidPage from './components/MidPage';
-import BottomPage from './components/BottomPage';
 
 
 export default function Landing() {
-  const [count, setCount] = useState(0);
-
   return (
     <div className="landing">
         <div className='landing-top'>
