@@ -1,8 +1,10 @@
 import { Anchor, Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { useNavigate } from 'react-router-dom';
 import './Login.scss';
 
 export default function Login() {
+  const navigate = useNavigate()
   const form = useForm({
     initialValues: { username: '', password: '' },
     validate: {
@@ -26,9 +28,9 @@ export default function Login() {
           component="button"
           type="button"
           color="dimmed"
-          onClick={() => { }}
           size="xs"
           mt="xs"
+          onClick={() => navigate("/register") }
         >
           Forgot password?
         </Anchor>
@@ -37,11 +39,10 @@ export default function Login() {
           component="button"
           type="button"
           color="dimmed"
-          onClick={() => { }}
+          onClick={() => navigate("/register") }
           size="xs"
           mt="xs"
         >
-          
           Don't have an account? Register
         </Anchor>
 
