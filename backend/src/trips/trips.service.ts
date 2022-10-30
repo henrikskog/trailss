@@ -69,8 +69,8 @@ export class TripsService {
     return tripEmssions;
   }
 
-  create(user: any, createTripDto: CreateTripDto) {
-    const trip = this.tripModel.create(createTripDto);
+  async create(user: any, createTripDto: CreateTripDto) {
+    const trip = await this.tripModel.create(createTripDto);
     console.log(user);
     user.trips.push(trip);
     user.save();

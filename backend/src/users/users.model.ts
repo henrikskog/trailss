@@ -17,11 +17,11 @@ export class User {
   @Prop()
   email: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' })
-  vehicles: [Vehicle]
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Vehicle', default: []})
+  vehicles: Vehicle[]
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Trip' })
-  trips: [Trip]
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Trip', default: []})
+  trips: Trip[]
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
