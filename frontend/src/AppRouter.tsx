@@ -1,5 +1,5 @@
 import './App.css';
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Landing from "./components/landing/Landing";
 import Map from './components/shared/map/Map';
@@ -7,15 +7,15 @@ import NotFound from './components/shared/notfound/NotFound';
 import Dashboard from './components/user/dashboard/Dashboard';
 
 
-function AppRouter() {
+function AppRouter(props: any) {
     function RequireAuth({ children }:any) {
         //const { authed } = useAuth();
-      
+        console.log(location.pathname)
         return true ? children : <Navigate to="/login" replace />;
       }
-
+    const location = useLocation();  
     return (
-        <div className='main'>
+        <div className={location.pathname !== "/dashboard"? "main" : "main-logged"}>
             <Routes>
                 <Route path='*' element={<NotFound />} />
                 <Route path="/" element={<Landing />} />
