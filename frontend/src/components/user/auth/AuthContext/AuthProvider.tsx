@@ -1,42 +1,46 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '../../../shared/hooks/useLocalStorage';
-import { JwtTokenResponse, RegisteredUserResponse, User, UserSchema } from '../../types';
+import { JwtTokenResponse, RegisteredUserResponse, User } from '../../types';
+import { showNotification } from '@mantine/notifications';
 
-type FetchParams = [input: RequestInfo | URL, init?: RequestInit | undefined];
+type FetchParams = [RequestInfo | URL, RequestInit | undefined];
 
-interface AuthContextType {
+type LoginParams = {
+  username: string;
+  password: string;
+};
+
+type RegisterParams = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+interface AuthContext {
   // We defined the user type in `index.d.ts`, but it's
   // a simple object with email, name and password.
   user: User | null;
   loading: boolean;
-  error?: any;
+  error: string;
+
   login: (email: string, password: string) => void;
   register: (email: string, name: string, password: string) => void;
   logout: () => void;
-  authenticatedRequest: (...fetchParams: FetchParams) => Promise<User | null>;
+  authFetch: (...fetchParams: FetchParams) => Promise<unknown>;
 }
 
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+const AuthContext = createContext<AuthContext>({} as AuthContext);
 
-// Export the provider as we need to wrap the entire app with it
 export function AuthProvider({ children }: { children: ReactNode }): JSX.Element {
   const [user, setUser] = useLocalStorage<User | null>('user', null);
-  const [error, setError] = useState<any>('ingen error');
-  const [loading, setLoading] = useState<boolean>(false);
+  const [authError, setAuthError] = useState<string>('');
+  const [authLoading, setAuthLoading] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
-  type LoginParams = {
-    username: string;
-    password: string;
-  };
-
-  type RegisterParams = {
-    username: string;
-    email: string;
-    password: string;
-  };
-
+  // Functions that send requests to the backend
+  // TODO: add error checking for API calls (if backend not available)
   const authApi = () => {
     const API_ROOT = 'http://localhost:5000';
     const LOGIN_PART = '/user/login';
@@ -44,7 +48,9 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
 
     return {
       login: async ({ username, password }: LoginParams): Promise<string | null> => {
-        const response = await fetch(API_ROOT + LOGIN_PART + `?username=${username}&password=${password}`);
+        const response = await fetch(
+          API_ROOT + LOGIN_PART + `?username=${username}&password=${password}`
+        );
 
         const data = await response.json();
         const parsedData = JwtTokenResponse.safeParse(data);
@@ -60,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
         email,
         username,
         password,
-      }: RegisterParams): Promise<{ username: string; email: string } | null> => {
+      }: RegisterParams): Promise<RegisteredUserResponse | null> => {
         const response = await fetch(API_ROOT + REGISTER_PART, {
           method: 'POST',
           headers: {
@@ -77,9 +83,6 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
         const data = await response.json();
         const parsedData = RegisteredUserResponse.safeParse(data);
 
-        console.log(data)
-        console.log(parsedData)
-
         if (parsedData.success) {
           return { username, email };
         } else {
@@ -87,10 +90,13 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
         }
       },
 
-      authenticatedRequest: async (...fetchParams: FetchParams): Promise<User | null> => {
+      authFetch: async (...fetchParams: FetchParams): Promise<unknown> => {
         if (user?.accessToken === null) {
-          setError('user not signed in');
-          console.log('user not signed in');
+          showNotification({
+            title: 'Session timed out',
+            message: 'Your session has timed out and you will need to sign in again.',
+          });
+          return null;
         }
 
         const response = await fetch(fetchParams[0], {
@@ -104,51 +110,43 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
     };
   };
 
-  // Flags the component loading state and posts the login
-  // data to the server.
-  //
-  // An error means that the email/password combination is
-  // not valid.
-  //
-  // Finally, just signal the component that loading the
-  // loading state is over.
   async function login(username: string, password: string) {
-    setLoading(true);
+    setAuthLoading(true);
 
     authApi()
       .login({ username, password })
       .then((token) => {
-        console.log("token:", token)
+        console.log('token:', token);
         if (token === null) {
-          setError('Invalid credentials');
+          setAuthError('Invalid credentials');
         } else {
           setUser({ accessToken: token, username: username });
         }
       })
       .catch((error: Error) => {
-        setError(error.message);
+        setAuthError(error.message);
       })
       .finally(() => {
-        setLoading(false);
+        setAuthLoading(false);
       });
   }
 
   // Sends sign up details to the server. On success we just apply
   // the created user to the state.
   function register(email: string, username: string, password: string) {
-    setLoading(true);
+    setAuthLoading(true);
 
     authApi()
       .register({ email, username, password })
       .then((user) => {
         if (user === null) {
-          setError('Could not create user');
+          setAuthError('Could not create user');
         } else {
           navigate('/login');
         }
       })
-      .catch((error: Error) => setError(error.message))
-      .finally(() => setLoading(false));
+      .catch((error: Error) => setAuthError(error.message))
+      .finally(() => setAuthLoading(false));
   }
 
   function logout() {
@@ -164,17 +162,17 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   // that can be very costly! Even in this case, where
   // you only get re-renders when logging in and out
   // we want to keep things very performant.
-  const memoedValue = useMemo<AuthContextType>(
+  const memoedValue = useMemo<AuthContext>(
     () => ({
       user,
-      loading,
-      error,
+      loading: authLoading,
+      error: authError,
       login,
       register,
       logout,
-      authenticatedRequest: authApi().authenticatedRequest,
+      authFetch: authApi().authFetch,
     }),
-    [user, loading, error]
+    [user, authLoading, authError]
   );
 
   // We only want to render the underlying app after we

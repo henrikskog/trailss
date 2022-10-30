@@ -14,8 +14,7 @@ export default function useLocalStorage<T>(key: string, initialValue: T) {
         // Parse stored json or if none return initialValue
         return item ? JSON.parse(item) : initialValue;
       } catch (error) {
-        // If error also return initialValue
-        console.log(error);
+        // JSON.parse will throw if the item stored is not properly formatted. Ignore this, as this would have been induced by user.
         return initialValue;
       }
     });
