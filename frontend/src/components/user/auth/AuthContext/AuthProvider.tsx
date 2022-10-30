@@ -5,8 +5,9 @@ import {
   useState
 } from "react";
 import useLocalStorage from "../../../shared/hooks/useLocalStorage";
-import { User } from "../../types";
-import authApi from "../api/authApi";
+import { JwtTokenResponse, User, UserSchema } from "../../types";
+
+type FetchParams = [input: RequestInfo | URL, init?: RequestInit | undefined];
 
 interface AuthContextType {
   // We defined the user type in `index.d.ts`, but it's
@@ -17,6 +18,7 @@ interface AuthContextType {
   login: (email: string, password: string) => void;
   register: (email: string, name: string, password: string) => void;
   logout: () => void;
+  authenticatedRequest: (...fetchParams: FetchParams) => Promise<User | null>
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -28,8 +30,85 @@ export function AuthProvider({
   children: ReactNode;
 }): JSX.Element {
   const [user, setUser] = useLocalStorage<User | null>("user", null);
-  const [error, setError] = useState<any>();
+  const [error, setError] = useState<any>("ingen error");
   const [loading, setLoading] = useState<boolean>(false);
+
+
+
+type LoginParams = {
+  username: string;
+  password: string;
+};
+
+type RegisterParams = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+
+const authApi = () => {
+  const API_ROOT = "http://localhost:5000";
+  const LOGIN_PART = "/user/login";
+  const REGISTER_PART = "/register";
+
+  return {
+    login: async ({
+      username, password,
+    }: LoginParams): Promise<string | null> => {
+      const response = await fetch(API_ROOT + LOGIN_PART, {
+        method: "POST",
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+      const parsedData = JwtTokenResponse.safeParse(data.data);
+
+      if (parsedData.success) {
+        return parsedData.data.access_token;
+      } else {
+        return null;
+      }
+    },
+
+    register: async ({email, username, password}: RegisterParams): Promise<User | null> => {
+      const response = await fetch(API_ROOT + REGISTER_PART, {
+        body: JSON.stringify({
+          email,
+          username,
+          password,
+        }),
+      });
+      const data = await response.json();
+      const parsedData = UserSchema.safeParse(data.data);
+
+      if (parsedData.success) {
+        return parsedData.data;
+      } else {
+        return null;
+      }
+    },
+
+    authenticatedRequest: async (...fetchParams: FetchParams): Promise<User | null> => {
+      if(user?.accessToken === null) {
+        setError("user not signed in")
+        console.log("user not signed in")
+      }
+
+      const response = await fetch(fetchParams[0], {
+        headers: {"Authorization" : `Bearer ${user?.accessToken}`},
+        body: fetchParams[1]?.body,
+      });
+
+      const data = await response.json();
+      return data;
+    },
+  }
+
+};
 
   // Flags the component loading state and posts the login
   // data to the server.
@@ -39,16 +118,28 @@ export function AuthProvider({
   //
   // Finally, just signal the component that loading the
   // loading state is over.
-  function login(email: string, password: string) {
+  async function login(username: string, password: string) {
     setLoading(true);
 
     authApi()
-      .login({email, password})
-      .then((user) => {
-        setUser(user);
+      .login({username, password})
+      .then((token) => {
+        if(token === null) {
+      setError("Invalid credentials")
+        } else {
+        setUser({accessToken: token, username: username});
+
+        }
+
       })
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+      .catch((error: Error) =>  {
+      setError(error.message)
+      }
+      
+      )
+      .finally(() => {
+        setLoading(false)}
+        );
   }
 
   // Sends sign up details to the server. On success we just apply
@@ -78,7 +169,7 @@ export function AuthProvider({
   // that can be very costly! Even in this case, where
   // you only get re-renders when logging in and out
   // we want to keep things very performant.
-  const memoedValue = useMemo(
+  const memoedValue = useMemo<AuthContextType>(
     () => ({
       user,
       loading,
@@ -86,6 +177,7 @@ export function AuthProvider({
       login,
       register,
       logout,
+      authenticatedRequest: authApi().authenticatedRequest
     }),
     [user, loading, error]
   );

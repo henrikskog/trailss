@@ -1,10 +1,13 @@
 import { Anchor, Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../AuthContext/AuthProvider';
 import './Login.scss';
 
 export default function Login() {
   const navigate = useNavigate()
+  const { login, error } = useAuth()
+
   const form = useForm({
     initialValues: { username: '', password: '' },
     validate: {
@@ -15,7 +18,8 @@ export default function Login() {
 
   return (
     <div className="container">
-      <form className='form' onSubmit={form.onSubmit((values: any) => (console.log(values)))}>
+      <form className='form' onSubmit={form.onSubmit((values: any) => (login(values['username'], values['password'])))}>
+        {error}
         <h1 id="header">Log in</h1>
         <TextInput placeholder="Username" {...form.getInputProps('username')} mb={"sm"} />
         <TextInput placeholder="Password" {...form.getInputProps('password')} />

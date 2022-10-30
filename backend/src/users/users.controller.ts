@@ -7,6 +7,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserEntity } from './entities/user.entity';
 
 @ApiTags('User')
 @Controller('user')
@@ -21,14 +22,17 @@ export class UsersController {
         @Query("username") username: string,
         @Query("password") password: string,
         @Query("email") email: string
-    ): Promise<User> {
+    ): Promise<UserEntity> {
         const saltOrRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltOrRounds);
-        const result = await this.usersService.createUser(
+
+        // strip away password from returned user
+        const {password: ignorePassword, ...result} = await this.usersService.createUser(
             username,
             hashedPassword,
             email
         );
+
         return result;
     }
 
