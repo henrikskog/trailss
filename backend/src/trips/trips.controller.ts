@@ -1,9 +1,13 @@
-import { Controller, Get, ParseIntPipe, Query } from "@nestjs/common";
-import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, Request } from "@nestjs/common";
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { VehicleFuelType } from "src/vehicles/entities/vehicle.entity";
 import { VehiclesService } from "src/vehicles/vehicles.service";
 import { TripsService } from "./trips.service";
 import { ApiTags } from '@nestjs/swagger';
+import { CreateTripDto } from "./dto/create-trip.dto";
+import { UpdateTripDto } from "./dto/update-trip.dto";
+import { AuthGuard } from "@nestjs/passport";
+import { JwtStrategy } from "src/auth/jwt.strategy";
 
 @ApiTags('Trips')
 @Controller("trips")
@@ -40,5 +44,40 @@ export class TripsController {
       year,
       consumptions
     );
+  }
+
+  @UseGuards(AuthGuard('jwt'))  
+  @Post()
+  @ApiBearerAuth()
+  create(@Request() req: any, @Body() createTripDto: CreateTripDto) {
+    return this.tripsService.create(req.user, createTripDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))  
+  @Get()
+  @ApiBearerAuth()
+  findAll(@Request() req: any) {
+    console.log(req.user.trips)
+  }
+  
+  @UseGuards(AuthGuard('jwt'))  
+  @Get(":id")
+  @ApiBearerAuth()
+  findOne(@Request() req: any, @Param("id") id: string) {
+    return this.tripsService.findOne(req.user, id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch(":id")
+  @ApiBearerAuth()
+  update(@Request() req: any, @Param("id") id: string, @Body() updateTripDto: UpdateTripDto) {
+    return this.tripsService.update(req.user, id, updateTripDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete(":id")
+  @ApiBearerAuth()
+  remove(@Request() req: any, @Param("id") id: string) {
+    return this.tripsService.remove(req.vehicles, id);
   }
 }
