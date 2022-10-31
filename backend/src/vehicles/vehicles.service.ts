@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable, NotFoundException, VERSION_NEUTRAL, UnauthorizedException, forwardRef, Inject } from "@nestjs/common";
+import { Injectable, NotFoundException, VERSION_NEUTRAL, UnauthorizedException, forwardRef, Inject, BadRequestException } from "@nestjs/common";
 import mongoose, { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
@@ -16,8 +16,8 @@ export class VehiclesService {
   constructor(
     private readonly httpService: HttpService, private readonly usersService: UsersService, @InjectModel('vehicle') private readonly vehicleModel: Model<VehicleDocument>, @InjectModel('trip') private readonly tripModel: Model<TripDocument>) {}
 
-  create(user: any, createVehicleDto: CreateVehicleDto) {
-    const vehicle = this.vehicleModel.create(createVehicleDto)
+  async create(user: any, createVehicleDto: CreateVehicleDto) {
+    const vehicle = await this.vehicleModel.create(createVehicleDto)
     user.vehicles.push(vehicle)
     user.save()
     return 'Added a new vehicle';
@@ -25,6 +25,7 @@ export class VehiclesService {
 
   async findAll(vehicleIds: [mongoose.Schema.Types.ObjectId]) {
     const vehicles = await this.vehicleModel.find({ '_id': {$in: vehicleIds}})
+    console.log(vehicles)
     return vehicles;
   }
   
@@ -36,17 +37,17 @@ export class VehiclesService {
     return await this.vehicleModel.findById(vehicle[0])
   } 
 
-  update(vehicleIds: [mongoose.Schema.Types.ObjectId], id: string, updateVehicleDto: UpdateVehicleDto) {
-    const vehicle = vehicleIds.filter(vehicle => vehicle.toString() == id)
+  async update(vehicleIds: [mongoose.Schema.Types.ObjectId], id: string, updateVehicleDto: UpdateVehicleDto) {
+    const vehicle = vehicleIds.filter((vehicle) => vehicle.toString() == id)
 
     if (!vehicle) throw new NotFoundException("No car with the given id was found");
 
-    this.vehicleModel.findByIdAndUpdate(vehicle, updateVehicleDto)
+    await this.vehicleModel.findByIdAndUpdate(vehicle[0], updateVehicleDto)
     return "Vehicle updated successfully"
   }
 
   async remove(user: any, id: string) {
-    const vehicle = user.vehicles.filter((Vehicle) => vehicle.toString() == id);
+    const vehicle = user.vehicles.filter((vehicle) => vehicle.toString() == id);
 
     if (!vehicle) {
       throw new NotFoundException("No vehicle with the given id was found");
@@ -54,8 +55,8 @@ export class VehiclesService {
 
     const trips = await this.tripModel.find({vehicle: vehicle[0]})    
 
-    if (trips) {
-      throw new NotFoundException("Can't delete a car that belong to a trip");
+    if (trips.length > 0) {
+      throw new BadRequestException("Can't delete a car that belong to a trip");
     }
 
     await this.vehicleModel.findByIdAndDelete(vehicle[0]);

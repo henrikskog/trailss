@@ -33,21 +33,21 @@ export class VehiclesController {
   @Get()
   @ApiBearerAuth()
   findAll(@Request() req: any) {
-    return this.vehiclesService.findAll(req.user.trips)
+    return this.vehiclesService.findAll(req.user.vehicles)
   }
   
   @UseGuards(AuthGuard('jwt'))  
   @Get(":id")
   @ApiBearerAuth()
   findOne(@Request() req: any, @Param("id") id: string) {
-    return this.vehiclesService.findOne(req.user.trips, id);
+    return this.vehiclesService.findOne(req.user.vehicles, id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(":id")
   @ApiBearerAuth()
   update(@Request() req: any, @Param("id") id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
-    return this.vehiclesService.update(req.user.trips, id, updateVehicleDto);
+    return this.vehiclesService.update(req.user.vehicles, id, updateVehicleDto);
   }
 
   @UseGuards(AuthGuard('jwt'))
