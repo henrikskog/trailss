@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Form.scss';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from '@mantine/form';
 import { NumberInput, TextInput, Button } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
@@ -11,10 +11,10 @@ import { useDebouncedValue } from '@mantine/hooks';
 import axios from 'axios';
 
 interface Props {
-    calculateRoute: (origin:string, destination: string) => void;
+    calculateRoute: (origin: string, destination: string) => void;
 }
 
-const Form: React.FC<Props> = ({calculateRoute}) => {
+const Form: React.FC<Props> = ({ calculateRoute }) => {
     const baseURL = "https://www.fueleconomy.gov/";
 
 
@@ -28,7 +28,7 @@ const Form: React.FC<Props> = ({calculateRoute}) => {
             date: (value: any) => (value ? null : 'Date must be provided'),
             passengers: (value: number) => (value === 0 || value > 10 ? 'Wrong number of passengers' : null),
             carYear: (value: number) => (value < 1980 || value > CurrentYear ? `Select a year between 1960-${CurrentYear}` : null),
-            consumption: (value: number) => (value === 0 && searchMakeValue === '' &&  searchMakeValue === '' ? "Indicate consumption if your model isn't in the list": null)
+            consumption: (value: number) => (value === 0 && searchMakeValue === '' && searchMakeValue === '' ? "Indicate consumption if your model isn't in the list" : null)
         },
     });
 
@@ -39,7 +39,11 @@ const Form: React.FC<Props> = ({calculateRoute}) => {
     const [yearValue, setYearValue] = useDebouncedValue(form.values.carYear, 200);
     const [searchMakeValue, onSearchMakeChange] = useState('');
     const [searchModelValue, onSearchModelChange] = useState('');
+    const [calculated, setCalculated] = useState(false);
 
+    useEffect(() => {
+        setCalculated(false)
+    }, [form.values])
 
     useEffect(() => {
         handleYear()
@@ -83,41 +87,44 @@ const Form: React.FC<Props> = ({calculateRoute}) => {
     }
 
     return (
-            <div className='search-form'>
-                <h1>Your trip</h1>
-                <form className='form' onSubmit={form.onSubmit((values: any) => {
-                    calculateRoute(values.origin, values.destination)
-                })}>
-                    <TextInput label="Origin:" placeholder="E.g. Times Square" {...form.getInputProps('origin')} />
-                    <TextInput mt="sm" label="Destination:" placeholder="E.g. Vegas" {...form.getInputProps('destination')} />
-                    <div className='double-line'>
-                        <div className='double-line-div margin'>
-                            <DatePicker placeholder="Pick date" label="Event date" withAsterisk {...form.getInputProps('date')} />
+        <div className='search-form'>
+            <h1>Your trip</h1>
+            <form className='form' onSubmit={form.onSubmit((values: any) => {
+                calculateRoute(values.origin, values.destination)
+                console.log("tu madre")
+                setCalculated(true)
 
-                        </div>
-                        <div className='double-line-div'>
-                            <NumberInput
-                                mt="sm"
-                                label="Num. Passengers:"
-                                placeholder="1"
-                                min={1}
-                                max={10}
-                                {...form.getInputProps('passengers')}
-                            />
-                        </div>
+            })}>
+                <TextInput label="Origin:" placeholder="E.g. Times Square" {...form.getInputProps('origin')} />
+                <TextInput mt="sm" label="Destination:" placeholder="E.g. Vegas" {...form.getInputProps('destination')} />
+                <div className='double-line'>
+                    <div className='double-line-div margin'>
+                        <DatePicker placeholder="Pick date" label="Event date" withAsterisk {...form.getInputProps('date')} />
 
                     </div>
-                    <NumberInput
-                        mt="sm"
-                        label="Car Year"
-                        placeholder="E.g. 1985"
-                        min={1960}
-                        max={CurrentYear}
-                        {...form.getInputProps('carYear')}
-                    />
-                    <div className='double-line'>
-                        <div className='double-line-div margin'>
-                            {makes.length !== 0 &&
+                    <div className='double-line-div'>
+                        <NumberInput
+                            mt="sm"
+                            label="Num. Passengers:"
+                            placeholder="1"
+                            min={1}
+                            max={10}
+                            {...form.getInputProps('passengers')}
+                        />
+                    </div>
+
+                </div>
+                <NumberInput
+                    mt="sm"
+                    label="Car Year"
+                    placeholder="E.g. 1985"
+                    min={1960}
+                    max={CurrentYear}
+                    {...form.getInputProps('carYear')}
+                />
+                <div className='double-line'>
+                    <div className='double-line-div margin'>
+                        {makes.length !== 0 &&
                             <Select
                                 mt="sm"
                                 label="Car Make:"
@@ -127,8 +134,8 @@ const Form: React.FC<Props> = ({calculateRoute}) => {
                                 onSearchChange={onSearchMakeChange}
                                 searchValue={searchMakeValue}
                             />
-                            }
-                            {makes.length === 0 &&
+                        }
+                        {makes.length === 0 &&
                             <Select
                                 mt="sm"
                                 label="Car Make:"
@@ -139,11 +146,11 @@ const Form: React.FC<Props> = ({calculateRoute}) => {
                                 onSearchChange={onSearchMakeChange}
                                 searchValue={searchMakeValue}
                             />
-                            }
+                        }
 
-                        </div>
-                        <div className='double-line-div'>
-                            {models.length !== 0 &&
+                    </div>
+                    <div className='double-line-div'>
+                        {models.length !== 0 &&
                             <Select
                                 mt="sm"
                                 label="Car model:"
@@ -153,7 +160,7 @@ const Form: React.FC<Props> = ({calculateRoute}) => {
                                 onSearchChange={onSearchModelChange}
                                 searchValue={searchModelValue}
                             />}
-                            {models.length === 0 &&
+                        {models.length === 0 &&
                             <Select
                                 mt="sm"
                                 label="Car model:"
@@ -165,24 +172,28 @@ const Form: React.FC<Props> = ({calculateRoute}) => {
                                 searchValue={searchModelValue}
                             />}
 
-                        </div>
                     </div>
-                    <NumberInput
-                        mt="sm"
-                        label="Comsumption"
-                        placeholder="E.g. 5l/100km"
-                        min={0}
-                        max={100}
-                        {...form.getInputProps('consumption')}
-                    />
-                    <div className='submit'>
-                        <Button type="submit" mt="sm">
-                            Submit
-                        </Button>
-                    </div>
-                </form>
-            </div>
-        
+                </div>
+                <NumberInput
+                    mt="sm"
+                    label="Comsumption"
+                    placeholder="E.g. 5l/100km"
+                    min={0}
+                    max={100}
+                    {...form.getInputProps('consumption')}
+                />
+                <div className='submit'>
+                    <Button type="submit" mt="sm">
+                        Submit
+                    </Button>
+                    {useLocation().pathname === "/dashboard" && calculated &&
+                        <Button className="save-button" type="submit" mt="sm">
+                            Save Trip
+                        </Button>}
+                </div>
+            </form>
+        </div>
+
     );
 }
 
