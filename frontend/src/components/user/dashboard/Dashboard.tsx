@@ -3,6 +3,8 @@ import './Dashboard.scss';
 import { MenuBar } from './components/menubar/MenuBar';
 import Map  from "../../shared/map/Map"
 import useAuth from '../auth/AuthContext/AuthProvider';
+import HistoryUser from './components/history/HistoryUser';
+import UserSettings from '../settings/UserSettings';
 
 export default function Dashboard() {
     const [content, setContent] = useState("")
@@ -10,9 +12,9 @@ export default function Dashboard() {
     function renderSwitch(param: string) {
         switch (param) {
             case 'History':
-                return <div>History</div>;
+                return <HistoryUser />;
             case 'Account':
-                return <div>Account</div>;    
+                return <UserSettings />;    
             default:
                 return <Map />;
         }

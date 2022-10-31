@@ -13,6 +13,7 @@ import TripInfoContext from '../../../../context/TripInfoContext';
 
 
 export default function Form() {
+    let tripInfo: any;
 
     const baseURL = "https://www.fueleconomy.gov/";
 
@@ -85,7 +86,7 @@ export default function Form() {
             <div className='search-form'>
                 <h1>Your trip</h1>
                 <form className='form' onSubmit={form.onSubmit((values: any) => {
-                    
+                    tripInfo = values;
                 })}>
                     <TextInput label="Origin:" placeholder="E.g. Times Square" {...form.getInputProps('origin')} />
                     <TextInput mt="sm" label="Destination:" placeholder="E.g. Vegas" {...form.getInputProps('destination')} />

@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import TripInfoContext from '../../../context/TripInfoContext';
 
 export default function Map() {
-  const tripInfo = useContext(TripInfoContext);
   const [count, setCount] = useState(0);
   return (
     <div className='container'>
