@@ -1,6 +1,7 @@
 import './Map.scss';
 
 import Form from '../../user/trip/form/Form';
+import CalculationsBar from "../../user/trip/calculations/CalculationsBar";
 import { Link } from "react-router-dom";
 
 import {
@@ -66,6 +67,9 @@ export default function Map() {
     <div className='container'>
       <div className='overlay-left'>
         <Form calculateRoute={calculateRoute} />
+      </div>
+      <div className='overlay-calculations calculations'>
+        <CalculationsBar />
       </div>
       <div className='background-map'>
 
