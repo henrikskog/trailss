@@ -24,39 +24,36 @@ export class VehiclesController {
 
   @UseGuards(AuthGuard('jwt'))  
   @Post()
-  @ApiAcceptedResponse({description: "hallloooo"})
-  @ApiExtraModels()
-  @ApiBody({schema: {$ref: getSchemaPath(Vehicle), example: {"name": "hello", "make": "volvo"}} })
   @ApiBearerAuth()
   create(@Request() req: any, @Body() createVehicleDto: CreateVehicleDto) {
-    return this.vehiclesService.create(req, createVehicleDto);
+    return this.vehiclesService.create(req.user, createVehicleDto);
   }
 
   @UseGuards(AuthGuard('jwt'))  
   @Get()
   @ApiBearerAuth()
   findAll(@Request() req: any) {
-    return req.vehicles;
+    return this.vehiclesService.findAll(req.user.trips)
   }
   
   @UseGuards(AuthGuard('jwt'))  
   @Get(":id")
   @ApiBearerAuth()
   findOne(@Request() req: any, @Param("id") id: string) {
-    return this.vehiclesService.findOne(req.vehicles, id);
+    return this.vehiclesService.findOne(req.user.trips, id);
   }
 
-  @UseGuards(JwtStrategy)
+  @UseGuards(AuthGuard('jwt'))
   @Patch(":id")
   @ApiBearerAuth()
   update(@Request() req: any, @Param("id") id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
-    return this.vehiclesService.update(req.vehicles, id, updateVehicleDto);
+    return this.vehiclesService.update(req.user.trips, id, updateVehicleDto);
   }
 
-  @UseGuards(JwtStrategy)
+  @UseGuards(AuthGuard('jwt'))
   @Delete(":id")
   @ApiBearerAuth()
   remove(@Request() req: any, @Param("id") id: string) {
-    return this.vehiclesService.remove(req.vehicles, id);
+    return this.vehiclesService.remove(req.user, id);
   }
 }

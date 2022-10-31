@@ -1,12 +1,13 @@
 import {
   BadRequestException,
+  forwardRef,
   Inject,
   Injectable,
   NotFoundException,
   Scope,
 } from "@nestjs/common";
 import { VehiclesService } from "../vehicles/vehicles.service";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { TripDocument } from "./trips.model";
 import {
@@ -16,6 +17,7 @@ import {
 import { CreateTripDto } from "./dto/create-trip.dto";
 import { UpdateTripDto } from "./dto/update-trip.dto";
 import { REQUEST } from "@nestjs/core";
+import { from } from "rxjs";
 
 @Injectable()
 export class TripsService {
@@ -71,33 +73,47 @@ export class TripsService {
 
   async create(user: any, createTripDto: CreateTripDto) {
     const trip = await this.tripModel.create(createTripDto);
-    console.log(user);
     user.trips.push(trip);
     user.save();
     return "Created a new trip";
   }
 
-  findOne(user: any, id: string) {
-    return user.trips.filter((trip) => trip._id.toString() == id);
+  async findAll(tripIds: [mongoose.Schema.Types.ObjectId]) {
+    const trips = await this.tripModel.find({ '_id': {$in: tripIds}})
+    return trips;
   }
 
-  update(user: any, id: string, updateTripDto: UpdateTripDto) {
-    const trip = user.trip.filter((trip) => trip._id.toString() == id);
+  async findOne(tripsIds: [mongoose.Schema.Types.ObjectId], id: string) {
+    const trip = tripsIds.filter((trip) => trip.toString() == id);
+    if (!trip) {
+      throw new NotFoundException("No car with the given arguments was found");
+    }
+    return await this.tripModel.findById(trip[0])
+  }
 
-    if (!trip)
+  async update(tripsIds: [mongoose.Schema.Types.ObjectId], id: string, updateTripDto: UpdateTripDto) {
+    const trip = tripsIds.filter((trip) => trip.toString() == id);
+    if (!trip) {
       throw new NotFoundException("No trip with the given id was found");
-
-    this.tripModel.findByIdAndUpdate(trip._id, updateTripDto);
+    }
+    await this.tripModel.findByIdAndUpdate(trip[0], updateTripDto);
     return "Trip updated successfully";
   }
 
-  remove(user: any, id: string) {
-    const trip = user.trip.filter((trip) => trip._id.toString() == id);
+/*   async findAllTripsByVehicleId(vehicleId: mongoose.Schema.Types.ObjectId) {
+    const trips = 
+    return trips
+  } */
+  
+  async remove(user: any, id: string) {
+    const trip = user.trips.filter((trip) => trip.toString() == id);
 
-    if (!trip)
+    if (!trip) {
       throw new NotFoundException("No trip with the given id was found");
-
-    this.tripModel.findByIdAndRemove(trip._id);
-    return "Trip updated successfully";
+    }
+    await this.tripModel.findByIdAndDelete(trip[0]);
+    user.trips.pull({ _id: trip[0]})
+    user.save()
+    return "Trip deleted successfully";
   }
 }

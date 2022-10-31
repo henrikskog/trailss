@@ -57,27 +57,27 @@ export class TripsController {
   @Get()
   @ApiBearerAuth()
   findAll(@Request() req: any) {
-    console.log(req.user.trips)
+    return this.tripsService.findAll(req.user.trips)
   }
   
   @UseGuards(AuthGuard('jwt'))  
   @Get(":id")
   @ApiBearerAuth()
   findOne(@Request() req: any, @Param("id") id: string) {
-    return this.tripsService.findOne(req.user, id);
+    return this.tripsService.findOne(req.user.trips, id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(":id")
   @ApiBearerAuth()
   update(@Request() req: any, @Param("id") id: string, @Body() updateTripDto: UpdateTripDto) {
-    return this.tripsService.update(req.user, id, updateTripDto);
+    return this.tripsService.update(req.user.trips, id, updateTripDto);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(":id")
   @ApiBearerAuth()
   remove(@Request() req: any, @Param("id") id: string) {
-    return this.tripsService.remove(req.vehicles, id);
+    return this.tripsService.remove(req.user, id);
   }
 }

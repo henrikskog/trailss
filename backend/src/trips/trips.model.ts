@@ -30,3 +30,4 @@ export class Trip {
 }
 
 export const TripSchema = SchemaFactory.createForClass(Trip);
+

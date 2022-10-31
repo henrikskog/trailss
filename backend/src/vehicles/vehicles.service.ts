@@ -1,6 +1,6 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable, NotFoundException, VERSION_NEUTRAL, UnauthorizedException } from "@nestjs/common";
-import { Model } from "mongoose";
+import { Injectable, NotFoundException, VERSION_NEUTRAL, UnauthorizedException, forwardRef, Inject } from "@nestjs/common";
+import mongoose, { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
@@ -8,37 +8,60 @@ import { VehicleDocument } from "./vehicles.schema";
 import { Vehicle, VehicleFuelType } from "./entities/vehicle.entity";
 import { lastValueFrom } from "rxjs";
 import { UsersService } from "src/users/users.service";
+import { TripsService } from "src/trips/trips.service";
+import { TripDocument } from "src/trips/trips.model";
 
 @Injectable()
 export class VehiclesService {
-  constructor(private readonly httpService: HttpService, private readonly usersService: UsersService, @InjectModel('vehicle') private readonly vehiclesModel: Model<VehicleDocument>) {}
+  constructor(
+    private readonly httpService: HttpService, private readonly usersService: UsersService, @InjectModel('vehicle') private readonly vehicleModel: Model<VehicleDocument>, @InjectModel('trip') private readonly tripModel: Model<TripDocument>) {}
 
-  create(req: any, createVehicleDto: CreateVehicleDto) {
-    const vehicle = this.vehiclesModel.create(createVehicleDto)
-    req.vehicles.push(vehicle)
-    req.save()
+  create(user: any, createVehicleDto: CreateVehicleDto) {
+    const vehicle = this.vehicleModel.create(createVehicleDto)
+    user.vehicles.push(vehicle)
+    user.save()
     return 'Added a new vehicle';
   }
 
-  findOne(vehicles: any, id: string) {
-    return vehicles.filter(vehicle => vehicle._id.toString() == id)
+  async findAll(vehicleIds: [mongoose.Schema.Types.ObjectId]) {
+    const vehicles = await this.vehicleModel.find({ '_id': {$in: vehicleIds}})
+    return vehicles;
   }
+  
+  async findOne(vehicleIds: [mongoose.Schema.Types.ObjectId], id: string) {
+    const vehicle = vehicleIds.filter((vehicle) => vehicle.toString() == id);
+    if (!vehicle) {
+      throw new NotFoundException("No car with the given arguments was found");
+    }
+    return await this.vehicleModel.findById(vehicle[0])
+  } 
 
-  update(vehicles: any, id: string, updateVehicleDto: UpdateVehicleDto) {
-    const vehicle = vehicles.filter(vehicle => vehicle._id.toString() == id)
+  update(vehicleIds: [mongoose.Schema.Types.ObjectId], id: string, updateVehicleDto: UpdateVehicleDto) {
+    const vehicle = vehicleIds.filter(vehicle => vehicle.toString() == id)
 
     if (!vehicle) throw new NotFoundException("No car with the given id was found");
 
-    this.vehiclesModel.findByIdAndUpdate(vehicle._id, updateVehicleDto)
+    this.vehicleModel.findByIdAndUpdate(vehicle, updateVehicleDto)
     return "Vehicle updated successfully"
   }
 
-  remove(vehicles: any, id: string) {
-    const vehicle = vehicles.filter(vehicle => vehicle._id.toString() == id)
+  async remove(user: any, id: string) {
+    const vehicle = user.vehicles.filter((Vehicle) => vehicle.toString() == id);
 
-    if (!vehicle) throw new NotFoundException("No car with the given id was found");
+    if (!vehicle) {
+      throw new NotFoundException("No vehicle with the given id was found");
+    }
 
-    this.vehiclesModel.findByIdAndRemove(id)
+    const trips = await this.tripModel.find({vehicle: vehicle[0]})    
+
+    if (trips) {
+      throw new NotFoundException("Can't delete a car that belong to a trip");
+    }
+
+    await this.vehicleModel.findByIdAndDelete(vehicle[0]);
+    user.vehicles.pull({ _id: vehicle[0]})
+    user.save()
+
     return 'Vehicle removed successfully'
   }
 
