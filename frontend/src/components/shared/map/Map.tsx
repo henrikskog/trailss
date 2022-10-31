@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './Map.scss';
+
 import Form from '../../user/trip/form/Form';
 import { Link } from "react-router-dom";
+import TripInfoContext from '../../../context/TripInfoContext';
 
 export default function Map() {
+  const tripInfo = useContext(TripInfoContext);
   const [count, setCount] = useState(0);
   return (
     <div className='container'>

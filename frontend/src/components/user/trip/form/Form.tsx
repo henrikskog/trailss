@@ -9,6 +9,7 @@ import { useDebouncedValue } from '@mantine/hooks';
 
 
 import axios from 'axios';
+import TripInfoContext from '../../../../context/TripInfoContext';
 
 
 export default function Form() {
@@ -81,104 +82,105 @@ export default function Form() {
     }
 
     return (
-        <div className='search-form'>
-            <h1>Your trip</h1>
-            <form className='form' onSubmit={form.onSubmit((values: any) => {
-                
-            })}>
-                <TextInput label="Origin:" placeholder="E.g. Times Square" {...form.getInputProps('origin')} />
-                <TextInput mt="sm" label="Destination:" placeholder="E.g. Vegas" {...form.getInputProps('destination')} />
-                <div className='double-line'>
-                    <div className='double-line-div margin'>
-                        <DatePicker placeholder="Pick date" label="Event date" withAsterisk {...form.getInputProps('date')} />
+            <div className='search-form'>
+                <h1>Your trip</h1>
+                <form className='form' onSubmit={form.onSubmit((values: any) => {
+                    
+                })}>
+                    <TextInput label="Origin:" placeholder="E.g. Times Square" {...form.getInputProps('origin')} />
+                    <TextInput mt="sm" label="Destination:" placeholder="E.g. Vegas" {...form.getInputProps('destination')} />
+                    <div className='double-line'>
+                        <div className='double-line-div margin'>
+                            <DatePicker placeholder="Pick date" label="Event date" withAsterisk {...form.getInputProps('date')} />
+
+                        </div>
+                        <div className='double-line-div'>
+                            <NumberInput
+                                mt="sm"
+                                label="Num. Passengers:"
+                                placeholder="1"
+                                min={1}
+                                max={10}
+                                {...form.getInputProps('passengers')}
+                            />
+                        </div>
 
                     </div>
-                    <div className='double-line-div'>
-                        <NumberInput
-                            mt="sm"
-                            label="Num. Passengers:"
-                            placeholder="1"
-                            min={1}
-                            max={10}
-                            {...form.getInputProps('passengers')}
-                        />
-                    </div>
+                    <NumberInput
+                        mt="sm"
+                        label="Car Year"
+                        placeholder="E.g. 1985"
+                        min={1960}
+                        max={CurrentYear}
+                        {...form.getInputProps('carYear')}
+                    />
+                    <div className='double-line'>
+                        <div className='double-line-div margin'>
+                            {makes.length !== 0 &&
+                            <Select
+                                mt="sm"
+                                label="Car Make:"
+                                searchable
+                                clearable
+                                data={makes}
+                                onSearchChange={onSearchMakeChange}
+                                searchValue={searchMakeValue}
+                            />
+                            }
+                            {makes.length === 0 &&
+                            <Select
+                                mt="sm"
+                                label="Car Make:"
+                                searchable
+                                clearable
+                                disabled
+                                data={makes}
+                                onSearchChange={onSearchMakeChange}
+                                searchValue={searchMakeValue}
+                            />
+                            }
 
-                </div>
-                <NumberInput
-                    mt="sm"
-                    label="Car Year"
-                    placeholder="E.g. 1985"
-                    min={1960}
-                    max={CurrentYear}
-                    {...form.getInputProps('carYear')}
-                />
-                <div className='double-line'>
-                    <div className='double-line-div margin'>
-                        {makes.length !== 0 &&
-                        <Select
-                            mt="sm"
-                            label="Car Make:"
-                            searchable
-                            clearable
-                            data={makes}
-                            onSearchChange={onSearchMakeChange}
-                            searchValue={searchMakeValue}
-                        />
-                        }
-                        {makes.length === 0 &&
-                        <Select
-                            mt="sm"
-                            label="Car Make:"
-                            searchable
-                            clearable
-                            disabled
-                            data={makes}
-                            onSearchChange={onSearchMakeChange}
-                            searchValue={searchMakeValue}
-                        />
-                        }
+                        </div>
+                        <div className='double-line-div'>
+                            {models.length !== 0 &&
+                            <Select
+                                mt="sm"
+                                label="Car model:"
+                                searchable
+                                clearable
+                                data={models}
+                                onSearchChange={onSearchModelChange}
+                                searchValue={searchModelValue}
+                            />}
+                            {models.length === 0 &&
+                            <Select
+                                mt="sm"
+                                label="Car model:"
+                                searchable
+                                clearable
+                                disabled
+                                data={models}
+                                onSearchChange={onSearchModelChange}
+                                searchValue={searchModelValue}
+                            />}
 
+                        </div>
                     </div>
-                    <div className='double-line-div'>
-                        {models.length !== 0 &&
-                        <Select
-                            mt="sm"
-                            label="Car model:"
-                            searchable
-                            clearable
-                            data={models}
-                            onSearchChange={onSearchModelChange}
-                            searchValue={searchModelValue}
-                        />}
-                        {models.length === 0 &&
-                        <Select
-                            mt="sm"
-                            label="Car model:"
-                            searchable
-                            clearable
-                            disabled
-                            data={models}
-                            onSearchChange={onSearchModelChange}
-                            searchValue={searchModelValue}
-                        />}
-
+                    <NumberInput
+                        mt="sm"
+                        label="Comsumption"
+                        placeholder="E.g. 5l/100km"
+                        min={0}
+                        max={100}
+                        {...form.getInputProps('consumption')}
+                    />
+                    <div className='submit'>
+                        <Button type="submit" mt="sm">
+                            Submit
+                        </Button>
                     </div>
-                </div>
-                <NumberInput
-                    mt="sm"
-                    label="Comsumption"
-                    placeholder="E.g. 5l/100km"
-                    min={0}
-                    max={100}
-                    {...form.getInputProps('consumption')}
-                />
-                <div className='submit'>
-                    <Button type="submit" mt="sm">
-                        Submit
-                    </Button>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
     );
 }
