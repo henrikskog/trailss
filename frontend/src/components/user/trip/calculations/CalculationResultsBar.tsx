@@ -1,22 +1,25 @@
 import React from 'react';
-import './CalculationsBar.scss';
+import './CalculationResultsBar.scss';
 
+interface Props {
+    distance: string;
+    emissions: number | undefined;
+}
 
-export default function Form() {
-
+const CalculationResultsBar: React.FC<Props> = ({distance, emissions}) => {
     return (
         <div className='calculations-bar'>
             <div className='upper'>
                 <div>
                     <p className='subheader'>Length</p>
                     <div>
-                        <p >374km</p>
+                        <p >{distance}km</p>
                     </div>
                 </div>
                 <div>
                     <p className='subheader'>Emissions</p>
                     <div>
-                        <p>2070g</p>
+                        <p>{emissions}g</p>
                     </div>
                 </div>
             </div>
@@ -26,3 +29,5 @@ export default function Form() {
         </div>
     );
 }
+
+export default CalculationResultsBar;
