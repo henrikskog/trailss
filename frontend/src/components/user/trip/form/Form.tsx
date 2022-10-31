@@ -9,12 +9,12 @@ import { useDebouncedValue } from '@mantine/hooks';
 
 
 import axios from 'axios';
-import TripInfoContext from '../../../../context/TripInfoContext';
 
+interface Props {
+    calculateRoute: (origin:string, destination: string) => void;
+}
 
-export default function Form() {
-    let tripInfo: any;
-
+const Form: React.FC<Props> = ({calculateRoute}) => {
     const baseURL = "https://www.fueleconomy.gov/";
 
 
@@ -86,7 +86,7 @@ export default function Form() {
             <div className='search-form'>
                 <h1>Your trip</h1>
                 <form className='form' onSubmit={form.onSubmit((values: any) => {
-                    tripInfo = values;
+                    calculateRoute(values.origin, values.destination)
                 })}>
                     <TextInput label="Origin:" placeholder="E.g. Times Square" {...form.getInputProps('origin')} />
                     <TextInput mt="sm" label="Destination:" placeholder="E.g. Vegas" {...form.getInputProps('destination')} />
@@ -185,3 +185,5 @@ export default function Form() {
         
     );
 }
+
+export default Form
