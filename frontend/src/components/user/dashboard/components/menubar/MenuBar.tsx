@@ -50,7 +50,7 @@ const mockdata = [
 ];
 
 export function MenuBar(props: any) {
-    const [active, setActive] = useState(2);
+    const [active, setActive] = useState(0);
     const {logout} = useAuth()
 
     const links = mockdata.map((link, index) => (

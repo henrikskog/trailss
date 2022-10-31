@@ -1,0 +1,18 @@
+@import "../../../../../general-variables.scss";
+
+.history-user{
+    margin: 5%;
+    display: flex;
+    flex-direction: column;
+    h1 {
+        text-align: left;
+        margin-bottom: 30px;
+        margin-left: 30px;
+    }
+
+    .history-user-table{
+        border-radius: 0.6rem;
+        box-shadow: $shadowSmall;
+        padding: 10px 20px;
+    }
+}
