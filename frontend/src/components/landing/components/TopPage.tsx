@@ -7,7 +7,7 @@ export default function TopPage() {
   return (
     <div className="toppage page">
        <div className='toppage-left'>
-        {/* <Form /> */}
+        <Form calculateRoute={() => {}}/>
        </div>
        <div className='toppage-right'>
         <Viewer />
