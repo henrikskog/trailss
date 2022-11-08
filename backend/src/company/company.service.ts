@@ -10,7 +10,7 @@ export class ComapnyService{
         @InjectModel("company") private readonly companyModel: Model<CompanyDocument>
     ) {}
 
-    async createUser(companyName: string, password: string, email: string) {
+    async createCompany(companyName: string, password: string, email: string) {
         return this.companyModel.create({
           companyName,
           password,
@@ -18,34 +18,34 @@ export class ComapnyService{
         });
       }
     
-      async getUserById(id: string): Promise<Company> {
-        const user = await this.companyModel.findById(id);
-        return user;
+      async getCompanyById(id: string): Promise<Company> {
+        const company = await this.companyModel.findById(id);
+        return company;
       }
     
-      async getUserByUserName(query: { companyName: string }): Promise<Company> {
+      async getCompanyByCompanyName(query: { companyName: string }): Promise<Company> {
         return this.companyModel.findOne(query);
       }
     
-      async getUserByEmail(query: { email: string }): Promise<Company> {
+      async getCompanyByEmail(query: { email: string }): Promise<Company> {
         return this.companyModel.findOne(query);
       }
     
-      getUserByToken(user: any) {
-        return { username: user.username, email: user.email };
+      getCompanyByToken(company: any) {
+        return { companyname: company.companyname, email: company.email };
       }
     
-      updateUserByToken(company: any, updateCompanyDto: UpdateCompanyDto) {
-        if (!company) throw new NotFoundException("User not found");
+      updateCompanyByToken(company: any, updateCompanyDto: UpdateCompanyDto) {
+        if (!company) throw new NotFoundException("Company not found");
     
         this.companyModel.findByIdAndUpdate(company._id, updateCompanyDto);
-        return "User updated successfully";
+        return "Company updated successfully";
       }
     
-      removeUserByToken(company: any) {
-        if (!company) throw new NotFoundException("User not found");
+      removeCompanyByToken(company: any) {
+        if (!company) throw new NotFoundException("Company not found");
     
         this.companyModel.findByIdAndRemove(company._id);
-        return "User removed successfully";
+        return "Company removed successfully";
       }
 }

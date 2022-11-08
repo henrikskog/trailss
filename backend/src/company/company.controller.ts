@@ -13,7 +13,7 @@ export class CompanyController {
     constructor(private readonly companyService: ComapnyService) { }
 
     @Post('/register')
-    async createcompany(
+    async createCompany(
         @Body() company: CreateCompanyDto
     ): Promise<CompanyEntity> {
         const saltOrRounds = 10;
@@ -21,7 +21,7 @@ export class CompanyController {
 
         // strip away password from returned company
         // TODO: look if this sends correct HTTP response on failure
-        await this.companyService.createcompany(
+        await this.companyService.createCompany(
             company.name,
             hashedPassword,
             company.email
@@ -33,21 +33,21 @@ export class CompanyController {
     @UseGuards(AuthGuard('jwt'))
     @Get()
     @ApiBearerAuth()
-    getcompanyByToken(@Request() req: any) {
-        return this.companyService.getcompanyByToken(req.company)
+    getCompanyByToken(@Request() req: any) {
+        return this.companyService.getCompanyByToken(req.company)
     }
 
     @UseGuards(AuthGuard('jwt'))
     @Patch()
     @ApiBearerAuth()
-    updatecompanyByToken(@Request() req: any, @Body() updatecompanyDto: UpdateCompanyDto) {
-        return this.companyService.updatecompanyByToken(req.company, updatecompanyDto)
+    updateCompanyByToken(@Request() req: any, @Body() updatecompanyDto: UpdateCompanyDto) {
+        return this.companyService.updateCompanyByToken(req.company, updatecompanyDto)
     }
 
     @UseGuards(AuthGuard('jwt'))
     @Delete()
     @ApiBearerAuth()
     remove(@Request() req: any) {
-    return this.companyService.removecompanyByToken(req.company);
+    return this.companyService.removeCompanyByToken(req.company);
   }
 }
