@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { Vehicle } from "src/vehicles/vehicles.schema";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User, UserDocument } from "./users.model";
 
