@@ -3,14 +3,12 @@ import { ApiBearerAuth, ApiOperation, ApiQuery, PickType } from "@nestjs/swagger
 import { UsersService } from './users.service';
 import { User } from './users.model';
 import * as bcrypt from 'bcrypt';
-import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
-@ApiTags('User')
 @Controller('user')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
