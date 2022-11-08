@@ -12,8 +12,6 @@ async function bootstrap() {
     .setDescription('API REST para el carbon tracker')
     .setVersion('1.0')
     .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
 
   app.enableCors()
   await app.listen(5000);
