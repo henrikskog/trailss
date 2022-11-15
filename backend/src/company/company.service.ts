@@ -23,7 +23,7 @@ export class ComapnyService{
         return company;
       }
     
-      async getCompanyByCompanyName(query: { companyName: string }): Promise<Company> {
+      async getCompanyByCompanyName(query: { companyname: string }): Promise<Company> {
         return this.companyModel.findOne(query);
       }
     

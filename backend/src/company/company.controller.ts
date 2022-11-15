@@ -1,17 +1,18 @@
 import { Controller, Post, Body, UseGuards, Get, Patch, Delete, Request } from "@nestjs/common";
-import * as bcrypt from 'bcrypt';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from "@nestjs/passport";
+import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
 import { ComapnyService } from "./company.service";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { CompanyEntity } from "./entities/company.entity";
+import * as bcrypt from 'bcrypt';
 
 @ApiTags('Company')
 @Controller('company')
 export class CompanyController {
     constructor(private readonly companyService: ComapnyService) { }
 
+    //fake register
     @Post('/register')
     async createCompany(
         @Body() company: CreateCompanyDto
@@ -19,8 +20,6 @@ export class CompanyController {
         const saltOrRounds = 10;
         const hashedPassword = await bcrypt.hash(company.password, saltOrRounds);
 
-        // strip away password from returned company
-        // TODO: look if this sends correct HTTP response on failure
         await this.companyService.createCompany(
             company.name,
             hashedPassword,
