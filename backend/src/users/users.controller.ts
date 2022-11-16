@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Get, Param, ParseIntPipe, Query, UseGuards, Request, Patch, Delete } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, PickType } from "@nestjs/swagger";
 import { UsersService } from './users.service';
-import { User } from './users.model';
+import { User } from './users.schema';
 import * as bcrypt from 'bcrypt';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';

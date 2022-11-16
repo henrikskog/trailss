@@ -27,6 +27,9 @@ export default function Navbar() {
           </>
         ) : (
           <>
+          <li>
+              <Link to="map">Map</Link>
+            </li>
             <li>
               <Link to="login">Sign in</Link>
             </li>

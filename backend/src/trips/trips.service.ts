@@ -1,29 +1,23 @@
 import {
-  BadRequestException,
-  forwardRef,
-  Inject,
-  Injectable,
-  NotFoundException,
-  Scope,
+  BadRequestException, Injectable,
+  NotFoundException
 } from "@nestjs/common";
-import { VehiclesService } from "../vehicles/vehicles.service";
-import mongoose, { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { TripDocument } from "./trips.model";
+import mongoose, { Model } from "mongoose";
 import {
   vehicleFuelSchema,
-  VehicleFuelType,
+  VehicleFuelType
 } from "../vehicles/entities/vehicle.entity";
+import { VehiclesService } from "../vehicles/vehicles.service";
 import { CreateTripDto } from "./dto/create-trip.dto";
 import { UpdateTripDto } from "./dto/update-trip.dto";
-import { REQUEST } from "@nestjs/core";
-import { from } from "rxjs";
+import { Trip, TripDocument } from "./trips.schema";
 
 @Injectable()
 export class TripsService {
   constructor(
     private readonly vehicleService: VehiclesService,
-    @InjectModel("trip") private readonly tripModel: Model<TripDocument>,
+    @InjectModel(Trip.name) private tripModel: Model<TripDocument>,
   ) {}
   /**
    * Fetch the fuel consumption for a given car

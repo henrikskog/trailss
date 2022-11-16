@@ -1,4 +1,4 @@
-import { Trip } from "src/trips/trips.model";
+import { Trip } from "src/trips/trips.schema";
 import { Vehicle } from "src/vehicles/vehicles.schema";
 
 export class UpdateUserDto {

@@ -5,7 +5,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 import { TripsController } from './trips.controller';
-import { TripDocument } from './trips.model';
+import { TripDocument } from './trips.schema';
 
 describe('TripsController', () => {
   let controller: TripsController;

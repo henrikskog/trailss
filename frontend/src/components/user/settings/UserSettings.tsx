@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import './UserSettings.scss';
 import { Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import useAuth from '../auth/AuthContext/AuthProvider';
 
 export default function UserSettings() {
+  const { user } = useAuth();
 
   const form = useForm({
-    initialValues: { username: '', password: '' },
+    initialValues: { username: user?.username, password: '' },
     validate: {
       username: (value: string) =>
         value.length > 3 && value.length < 50 ? null : 'Insert a valid username',
@@ -23,8 +25,8 @@ export default function UserSettings() {
           className="form"
           onSubmit={form.onSubmit((values: any) => console.log("abuela"))}
         >
-          <TextInput label="Change username:" placeholder="Username" {...form.getInputProps('username')} mb={'sm'} />
-          <TextInput label="Change password:" placeholder="Password" {...form.getInputProps('password')} />
+          <TextInput label="Change username:" {...form.getInputProps('username')} mb={'sm'} />
+          <TextInput label="Change password:" placeholder="*********" {...form.getInputProps('password')} />
         </form>
         {/* <div className='change-user'>
             <h4>Change username</h4>

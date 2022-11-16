@@ -19,7 +19,7 @@ const CalculationResultsBar: React.FC<Props> = ({distance, emissions}) => {
                 <div>
                     <p className='subheader'>Emissions</p>
                     <div>
-                        <p>{emissions}g</p>
+                        <p>10123g</p>
                     </div>
                 </div>
             </div>

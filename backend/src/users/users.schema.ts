@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Trip } from 'src/trips/trips.schema';
 import { Vehicle } from 'src/vehicles/vehicles.schema';
-import { Trip } from 'src/trips/trips.model';
 
 
-export type UserDocument = User & Document;
+export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
@@ -17,10 +17,10 @@ export class User {
   @Prop()
   email: string;
 
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Vehicle', default: []})
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' }] })
   vehicles: Vehicle[]
 
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Trip', default: []})
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Trip' }] })
   trips: Trip[]
 }
 
