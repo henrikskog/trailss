@@ -29,12 +29,14 @@ function AppRouter(props: any) {
             <Routes>
                 <Route path='*' element={<NotFound />} />
                 <Route path="/" element={<Landing />} />
-                <Route path="/map" element={<MapsExample />} />
+                <Route path="/map" element={<Map />} />
                 <Route path="/mapTemp" element={<Map />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/dashboard" element={
+                    <RequireAuth>
                         <Dashboard />
+                    </ RequireAuth>
                 } />
                 <Route path='/user/settings' element={<Map />} />
             </Routes>

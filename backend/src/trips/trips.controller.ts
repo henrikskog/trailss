@@ -6,6 +6,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateTripDto } from "./dto/create-trip.dto";
 import { UpdateTripDto } from "./dto/update-trip.dto";
 import { AuthGuard } from "@nestjs/passport";
+import { JwtStrategy } from "src/auth/jwt.strategy";
+import { JwtAuthGuard } from "src/auth/jwt-auth-guard.guard";
+
 
 @ApiTags('Trips')
 @Controller("trips")
@@ -44,35 +47,35 @@ export class TripsController {
     );
   }
 
-  @UseGuards(AuthGuard('jwt'))  
+  @UseGuards(JwtAuthGuard)  
   @Post()
   @ApiBearerAuth()
   create(@Request() req: any, @Body() createTripDto: CreateTripDto) {
     return this.tripsService.create(req.user, createTripDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))  
+  @UseGuards(JwtAuthGuard)  
   @Get()
   @ApiBearerAuth()
   findAll(@Request() req: any) {
     return this.tripsService.findAll(req.user.trips)
   }
   
-  @UseGuards(AuthGuard('jwt'))  
+  @UseGuards(JwtAuthGuard)  
   @Get(":id")
   @ApiBearerAuth()
   findOne(@Request() req: any, @Param("id") id: string) {
     return this.tripsService.findOne(req.user.trips, id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @Patch(":id")
   @ApiBearerAuth()
   update(@Request() req: any, @Param("id") id: string, @Body() updateTripDto: UpdateTripDto) {
     return this.tripsService.update(req.user.trips, id, updateTripDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @Delete(":id")
   @ApiBearerAuth()
   remove(@Request() req: any, @Param("id") id: string) {

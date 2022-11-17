@@ -13,13 +13,14 @@ import {
 } from '@react-google-maps/api'
 import { useRef, useState } from 'react'
 import CalculationResultsBar from '../../user/trip/calculations/CalculationResultsBar';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 
 const center = { lat: 48.8584, lng: 2.2945 }
 
-export default function Map() {
-  const [destination, setDestination] = useState<string>("")
-  const [origin, setOrigin] = useState<string>("")
+const Map: React.FC = () => {
+  const [destination, setDestination] = useLocalStorage<string>("destination","")
+  const [origin, setOrigin] = useLocalStorage<string>("origin", "")
 
   const [map, setMap] = useState<google.maps.Map | null>(/** @type google.maps.Map */(null))
   const [directionsResponse, setDirectionsResponse] = useState(null)
@@ -53,7 +54,11 @@ export default function Map() {
     //@ts-ignore
     setDirectionsResponse(results)
     //@ts-ignore
-    const distance = results.routes[0].legs[0].distance.text
+    const rawDistance = results.routes[0].legs[0].distance.text
+
+    const distance = rawDistance.slice(0, rawDistance.length-3)
+
+
 
     setDistance(distance)
 
@@ -66,11 +71,11 @@ export default function Map() {
       fetchBody = ...
     }
  */
-    const data = await (await fetch("http://localhost:5000/trip/calculate", {
-      body: JSON.stringify(fetchBody)
-    })).json()
+    // const data = await (await fetch(`http://localhost:5000/trips/calculate?distance=${distance}&fuel-type=diesel&car-make=${carMake}&car-model=${carModel}&car-model-year=${carYear}`)).json()
+    const data = await (await fetch("http://localhost:5000/trips/calculate?distance=100&fuel-type=diesel&car-make=Aston%20Martin&car-model=DB-7%20Vantage%20Coupe&car-model-year=2000")).json()
 
     setEmissions(data.emissions)
+    setShowResults(true)
 
     // //@ts-ignore
     // setDuration(results.routes[0].legs[0].duration.text)
@@ -120,3 +125,5 @@ export default function Map() {
 
   );
 }
+
+export default Map

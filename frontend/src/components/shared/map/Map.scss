@@ -23,4 +23,11 @@
         min-width: 400px;
         align-items: center;
     }
+    .overlay-calculations {
+        position: absolute;
+        bottom: 0;
+        right: 5%;
+        width: 500px;
+        z-index: 30;
+    }
 }

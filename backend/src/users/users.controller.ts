@@ -1,55 +1,61 @@
-import { Body, Controller, Post, Get, Param, ParseIntPipe, Query, UseGuards, Request, Patch, Delete } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags, ApiOperation, ApiQuery, PickType } from "@nestjs/swagger";
-import { UsersService } from './users.service';
-import { User } from './users.model';
-import * as bcrypt from 'bcrypt';
-import { AuthGuard } from '@nestjs/passport';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
+import {
+    Body,
+    Controller, Delete, Get, Patch, Post, UseGuards
+} from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import {
+    ApiBearerAuth, ApiTags
+} from "@nestjs/swagger";
+import * as bcrypt from "bcrypt";
+import { JwtAuthGuard } from "src/auth/jwt-auth-guard.guard";
+import { JwtStrategy } from "src/auth/jwt.strategy";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { AuthedUser as AuthedUser } from "./user.decorator";
+import { User } from "./users.schema";
+import { UsersService } from "./users.service";
 
-@ApiTags('User')
-@Controller('user')
+@ApiTags("User")
+@Controller("user")
 export class UsersController {
-    constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
-    @Post('/register')
-    async createUser(
-        @Body() user: CreateUserDto
-    ): Promise<UserEntity> {
-        const saltOrRounds = 10;
-        const hashedPassword = await bcrypt.hash(user.password, saltOrRounds);
+  @Post("/register")
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(createUserDto.password, saltOrRounds);
 
-        // strip away password from returned user
-        // TODO: look if this sends correct HTTP response on failure
-        await this.usersService.createUser(
-            user.username,
-            hashedPassword,
-            user.email
-        );
+    // strip away password from returned user
+    // TODO: look if this sends correct HTTP response on failure
+    const user = await this.usersService.createUser(
+      createUserDto.username,
+      hashedPassword,
+      createUserDto.email
+    );
 
-        return {username: user.username, email: user.email};
-    }
+    return user;
+  }
 
-    @UseGuards(AuthGuard('jwt'))
-    @Get()
-    @ApiBearerAuth()
-    getUserByToken(@Request() req: any) {
-        return this.usersService.getUserByToken(req.user)
-    }
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  getUserByToken(@AuthedUser() user) {
+    // TODO: investigate how to return user without password
+    return user;
+  }
 
-    @UseGuards(AuthGuard('jwt'))
-    @Patch()
-    @ApiBearerAuth()
-    updateUserByToken(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
-        return this.usersService.updateUserByToken(req.user, updateUserDto)
-    }
+  @UseGuards(JwtAuthGuard)
+  @Patch()
+  updateUserByToken(
+    @AuthedUser() user: User,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
+    return this.usersService.updateUserByToken(user, updateUserDto);
+  }
 
-    @UseGuards(JwtStrategy)
-    @Delete()
-    @ApiBearerAuth()
-    remove(@Request() req: any) {
-    return this.usersService.removeUserByToken(req.user);
+  @UseGuards(JwtStrategy)
+  @Delete()
+  @ApiBearerAuth()
+  remove(@AuthedUser() user) {
+    return this.usersService.removeUserByToken(user);
   }
 }
