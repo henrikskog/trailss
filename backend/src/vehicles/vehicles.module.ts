@@ -9,8 +9,8 @@ import { VehiclesService } from "./vehicles.service";
 
 @Module({
   imports: [
-    UsersModule,
     HttpModule,
+    forwardRef(() => UsersModule),
     forwardRef(() => TripsModule),
     MongooseModule.forFeature([
       { name: Vehicle.name, schema: VehicleSchema },

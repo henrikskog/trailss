@@ -14,7 +14,6 @@ import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
 import { ApiAcceptedResponse, ApiBearerAuth, ApiBody, ApiExtraModels, ApiTags, getSchemaPath } from "@nestjs/swagger";
 import { JwtStrategy } from '../auth/jwt.strategy';
-import { Vehicle } from "./entities/vehicle.entity";
 import { AuthGuard } from "@nestjs/passport";
 
 @ApiTags("Vehicles")

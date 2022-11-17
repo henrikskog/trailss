@@ -1,10 +1,7 @@
-import { Trip } from "src/trips/trips.schema";
-import { Vehicle } from "src/vehicles/vehicles.schema";
+import { VehicleEntity } from "src/vehicles/entities/vehicle.entity";
 
 export class UpdateUserDto {
     username: string;
     password: string;
     email: string;
-    vehicles: [Vehicle]
-    trips: [Trip]
 }

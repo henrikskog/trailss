@@ -5,7 +5,7 @@ export const vehicleFuelSchema = z.literal("diesel").or(z.literal("petrol")).or(
 export type VehicleFuelType = z.infer<typeof vehicleFuelSchema>;
 
 
-export class Vehicle {
+export class VehicleEntity {
     @ApiProperty()
     id: number
 
