@@ -3,14 +3,12 @@ import mongoose, { HydratedDocument, SchemaTypes, Types } from 'mongoose';
 import { Trip } from 'src/trips/trips.schema';
 import { Vehicle } from 'src/vehicles/vehicles.schema';
 
+export type UserFromDB = User & { _id: string };
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
-  @Prop({ type: SchemaTypes.ObjectId })
-  _id: Types.ObjectId
-
   @Prop()
   username: string;
 

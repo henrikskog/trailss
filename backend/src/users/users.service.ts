@@ -2,8 +2,10 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { User, UserDocument } from "./users.schema";
+import { User, UserDocument, UserFromDB } from "./users.schema";
 import {hash} from 'bcrypt'
+import { CreateUserDto } from "./dto/create-user.dto";
+
 
 @Injectable()
 export class UsersService {
@@ -19,17 +21,14 @@ export class UsersService {
     return hashedPassword
   }
 
-  async createUser(username: string, password: string, email: string) {
-    return this.userModel.create({
-      username,
-      password,
-      email
-    });
+  async createUser(createUserDto: CreateUserDto) {
+    createUserDto.password = await this.hashPassword(createUserDto.password)
+
+    return this.userModel.create(createUserDto);
   }
 
   async getUserById(id: string): Promise<User> {
-    const user = await this.userModel.findById(id);
-    return user;
+    return this.userModel.findById(id);
   }
 
   async getUserByUserName(query: { username: string }): Promise<User> {
@@ -40,20 +39,15 @@ export class UsersService {
     return this.userModel.findOne(query);
   }
 
-  getUserByToken(user: any) {
-    return { username: user.username, email: user.email };
-  }
-
-  async updateUserByToken(user: User, updateUserDto: UpdateUserDto) {
+  async updateUserByToken(user: UserFromDB, updateUserDto: UpdateUserDto) {
     updateUserDto.password = await this.hashPassword(updateUserDto.password)
 
     return this.userModel.findByIdAndUpdate(user._id, updateUserDto);
   }
 
-  removeUserByToken(user: any) {
+  deleteUser(user: UserFromDB) {
     if (!user) throw new NotFoundException("User not found");
 
-    this.userModel.findByIdAndRemove(user._id);
-    return "User removed successfully";
+    return this.userModel.findByIdAndRemove(user._id);
   }
 }
