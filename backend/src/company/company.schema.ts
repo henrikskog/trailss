@@ -1,6 +1,6 @@
-import { Trip } from "src/trips/trips.model";
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
+import { Trip } from 'src/trips/trips.schema';
 
 export type CompanyDocument = Company & Document;
 

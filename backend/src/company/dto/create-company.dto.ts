@@ -1,4 +1,4 @@
-import { Trip } from "src/trips/trips.model";
+import { Trip } from "src/trips/trips.schema";
 
 export class CreateCompanyDto {
     name: string;
@@ -8,5 +8,5 @@ export class CreateCompanyDto {
     subscription_start: Date;
     subscription_type: string;
     subscription: number;
-    company_trips: [Trip]
+    company_trips: Trip[]
 }

@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards, Get, Patch, Delete, Request } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
-import { ComapnyService } from "./company.service";
+import { CompanyService } from "./company.service";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { CompanyEntity } from "./entities/company.entity";
@@ -10,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 @ApiTags('Company')
 @Controller('company')
 export class CompanyController {
-    constructor(private readonly companyService: ComapnyService) { }
+    constructor(private readonly companyService: CompanyService) { }
 
     //fake register
     @Post('/register')

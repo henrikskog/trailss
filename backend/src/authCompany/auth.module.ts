@@ -7,8 +7,8 @@ import { MongooseModule } from "@nestjs/mongoose"
 import { LocalStrategy } from './local.auth';
 import { JwtStrategy } from "./jwt.strategy";
 import { CompanyModule } from "src/company/company.module";
-import { CompanySchema } from "src/company/company.model";
-import { ComapnyService } from "src/company/company.service";
+import { CompanySchema } from "src/company/company.schema";
+import { CompanyService } from "src/company/company.service";
 
 
 @Module({
@@ -16,7 +16,7 @@ import { ComapnyService } from "src/company/company.service";
     secret: "" + process.env.SECRET_KEY,
     signOptions: { expiresIn: '3600s' },
   }), MongooseModule.forFeature([{ name: "company", schema: CompanySchema }])],
-  providers: [AuthService, ComapnyService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, CompanyService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthCompanyModule { }

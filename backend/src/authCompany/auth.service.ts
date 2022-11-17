@@ -2,12 +2,12 @@ import { Injectable, NotAcceptableException } from "@nestjs/common";
 import { UsersService } from "../users/users.service";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
-import { ComapnyService } from "src/company/company.service";
+import { CompanyService } from "src/company/company.service";
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly companyService: ComapnyService,
+    private readonly companyService: CompanyService,
     private jwtService: JwtService
   ) {}
 
