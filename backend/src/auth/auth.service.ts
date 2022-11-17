@@ -2,7 +2,7 @@ import { Injectable, NotAcceptableException } from "@nestjs/common";
 import { UsersService } from "../users/users.service";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
-import { UserEntity } from "src/users/entities/user.entity";
+import { User } from "src/users/users.schema";
 
 @Injectable()
 export class AuthService {
@@ -12,7 +12,7 @@ export class AuthService {
   ) {}
 
 
-  async validateUser(firstparam: string, password: string): Promise<UserEntity> {
+  async validateUser(firstparam: string, password: string): Promise<User> {
     // Try to find user by username
     let user = await this.usersService.getUserByUserName({ username:  firstparam});    
 

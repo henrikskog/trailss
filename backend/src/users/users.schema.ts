@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument, SchemaTypes, Types } from 'mongoose';
 import { Trip } from 'src/trips/trips.schema';
 import { Vehicle } from 'src/vehicles/vehicles.schema';
 
@@ -8,6 +8,9 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
+  @Prop({ type: SchemaTypes.ObjectId })
+  _id: Types.ObjectId
+
   @Prop()
   username: string;
 

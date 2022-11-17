@@ -6,10 +6,10 @@ import {
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 import { lastValueFrom } from "rxjs";
-import { Trip, TripDocument, TripSchema } from "src/trips/trips.schema";
+import { Trip, TripDocument } from "src/trips/trips.schema";
+import { VehicleFuelType } from "src/trips/trips.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
-import { VehicleFuelType } from "./entities/vehicle.entity";
 import { Vehicle, VehicleDocument } from "./vehicles.schema";
 
 @Injectable()

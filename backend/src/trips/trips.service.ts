@@ -4,14 +4,14 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
-import {
-  vehicleFuelSchema,
-  VehicleFuelType
-} from "../vehicles/entities/vehicle.entity";
+import { z } from "zod";
 import { VehiclesService } from "../vehicles/vehicles.service";
 import { CreateTripDto } from "./dto/create-trip.dto";
 import { UpdateTripDto } from "./dto/update-trip.dto";
 import { Trip, TripDocument } from "./trips.schema";
+
+export const vehicleFuelSchema = z.literal("diesel").or(z.literal("petrol")).or(z.literal("LPG"));
+export type VehicleFuelType = z.infer<typeof vehicleFuelSchema>;
 
 @Injectable()
 export class TripsService {

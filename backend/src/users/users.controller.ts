@@ -1,32 +1,19 @@
 import {
-  Body,
-  Controller,
-  Post,
-  Get,
-  Param,
-  ParseIntPipe,
-  Query,
-  UseGuards,
-  Request,
-  Patch,
-  Delete,
+    Body,
+    Controller, Delete, Get, Patch, Post, UseGuards
 } from "@nestjs/common";
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiQuery,
-  PickType,
-} from "@nestjs/swagger";
-import { UsersService } from "./users.service";
-import { User as UserSchema } from "./users.schema";
-import * as bcrypt from "bcrypt";
-import { ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
+import {
+    ApiBearerAuth, ApiTags
+} from "@nestjs/swagger";
+import * as bcrypt from "bcrypt";
+import { JwtAuthGuard } from "src/auth/jwt-auth-guard.guard";
 import { JwtStrategy } from "src/auth/jwt.strategy";
-import { UpdateUserDto } from "./dto/update-user.dto";
-import { UserEntity } from "./entities/user.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { User } from "./user.decorator";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { AuthedUser as AuthedUser } from "./user.decorator";
+import { User } from "./users.schema";
+import { UsersService } from "./users.service";
 
 @ApiTags("User")
 @Controller("user")
@@ -34,31 +21,32 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post("/register")
-  async createUser(@Body() user: CreateUserDto): Promise<UserEntity> {
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     const saltOrRounds = 10;
-    const hashedPassword = await bcrypt.hash(user.password, saltOrRounds);
+    const hashedPassword = await bcrypt.hash(createUserDto.password, saltOrRounds);
 
     // strip away password from returned user
     // TODO: look if this sends correct HTTP response on failure
-    await this.usersService.createUser(
-      user.username,
+    const user = await this.usersService.createUser(
+      createUserDto.username,
       hashedPassword,
-      user.email
+      createUserDto.email
     );
 
-    return { username: user.username, email: user.email };
+    return user;
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(JwtAuthGuard)
   @Get()
-  @ApiBearerAuth()
-  getUserByToken(@User() user: UserEntity) {
-    return this.usersService.getUserByToken(user);
+  getUserByToken(@AuthedUser() user) {
+    // TODO: investigate how to return user without password
+    return user;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch()
   updateUserByToken(
-    @User() user: UserEntity,
+    @AuthedUser() user: User,
     @Body() updateUserDto: UpdateUserDto
   ) {
     return this.usersService.updateUserByToken(user, updateUserDto);
@@ -67,7 +55,7 @@ export class UsersController {
   @UseGuards(JwtStrategy)
   @Delete()
   @ApiBearerAuth()
-  remove(@User() user: UserEntity) {
+  remove(@AuthedUser() user) {
     return this.usersService.removeUserByToken(user);
   }
 }

@@ -3,12 +3,21 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User, UserDocument } from "./users.schema";
+import {hash} from 'bcrypt'
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>
   ) {}
+
+
+  // Hash password with bcrypt
+  async hashPassword(password: string) {
+    const saltOrRounds = 10;
+    const hashedPassword = await hash(password, saltOrRounds);
+    return hashedPassword
+  }
 
   async createUser(username: string, password: string, email: string) {
     return this.userModel.create({
@@ -35,11 +44,10 @@ export class UsersService {
     return { username: user.username, email: user.email };
   }
 
-  updateUserByToken(user: any, updateUserDto: UpdateUserDto) {
-    if (!user) throw new NotFoundException("User not found");
+  async updateUserByToken(user: User, updateUserDto: UpdateUserDto) {
+    updateUserDto.password = await this.hashPassword(updateUserDto.password)
 
-    this.userModel.findByIdAndUpdate(user._id, updateUserDto);
-    return "User updated successfully";
+    return this.userModel.findByIdAndUpdate(user._id, updateUserDto);
   }
 
   removeUserByToken(user: any) {
