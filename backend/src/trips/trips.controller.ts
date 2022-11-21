@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, Request } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
-import { VehiclesService } from "src/vehicles/vehicles.service";
 import { TripsService, VehicleFuelType } from "./trips.service";
 import { ApiTags } from '@nestjs/swagger';
 import { CreateTripDto } from "./dto/create-trip.dto";
@@ -8,6 +7,7 @@ import { UpdateTripDto } from "./dto/update-trip.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { JwtStrategy } from "src/auth/jwt.strategy";
 import { JwtAuthGuard } from "src/auth/jwt-auth-guard.guard";
+
 
 @ApiTags('Trips')
 @Controller("trips")
