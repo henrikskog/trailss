@@ -8,6 +8,10 @@ import {
     IconUser,
     IconLogout,
     IconSwitchHorizontal,
+    IconCar,
+    IconPlaneDeparture,
+    IconCertificate,
+    IconChartBar,
 } from '@tabler/icons';
 import { Link } from 'react-router-dom';
 import useAuth from '../../../auth/AuthContext/AuthProvider';
@@ -43,17 +47,27 @@ interface NavbarLinkProps {
 }
 
 
-const mockdata = [
+const mockdataUser = [
     { icon: IconHome2, label: 'Map' },
     { icon: IconCalendarStats, label: 'History' },
     { icon: IconUser, label: 'Account' },
 ];
 
+const mockdataCompany = [
+    { icon: IconHome2, label: 'Home' },
+    { icon: IconCar, label: 'Fleets' },
+    { icon: IconPlaneDeparture, label: 'Business trips' },
+    { icon: IconCertificate, label: 'Certificates' },
+    { icon: IconChartBar, label: 'Statistics' },
+    { icon: IconUser, label: 'Account' },
+];
+
+// const data = "isCompanyDashboard" in props ? mockdataCompany : mockdataUser;
 export function MenuBar(props: any) {
     const [active, setActive] = useState(0);
     const {logout} = useAuth()
-
-    const links = mockdata.map((link, index) => (
+    const data = "isCompanyDashboard" in props ? mockdataCompany : mockdataUser;
+    const links = data.map((link, index) => (
         <NavbarLink
             {...link}
             key={link.label}
@@ -64,6 +78,8 @@ export function MenuBar(props: any) {
             }}
         />
     ));
+
+    
 
     function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
         const { classes, cx } = useStyles();

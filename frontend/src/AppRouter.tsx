@@ -10,6 +10,7 @@ import Login from './components/user/auth/login/Login';
 import Register from './components/user/auth/register/Register';
 import MapsExample from './components/shared/map/MapsExample'
 import { ReactNode } from 'react';
+import DashboardCompany from './components/company/DashboardCompany';
 
 
 function AppRouter(props: any) {
@@ -34,9 +35,14 @@ function AppRouter(props: any) {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/dashboard" element={
-                    <RequireAuth>
+                    //<RequireAuth>
                         <Dashboard />
-                    </ RequireAuth>
+                    //</ RequireAuth>
+                } />
+                <Route path="/dashboardCompany" element={
+                    //<RequireAuth>
+                        <DashboardCompany />
+                    //</ RequireAuth>
                 } />
                 <Route path='/user/settings' element={<Map />} />
             </Routes>
