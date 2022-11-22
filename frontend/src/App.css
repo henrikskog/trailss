@@ -1,6 +1,14 @@
 .App {
   text-align: center;
+  min-height: 100vh;
+
 } 
 .main{
   padding-top: 51px;
+  height: auto;
+  min-height: 100vh;
+  
+}
+.main-logged{
+  height: 100vh;  
 }

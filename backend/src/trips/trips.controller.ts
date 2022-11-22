@@ -1,9 +1,13 @@
-import { Controller, Get, ParseIntPipe, Query } from "@nestjs/common";
-import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
-import { VehicleFuelType } from "src/vehicles/entities/vehicle.entity";
-import { VehiclesService } from "src/vehicles/vehicles.service";
-import { TripsService } from "./trips.service";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, Request } from "@nestjs/common";
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { TripsService, VehicleFuelType } from "./trips.service";
 import { ApiTags } from '@nestjs/swagger';
+import { CreateTripDto } from "./dto/create-trip.dto";
+import { UpdateTripDto } from "./dto/update-trip.dto";
+import { AuthGuard } from "@nestjs/passport";
+import { JwtStrategy } from "src/auth/jwt.strategy";
+import { JwtAuthGuard } from "src/auth/jwt-auth-guard.guard";
+
 
 @ApiTags('Trips')
 @Controller("trips")
@@ -40,5 +44,40 @@ export class TripsController {
       year,
       consumptions
     );
+  }
+
+  @UseGuards(JwtAuthGuard)  
+  @Post()
+  @ApiBearerAuth()
+  create(@Request() req: any, @Body() createTripDto: CreateTripDto) {
+    return this.tripsService.create(req.user, createTripDto);
+  }
+
+  @UseGuards(JwtAuthGuard)  
+  @Get()
+  @ApiBearerAuth()
+  findAll(@Request() req: any) {
+    return this.tripsService.findAll(req.user)
+  }
+  
+  @UseGuards(JwtAuthGuard)  
+  @Get(":id")
+  @ApiBearerAuth()
+  findOne(@Request() req: any, @Param("id") id: string) {
+    return this.tripsService.findOne(req.user, id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(":id")
+  @ApiBearerAuth()
+  update(@Request() req: any, @Param("id") id: string, @Body() updateTripDto: UpdateTripDto) {
+    return this.tripsService.update(req.user.trips, id, updateTripDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(":id")
+  @ApiBearerAuth()
+  remove(@Request() req: any, @Param("id") id: string) {
+    return this.tripsService.remove(req.user, id);
   }
 }

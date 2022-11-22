@@ -1,45 +1,71 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable, NotFoundException, VERSION_NEUTRAL, UnauthorizedException } from "@nestjs/common";
-import { Model } from "mongoose";
+import {
+  BadRequestException, Injectable,
+  NotFoundException
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import mongoose, { Model } from "mongoose";
+import { lastValueFrom } from "rxjs";
+import { Trip, TripDocument } from "src/trips/trips.schema";
+import { VehicleFuelType } from "src/trips/trips.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
-import { VehicleDocument } from "./vehicles.schema";
-import { Vehicle, VehicleFuelType } from "./entities/vehicle.entity";
-import { lastValueFrom } from "rxjs";
-import { UsersService } from "src/users/users.service";
+import { Vehicle, VehicleDocument } from "./vehicles.schema";
 
 @Injectable()
 export class VehiclesService {
-  constructor(private readonly httpService: HttpService, private readonly usersService: UsersService, @InjectModel('vehicle') private readonly vehiclesModel: Model<VehicleDocument>) {}
+  constructor(
+    private readonly httpService: HttpService,
+    @InjectModel(Vehicle.name) private readonly vehicleModel: Model<VehicleDocument>,
+    @InjectModel(Trip.name) private readonly tripModel: Model<TripDocument>
+  ) {}
 
-  create(req: any, createVehicleDto: CreateVehicleDto) {
-    const vehicle = this.vehiclesModel.create(createVehicleDto)
-    req.vehicles.push(vehicle)
-    req.save()
-    return 'Added a new vehicle';
+  async create(user: any, createVehicleDto: CreateVehicleDto) {
+    const vehicle = await this.vehicleModel.create(createVehicleDto);
+    user.vehicles.push(vehicle);
+    user.save();
+    return "Added a new vehicle";
   }
 
-  findOne(vehicles: any, id: string) {
-    return vehicles.filter(vehicle => vehicle._id.toString() == id)
+  async findAll(user: any) {
+    const vehicles = await user.populate("vehicles").then(p => p.vehicles)
+    return vehicles;
   }
 
-  update(vehicles: any, id: string, updateVehicleDto: UpdateVehicleDto) {
-    const vehicle = vehicles.filter(vehicle => vehicle._id.toString() == id)
-
-    if (!vehicle) throw new NotFoundException("No car with the given id was found");
-
-    this.vehiclesModel.findByIdAndUpdate(vehicle._id, updateVehicleDto)
-    return "Vehicle updated successfully"
+  async findOne(user: any, id: string) {
+    const vehicle = await user.populate("vehicles", null, {_id : id}).then(p => p.vehicles)
+    console.log(vehicle)
+    if (!vehicle) {
+      throw new NotFoundException("No car with the given arguments was found");
+    }
+    return vehicle[0];
   }
 
-  remove(vehicles: any, id: string) {
-    const vehicle = vehicles.filter(vehicle => vehicle._id.toString() == id)
+  async update(
+    vehicleIds: [mongoose.Schema.Types.ObjectId],
+    id: string,
+    updateVehicleDto: UpdateVehicleDto
+  ) {
+    const vehicle = vehicleIds.filter((vehicle) => vehicle.toString() == id);
 
-    if (!vehicle) throw new NotFoundException("No car with the given id was found");
+    if (!vehicle)
+      throw new NotFoundException("No car with the given id was found");
 
-    this.vehiclesModel.findByIdAndRemove(id)
-    return 'Vehicle removed successfully'
+    await this.vehicleModel.findByIdAndUpdate(vehicle[0], updateVehicleDto);
+    return "Vehicle updated successfully";
+  }
+
+  async remove(user: any, id: string) {
+    const vehicle = user.vehicles.filter((vehicle) => vehicle.toString() == id);
+
+    if (!vehicle) {
+      throw new NotFoundException("No vehicle with the given id was found");
+    }
+    user.vehicles.pull({ _id: vehicle[0] });
+    user.save();
+    await this.vehicleModel.findByIdAndDelete(vehicle[0]);    
+
+    return "Vehicle removed successfully";
   }
 
   /**
@@ -75,7 +101,9 @@ export class VehiclesService {
     const emissions = car.data?.comb08;
 
     if (!emissions) {
-      throw new NotFoundException("There was an error handling data from the CAR API");
+      throw new NotFoundException(
+        "There was an error handling data from the CAR API"
+      );
     }
 
     return Number(emissions);
@@ -88,7 +116,7 @@ export class VehiclesService {
    * @returns Grams of CO2 emitted per km
    */
   getEmissions(fuelType: VehicleFuelType, consumption: number) {
- //         Diesel:
+    //         Diesel:
     //         1 liter of diesel weighs 835 grammes. Diesel consist for 86,2% of carbon, or 720 grammes of carbon per liter diesel. In order to combust this carbon to CO2, 1920 grammes of oxygen is needed. The sum is then 720 + 1920 = 2640 grammes of CO2/liter diesel.
     //         An average consumption of 5 liters/100 km then corresponds to 5 l x 2640 g/l / 100 (per km) = 132 g CO2/km.
     if (fuelType === "diesel") return (consumption * 2640) / 100;

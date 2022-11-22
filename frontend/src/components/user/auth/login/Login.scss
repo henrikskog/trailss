@@ -1,0 +1,35 @@
+@import "src/general-variables.scss";
+
+
+.submitButton {
+    width: 100%;
+    background-color: $principal-color;
+}
+
+.submitButton:hover {
+    background: $principal-color;
+}
+
+#header {
+    text-align: center;
+    margin: 3.5%;
+    text-decoration: solid;
+    color: $dark;
+    margin-bottom: 40px;
+
+}
+
+.container {
+    height: 80vh;
+    display: grid;
+    place-items: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 0.6rem;
+    background-color: white;
+    min-width: 400px;
+}

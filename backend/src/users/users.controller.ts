@@ -1,55 +1,52 @@
-import { Body, Controller, Post, Get, Param, ParseIntPipe, Query, UseGuards, Request, Patch, Delete } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery } from "@nestjs/swagger";
-import { UsersService } from './users.service';
-import { User } from './users.model';
-import * as bcrypt from 'bcrypt';
-import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+    Body,
+    Controller, Delete, Get, Patch, Post, UseGuards
+} from "@nestjs/common";
+import {
+    ApiBearerAuth, ApiTags
+} from "@nestjs/swagger";
+import { JwtAuthGuard } from "src/auth/jwt-auth-guard.guard";
+import { JwtStrategy } from "src/auth/jwt.strategy";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { AuthedUser as AuthedUser } from "./user.decorator";
+import { User, UserFromDB } from "./users.schema";
+import { UsersService } from "./users.service";
 
-@ApiTags('User')
-@Controller('user')
+@ApiTags("User")
+@Controller("user")
 export class UsersController {
-    constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
-    @Post('/signup')
-    @ApiQuery({ name: "username", required: true, description: "E.g. manolete97" })
-    @ApiQuery({ name: "password", required: true, description: "E.g. asD2349pyN" })
-    @ApiQuery({ name: "email", required: true, description: "E.g. manolo@gmail.com" })
-    async createUser(
-        @Query("username") username: string,
-        @Query("password") password: string,
-        @Query("email") email: string
-    ): Promise<User> {
-        const saltOrRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltOrRounds);
-        const result = await this.usersService.createUser(
-            username,
-            hashedPassword,
-            email
-        );
-        return result;
-    }
+  @Post("/register")
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+    // strip away password from returned user
+    // TODO: look if this sends correct HTTP response on failure
+    const user = await this.usersService.createUser(createUserDto);
 
-    @UseGuards(AuthGuard('jwt'))
-    @Get()
-    @ApiBearerAuth()
-    getUserByToken(@Request() req: any) {
-        return this.usersService.getUserByToken(req.user)
-    }
+    return user;
+  }
 
-    @UseGuards(AuthGuard('jwt'))
-    @Patch()
-    @ApiBearerAuth()
-    updateUserByToken(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
-        return this.usersService.updateUserByToken(req.user, updateUserDto)
-    }
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  getUserByToken(@AuthedUser() user) {
+    // TODO: investigate how to return user without password
+    return user;
+  }
 
-    @UseGuards(JwtStrategy)
-    @Delete()
-    @ApiBearerAuth()
-    remove(@Request() req: any) {
-    return this.usersService.removeUserByToken(req.user);
+  @UseGuards(JwtAuthGuard)
+  @Patch()
+  updateUserByToken(
+    @AuthedUser() user: UserFromDB,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
+    return this.usersService.updateUserByToken(user, updateUserDto);
+  }
+
+  @UseGuards(JwtStrategy)
+  @Delete()
+  @ApiBearerAuth()
+  remove(@AuthedUser() user) {
+    return this.usersService.deleteUser(user);
   }
 }

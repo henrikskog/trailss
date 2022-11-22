@@ -3,38 +3,50 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@mantine/core": "^5.6.2",
-    "@mantine/dates": "^5.6.2",
-    "@mantine/ds": "^5.6.2",
-    "@mantine/form": "^5.6.2",
-    "@mantine/hooks": "^5.6.2",
+    "@chakra-ui/react": "^2.3.6",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mantine/core": "^5.6.3",
+    "@mantine/dates": "^5.6.3",
+    "@mantine/ds": "^5.6.3",
+    "@mantine/form": "^5.6.3",
+    "@mantine/hooks": "^5.6.3",
+    "@mantine/notifications": "^5.6.3",
+    "@react-google-maps/api": "^2.13.1",
     "@react-three/drei": "^9.34.4",
     "@react-three/fiber": "^8.8.10",
+    "@tabler/icons": "^1.108.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/google-map-react": "^2.1.7",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.11.59",
     "@types/react": "^18.0.20",
     "@types/react-dom": "^18.0.6",
     "axios": "^1.1.3",
     "dayjs": "^1.11.6",
+    "framer-motion": "^7.6.2",
+    "google-map-react": "^2.2.0",
     "node-sass": "^7.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.37.0",
+    "react-icons": "^4.6.0",
     "react-router-dom": "^6.4.2",
     "react-scripts": "5.0.1",
     "three": "^0.145.0",
     "typescript": "^4.8.3",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zod": "^3.19.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint --fix --ext .js,.ts,.tsx ./src --ignore-path .gitignore",
+    "format": "npm run prettier -- --write"
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +67,15 @@
     ]
   },
   "devDependencies": {
+    "@types/googlemaps": "^3.43.3",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jest-dom": "^3.9.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "sass": "^1.55.0"
   }
 }

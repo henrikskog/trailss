@@ -1,22 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import Landing from './components/landing/Landing';
+import { useLocation } from 'react-router-dom';
 import './App.css';
 import AppRouter from './AppRouter';
 import Navbar from './components/navbar/Navbar';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+function setTripInfo() {
+  return {origin: '', destination: '', date: 0, passengers: 1, carYear: 2000, consumption: 0}
+}
+
+const tripInfo = {
+  origin: 'Albalat de la Ribera', 
+  destination: 'Poliña del Xuquer', 
+  date: 0, 
+  passengers: 1, 
+  carYear: 2000, 
+  consumption: 69
+}
 
 function App() {
   return (
-    <div>
-      <BrowserRouter>
+      <div>
         <div className='App'>
-          <Navbar />
+          {
+            useLocation().pathname !== "/dashboard" &&
+            <Navbar />
+          }
           <AppRouter />
         </div>
-      </BrowserRouter>
-    </div>
-
+      </div>
   );
 }
 
