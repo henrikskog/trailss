@@ -24,7 +24,7 @@ export class Trip {
   @Prop()
   passengers: number;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' })
+  @Prop()
   vehicle: Vehicle;
 
 }

@@ -27,18 +27,18 @@ export class VehiclesService {
     return "Added a new vehicle";
   }
 
-  async findAll(vehicleIds: [mongoose.Schema.Types.ObjectId]) {
-    const vehicles = await this.vehicleModel.find({ _id: { $in: vehicleIds } });
-    console.log(vehicles);
+  async findAll(user: any) {
+    const vehicles = await user.populate("vehicles").then(p => p.vehicles)
     return vehicles;
   }
 
-  async findOne(vehicleIds: [mongoose.Schema.Types.ObjectId], id: string) {
-    const vehicle = vehicleIds.filter((vehicle) => vehicle.toString() == id);
+  async findOne(user: any, id: string) {
+    const vehicle = await user.populate("vehicles", null, {_id : id}).then(p => p.vehicles)
+    console.log(vehicle)
     if (!vehicle) {
       throw new NotFoundException("No car with the given arguments was found");
     }
-    return await this.vehicleModel.findById(vehicle[0]);
+    return vehicle[0];
   }
 
   async update(
@@ -61,16 +61,9 @@ export class VehiclesService {
     if (!vehicle) {
       throw new NotFoundException("No vehicle with the given id was found");
     }
-
-    const trips = await this.tripModel.find({ vehicle: vehicle[0] });
-
-    if (trips.length > 0) {
-      throw new BadRequestException("Can't delete a car that belong to a trip");
-    }
-
-    await this.vehicleModel.findByIdAndDelete(vehicle[0]);
     user.vehicles.pull({ _id: vehicle[0] });
     user.save();
+    await this.vehicleModel.findByIdAndDelete(vehicle[0]);    
 
     return "Vehicle removed successfully";
   }

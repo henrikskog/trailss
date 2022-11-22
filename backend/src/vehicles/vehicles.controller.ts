@@ -32,15 +32,16 @@ export class VehiclesController {
 
   @UseGuards(JwtAuthGuard)  
   @Get()
-  findAll(@AuthedUser() user) {
-    return this.vehiclesService.findAll(user)
+  @ApiBearerAuth()
+  findAll(@Request() req: any) {
+    return this.vehiclesService.findAll(req.user)
   }
   
   @UseGuards(JwtAuthGuard)  
   @Get(":id")
   @ApiBearerAuth()
   findOne(@Request() req: any, @Param("id") id: string) {
-    return this.vehiclesService.findOne(req.user.vehicles, id);
+    return this.vehiclesService.findOne(req.user, id);
   }
 
   @UseGuards(JwtAuthGuard)

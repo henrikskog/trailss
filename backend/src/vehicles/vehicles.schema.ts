@@ -6,6 +6,9 @@ export type VehicleDocument = HydratedDocument<Vehicle>;
 @Schema()
 export class Vehicle {
   @Prop()
+  name?: string;
+
+  @Prop()
   type: string;
 
   @Prop()

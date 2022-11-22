@@ -72,17 +72,17 @@ export class TripsService {
     return "Created a new trip";
   }
 
-  async findAll(tripIds: [mongoose.Schema.Types.ObjectId]) {
-    const trips = await this.tripModel.find({ '_id': {$in: tripIds}})
+  async findAll(user: any) {
+    const trips = await user.populate("trips").then(p => p.trips)
     return trips;
   }
 
-  async findOne(tripsIds: [mongoose.Schema.Types.ObjectId], id: string) {
-    const trip = tripsIds.filter((trip) => trip.toString() == id);
+  async findOne(user: any, id: string) {
+    const trip = await user.populate("trips", null, {_id : id}).then(p => p.trips)
     if (!trip) {
-      throw new NotFoundException("No car with the given arguments was found");
+      throw new NotFoundException("No trip with the given arguments was found");
     }
-    return await this.tripModel.findById(trip[0])
+    return trip[0];
   }
 
   async update(tripsIds: [mongoose.Schema.Types.ObjectId], id: string, updateTripDto: UpdateTripDto) {
@@ -94,20 +94,16 @@ export class TripsService {
     return "Trip updated successfully";
   }
 
-/*   async findAllTripsByVehicleId(vehicleId: mongoose.Schema.Types.ObjectId) {
-    const trips = 
-    return trips
-  } */
-  
   async remove(user: any, id: string) {
     const trip = user.trips.filter((trip) => trip.toString() == id);
 
     if (!trip) {
       throw new NotFoundException("No trip with the given id was found");
     }
-    await this.tripModel.findByIdAndDelete(trip[0]);
     user.trips.pull({ _id: trip[0]})
     user.save()
+    await this.tripModel.findByIdAndDelete(trip[0]);
+    
     return "Trip deleted successfully";
   }
 }

@@ -1,5 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
+import { Fleet } from 'src/fleets/fleets.schema';
 import { Trip } from 'src/trips/trips.schema';
 
 export type CompanyDocument = Company & Document;
@@ -15,8 +16,8 @@ export class Company {
   @Prop()
   email: string;
 
-  @Prop()
-  fleet: number;
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Fleets', default: []})
+  fleets: Fleet[]
 
   @Prop()
   subscription_start: Date;

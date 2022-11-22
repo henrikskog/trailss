@@ -57,14 +57,14 @@ export class TripsController {
   @Get()
   @ApiBearerAuth()
   findAll(@Request() req: any) {
-    return this.tripsService.findAll(req.user.trips)
+    return this.tripsService.findAll(req.user)
   }
   
   @UseGuards(JwtAuthGuard)  
   @Get(":id")
   @ApiBearerAuth()
   findOne(@Request() req: any, @Param("id") id: string) {
-    return this.tripsService.findOne(req.user.trips, id);
+    return this.tripsService.findOne(req.user, id);
   }
 
   @UseGuards(JwtAuthGuard)
