@@ -34,7 +34,6 @@ export class VehiclesService {
 
   async findOne(user: any, id: string) {
     const vehicle = await user.populate("vehicles", null, {_id : id}).then(p => p.vehicles)
-    console.log(vehicle)
     if (!vehicle) {
       throw new NotFoundException("No car with the given arguments was found");
     }

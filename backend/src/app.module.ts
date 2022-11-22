@@ -6,7 +6,7 @@ import { TripsModule } from './trips/trips.module';
 import { VehiclesModule } from './vehicles/vehicles.module';
 import { AuthModule } from './auth/auth.module';
 import { CompanyModule } from './company/company.module';
-import { AuthCompanyModule } from './authCompany/auth.module';
+import { AuthCompanyModule } from './authCompany/auth-company.module';
 import { CompanyRoutesModule } from './company-routes/company-routes.module';
 import { CompanyVehiclesModule } from './company-vehicles/company-vehicles.module';
 import { FleetsModule } from './fleets/fleets.module';
