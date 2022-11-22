@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { Vehicle } from 'src/vehicles/vehicles.schema';
 
-export type TripDocument = Trip & Document;
+export type TripDocument = HydratedDocument<Trip>;
 
 @Schema()
 export class Trip {
@@ -24,7 +24,7 @@ export class Trip {
   @Prop()
   passengers: number;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' })
+  @Prop()
   vehicle: Vehicle;
 
 }

@@ -1,9 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
-export type VehicleDocument = Vehicle & Document;
+export type VehicleDocument = HydratedDocument<Vehicle>;
 
 @Schema()
 export class Vehicle {
+  @Prop()
+  name?: string;
+
   @Prop()
   type: string;
 

@@ -1,49 +1,58 @@
 import { HttpService } from "@nestjs/axios";
-import { Injectable, NotFoundException, VERSION_NEUTRAL, UnauthorizedException, forwardRef, Inject, BadRequestException } from "@nestjs/common";
-import mongoose, { Model } from "mongoose";
+import {
+  BadRequestException, Injectable,
+  NotFoundException
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import mongoose, { Model } from "mongoose";
+import { lastValueFrom } from "rxjs";
+import { Trip, TripDocument } from "src/trips/trips.schema";
+import { VehicleFuelType } from "src/trips/trips.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
-import { VehicleDocument } from "./vehicles.schema";
-import { Vehicle, VehicleFuelType } from "./entities/vehicle.entity";
-import { lastValueFrom } from "rxjs";
-import { UsersService } from "src/users/users.service";
-import { TripsService } from "src/trips/trips.service";
-import { TripDocument } from "src/trips/trips.model";
+import { Vehicle, VehicleDocument } from "./vehicles.schema";
 
 @Injectable()
 export class VehiclesService {
   constructor(
-    private readonly httpService: HttpService, private readonly usersService: UsersService, @InjectModel('vehicle') private readonly vehicleModel: Model<VehicleDocument>, @InjectModel('trip') private readonly tripModel: Model<TripDocument>) {}
+    private readonly httpService: HttpService,
+    @InjectModel(Vehicle.name) private readonly vehicleModel: Model<VehicleDocument>,
+    @InjectModel(Trip.name) private readonly tripModel: Model<TripDocument>
+  ) {}
 
   async create(user: any, createVehicleDto: CreateVehicleDto) {
-    const vehicle = await this.vehicleModel.create(createVehicleDto)
-    user.vehicles.push(vehicle)
-    user.save()
-    return 'Added a new vehicle';
+    const vehicle = await this.vehicleModel.create(createVehicleDto);
+    user.vehicles.push(vehicle);
+    user.save();
+    return "Added a new vehicle";
   }
 
-  async findAll(vehicleIds: [mongoose.Schema.Types.ObjectId]) {
-    const vehicles = await this.vehicleModel.find({ '_id': {$in: vehicleIds}})
-    console.log(vehicles)
+  async findAll(user: any) {
+    const vehicles = await user.populate("vehicles").then(p => p.vehicles)
     return vehicles;
   }
-  
-  async findOne(vehicleIds: [mongoose.Schema.Types.ObjectId], id: string) {
-    const vehicle = vehicleIds.filter((vehicle) => vehicle.toString() == id);
+
+  async findOne(user: any, id: string) {
+    const vehicle = await user.populate("vehicles", null, {_id : id}).then(p => p.vehicles)
+    console.log(vehicle)
     if (!vehicle) {
       throw new NotFoundException("No car with the given arguments was found");
     }
-    return await this.vehicleModel.findById(vehicle[0])
-  } 
+    return vehicle[0];
+  }
 
-  async update(vehicleIds: [mongoose.Schema.Types.ObjectId], id: string, updateVehicleDto: UpdateVehicleDto) {
-    const vehicle = vehicleIds.filter((vehicle) => vehicle.toString() == id)
+  async update(
+    vehicleIds: [mongoose.Schema.Types.ObjectId],
+    id: string,
+    updateVehicleDto: UpdateVehicleDto
+  ) {
+    const vehicle = vehicleIds.filter((vehicle) => vehicle.toString() == id);
 
-    if (!vehicle) throw new NotFoundException("No car with the given id was found");
+    if (!vehicle)
+      throw new NotFoundException("No car with the given id was found");
 
-    await this.vehicleModel.findByIdAndUpdate(vehicle[0], updateVehicleDto)
-    return "Vehicle updated successfully"
+    await this.vehicleModel.findByIdAndUpdate(vehicle[0], updateVehicleDto);
+    return "Vehicle updated successfully";
   }
 
   async remove(user: any, id: string) {
@@ -52,18 +61,11 @@ export class VehiclesService {
     if (!vehicle) {
       throw new NotFoundException("No vehicle with the given id was found");
     }
+    user.vehicles.pull({ _id: vehicle[0] });
+    user.save();
+    await this.vehicleModel.findByIdAndDelete(vehicle[0]);    
 
-    const trips = await this.tripModel.find({vehicle: vehicle[0]})    
-
-    if (trips.length > 0) {
-      throw new BadRequestException("Can't delete a car that belong to a trip");
-    }
-
-    await this.vehicleModel.findByIdAndDelete(vehicle[0]);
-    user.vehicles.pull({ _id: vehicle[0]})
-    user.save()
-
-    return 'Vehicle removed successfully'
+    return "Vehicle removed successfully";
   }
 
   /**
@@ -99,7 +101,9 @@ export class VehiclesService {
     const emissions = car.data?.comb08;
 
     if (!emissions) {
-      throw new NotFoundException("There was an error handling data from the CAR API");
+      throw new NotFoundException(
+        "There was an error handling data from the CAR API"
+      );
     }
 
     return Number(emissions);
@@ -112,7 +116,7 @@ export class VehiclesService {
    * @returns Grams of CO2 emitted per km
    */
   getEmissions(fuelType: VehicleFuelType, consumption: number) {
- //         Diesel:
+    //         Diesel:
     //         1 liter of diesel weighs 835 grammes. Diesel consist for 86,2% of carbon, or 720 grammes of carbon per liter diesel. In order to combust this carbon to CO2, 1920 grammes of oxygen is needed. The sum is then 720 + 1920 = 2640 grammes of CO2/liter diesel.
     //         An average consumption of 5 liters/100 km then corresponds to 5 l x 2640 g/l / 100 (per km) = 132 g CO2/km.
     if (fuelType === "diesel") return (consumption * 2640) / 100;
