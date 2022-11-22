@@ -47,26 +47,18 @@ interface NavbarLinkProps {
 }
 
 
-const mockdataUser = [
-    { icon: IconHome2, label: 'Map' },
-    { icon: IconCalendarStats, label: 'History' },
-    { icon: IconUser, label: 'Account' },
-];
 
-const mockdataCompany = [
-    { icon: IconHome2, label: 'Home' },
-    { icon: IconCar, label: 'Fleets' },
-    { icon: IconPlaneDeparture, label: 'Business trips' },
-    { icon: IconCertificate, label: 'Certificates' },
-    { icon: IconChartBar, label: 'Statistics' },
-    { icon: IconUser, label: 'Account' },
-];
+
+interface Props {
+    setContent: (content: string) => void;
+    isCompanyDashboard?: boolean;
+    data: { icon: TablerIcon; label: string }[];
+}
 
 // const data = "isCompanyDashboard" in props ? mockdataCompany : mockdataUser;
-export function MenuBar(props: any) {
+const MenuBar: React.FC<Props> = ({ setContent, isCompanyDashboard, data }) => {
     const [active, setActive] = useState(0);
-    const {logout} = useAuth()
-    const data = "isCompanyDashboard" in props ? mockdataCompany : mockdataUser;
+    const { logout } = useAuth()
     const links = data.map((link, index) => (
         <NavbarLink
             {...link}
@@ -74,12 +66,10 @@ export function MenuBar(props: any) {
             active={index === active}
             onClick={() => {
                 setActive(index)
-                props.setContent(link.label)
+                setContent(link.label)
             }}
         />
     ));
-
-    
 
     function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
         const { classes, cx } = useStyles();
@@ -109,3 +99,4 @@ export function MenuBar(props: any) {
         </Navbar>
     );
 }
+export default MenuBar;
