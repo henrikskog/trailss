@@ -10,6 +10,8 @@ import Login from './components/user/auth/login/Login';
 import Register from './components/user/auth/register/Register';
 import MapsExample from './components/shared/map/MapsExample'
 import { ReactNode } from 'react';
+import SalesPage from './components/enterprise/SalesPage';
+import EnterpriseLogin from "./components/enterprise/EnterpriseLogin";
 
 
 function AppRouter(props: any) {
@@ -39,6 +41,8 @@ function AppRouter(props: any) {
                     </ RequireAuth>
                 } />
                 <Route path='/user/settings' element={<Map />} />
+                <Route path='information' element={<SalesPage />} />
+                <Route path='enterprise-login' element={<EnterpriseLogin />} />
             </Routes>
         </div>
     )

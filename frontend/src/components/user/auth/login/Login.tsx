@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from '../AuthContext/AuthProvider';
 import './Login.scss';
 
-export default function Login() {
+export default function Login(props: any) {
   const navigate = useNavigate();
   const { login, error, user } = useAuth();
 
@@ -32,7 +32,8 @@ export default function Login() {
         onSubmit={form.onSubmit((values: any) => login(values['username'], values['password']))}
       >
         {error}
-        <h1 id="header">Log in</h1>
+        
+        <h1 id="header">{props.business ? "Business log in" : "Log in" }</h1>
         <TextInput placeholder="Username" {...form.getInputProps('username')} mb={'sm'} />
         <TextInput placeholder="Password" {...form.getInputProps('password')} />
         <div className="submit">
