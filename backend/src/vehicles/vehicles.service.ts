@@ -34,8 +34,7 @@ export class VehiclesService {
 
   async findOne(user: any, id: string) {
     const vehicle = await user.populate("vehicles", null, {_id : id}).then(p => p.vehicles)
-    console.log(vehicle)
-    if (!vehicle) {
+    if (!vehicle.length) {
       throw new NotFoundException("No car with the given arguments was found");
     }
     return vehicle[0];
@@ -48,7 +47,7 @@ export class VehiclesService {
   ) {
     const vehicle = vehicleIds.filter((vehicle) => vehicle.toString() == id);
 
-    if (!vehicle)
+    if (!vehicle.length)
       throw new NotFoundException("No car with the given id was found");
 
     await this.vehicleModel.findByIdAndUpdate(vehicle[0], updateVehicleDto);
@@ -58,7 +57,7 @@ export class VehiclesService {
   async remove(user: any, id: string) {
     const vehicle = user.vehicles.filter((vehicle) => vehicle.toString() == id);
 
-    if (!vehicle) {
+    if (!vehicle.length) {
       throw new NotFoundException("No vehicle with the given id was found");
     }
     user.vehicles.pull({ _id: vehicle[0] });

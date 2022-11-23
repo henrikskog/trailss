@@ -115,7 +115,6 @@ const Form: React.FC<Props> = ({ calculateRoute }) => {
         className="form"
         onSubmit={form.onSubmit((values: any) => {
           calculateRoute(values.origin, values.destination, searchMakeValue, yearValue.toString(), searchModelValue );
-          console.log('tu madre');
           setCalculated(true);
         })}
       >

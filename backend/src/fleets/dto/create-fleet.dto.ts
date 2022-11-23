@@ -1,1 +1,3 @@
-export class CreateFleetDto {}
+export class CreateFleetDto {
+    name: string;
+}

@@ -1,19 +1,19 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { companyVehicle } from 'src/company-vehicles/company-vehicles.schema';
+import { CompanyVehicle } from 'src/company-vehicles/company-vehicles.schema';
 
 export type FleetDocument = Fleet & Document;
 
 @Schema()
 export class Fleet {
-  @Prop()
+  @Prop({required: true})
   name: string;
 
-  @Prop()
+  @Prop({default: true})
   active: boolean;
 
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'VehiclesCompany', default: []})
-  fleets: companyVehicle[]
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'CompanyVehicle', default: []})
+  vehicles: CompanyVehicle[]
 
 }
 

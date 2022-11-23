@@ -16,7 +16,7 @@ export class Company {
   @Prop()
   email: string;
 
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Fleets', default: []})
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Fleet', default: []})
   fleets: Fleet[]
 
   @Prop()

@@ -10,9 +10,9 @@ export class CompanyService{
         @InjectModel("company") private readonly companyModel: Model<CompanyDocument>
     ) {}
 
-    async createCompany(companyName: string, password: string, email: string) {
+    async createCompany(name: string, password: string, email: string) {
         return this.companyModel.create({
-          companyName,
+          name,
           password,
           email
         });
@@ -32,7 +32,7 @@ export class CompanyService{
       }
     
       getCompanyByToken(company: any) {
-        return { companyname: company.companyname, email: company.email };
+        return { name: company.name, email: company.email };
       }
     
       updateCompanyByToken(company: any, updateCompanyDto: UpdateCompanyDto) {
