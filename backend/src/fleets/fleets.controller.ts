@@ -35,7 +35,7 @@ export class FleetsController {
   @Patch(":id")
   @ApiBearerAuth()
   async update(@Request() req: any, @Param("id") id: string, @Body() updateFleetDto: UpdateFleetDto) {
-    return this.fleetsService.update(req.user.vehicles, id, updateFleetDto);
+    return this.fleetsService.update(req.user.fleets, id, updateFleetDto);
   }
 
   @UseGuards(JwtCompanyAuthGuard)

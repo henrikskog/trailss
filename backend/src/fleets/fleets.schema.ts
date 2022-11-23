@@ -6,13 +6,13 @@ export type FleetDocument = Fleet & Document;
 
 @Schema()
 export class Fleet {
-  @Prop()
+  @Prop({required: true})
   name: string;
 
-  @Prop()
+  @Prop({default: true})
   active: boolean;
 
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'VehiclesCompany', default: []})
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'CompanyVehicle', default: []})
   vehicles: CompanyVehicle[]
 
 }

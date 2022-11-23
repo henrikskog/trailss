@@ -1,6 +1,7 @@
 import { Controller, Post, Body, UseGuards, Get, Patch, Delete, Request } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { ApiTags, ApiBearerAuth } from "@nestjs/swagger";
+import { JwtCompanyAuthGuard } from 'src/authCompany/jwt-auth-guard-company.guard';
 import { CompanyService } from "./company.service";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
@@ -26,27 +27,27 @@ export class CompanyController {
             company.email
         );
 
-        return {companyname: company.name, email: company.email};
+        return {name: company.name, email: company.email};
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(JwtCompanyAuthGuard)
     @Get()
     @ApiBearerAuth()
     getCompanyByToken(@Request() req: any) {
-        return this.companyService.getCompanyByToken(req.company)
+        return this.companyService.getCompanyByToken(req.user)
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(JwtCompanyAuthGuard)
     @Patch()
     @ApiBearerAuth()
     updateCompanyByToken(@Request() req: any, @Body() updatecompanyDto: UpdateCompanyDto) {
-        return this.companyService.updateCompanyByToken(req.company, updatecompanyDto)
+        return this.companyService.updateCompanyByToken(req.user, updatecompanyDto)
     }
 
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(JwtCompanyAuthGuard)
     @Delete()
     @ApiBearerAuth()
     remove(@Request() req: any) {
-    return this.companyService.removeCompanyByToken(req.company);
+    return this.companyService.removeCompanyByToken(req.user);
   }
 }

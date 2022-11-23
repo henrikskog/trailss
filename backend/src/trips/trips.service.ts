@@ -79,7 +79,7 @@ export class TripsService {
 
   async findOne(user: any, id: string) {
     const trip = await user.populate("trips", null, {_id : id}).then(p => p.trips)
-    if (!trip) {
+    if (!trip.length) {
       throw new NotFoundException("No trip with the given arguments was found");
     }
     return trip[0];
@@ -87,7 +87,7 @@ export class TripsService {
 
   async update(tripsIds: [mongoose.Schema.Types.ObjectId], id: string, updateTripDto: UpdateTripDto) {
     const trip = tripsIds.filter((trip) => trip.toString() == id);
-    if (!trip) {
+    if (!trip.length) {
       throw new NotFoundException("No trip with the given id was found");
     }
     await this.tripModel.findByIdAndUpdate(trip[0], updateTripDto);
@@ -97,7 +97,7 @@ export class TripsService {
   async remove(user: any, id: string) {
     const trip = user.trips.filter((trip) => trip.toString() == id);
 
-    if (!trip) {
+    if (!trip.length) {
       throw new NotFoundException("No trip with the given id was found");
     }
     user.trips.pull({ _id: trip[0]})

@@ -9,56 +9,85 @@ import { UpdateCompanyVehicleDto } from './dto/update-company-vehicle.dto';
 export class CompanyVehiclesService {
   constructor(
     @InjectModel(CompanyVehicle.name) private readonly companyVehicleModel: Model<CompanyVehicleDocument>,
-  ) {}
+  ) { }
 
-  async ownsVehicle(company: any, id: string) {
-    const vehicle = await company.populate("fleets").then(p => p.fleets.populate("vehicles", null, {_id : id}).then(p => p.vehicles))
+  async getFleet(company: any, id: string) {
+    try {
+      const fleet = await company.populate("fleets", null, { _id: id }).then(p => p.fleets)
+      if (!fleet.length) {
+        throw new NotFoundException("No fleet with the given id was found");
+      }
+      return fleet[0]
+    } catch {
+      throw new NotFoundException("No fleet with the given arguments was found");
+    }
   }
 
-  async create(fleet: any, createCompanyVehicleDto: CreateCompanyVehicleDto) {
+  async create(company: any, fleetId: string, createCompanyVehicleDto: CreateCompanyVehicleDto) {
+    const fleet = await this.getFleet(company, fleetId)
+    console.log(fleet)
     const vehicle = await this.companyVehicleModel.create(createCompanyVehicleDto);
     fleet.vehicles.push(vehicle);
     fleet.save();
     return "Added a new vehicle to the fleet";
   }
 
-  async findAll(fleet: any) {
+  async findAll(company: any, fleetId: string) {
+    const fleet = await this.getFleet(company, fleetId)
     const vehicles = await fleet.populate("vehicles").then(p => p.vehicles)
     return vehicles;
   }
 
-  async findOne(fleet: any, id: string) {
-    const vehicle = await fleet.populate("vehicles", null, {_id : id}).then(p => p.vehicles)
-    if (!vehicle) {
+  async findOne(company: any, fleetId: string, id: string) {
+    const fleet = await this.getFleet(company, fleetId)
+    try {
+      const vehicle = await fleet.populate("vehicles", null, { _id: id }).then(p => p.vehicles)
+      if (!vehicle.length) {
+        throw new NotFoundException("No car with the given arguments was found");
+      }
+      return vehicle[0];
+    } catch {
       throw new NotFoundException("No car with the given arguments was found");
     }
-    return vehicle[0];
+
   }
 
   async update(
-    fleetIds: [mongoose.Schema.Types.ObjectId],
+    company: any,
+    fleetId: string,
     id: string,
     updateCompanyVehicleDto: UpdateCompanyVehicleDto
   ) {
-    const vehicle = fleetIds.filter((vehicle) => vehicle.toString() == id);
+    const fleet = await this.getFleet(company, fleetId)
+    try {
+      const vehicle = fleet.vehicles.filter((vehicle) => vehicle.toString() == id);
 
-    if (!vehicle)
-      throw new NotFoundException("No car with the given id was found");
+      if (!vehicle.length)
+        throw new NotFoundException("No car with the given id was found");
 
-    await this.companyVehicleModel.findByIdAndUpdate(vehicle[0], updateCompanyVehicleDto);
-    return "Vehicle updated successfully";
+      await this.companyVehicleModel.findByIdAndUpdate(vehicle[0], updateCompanyVehicleDto);
+      return "Vehicle updated successfully";
+    } catch {
+      throw new NotFoundException("No car with the given arguments was found");
+    }
   }
 
-  async remove(user: any, id: string) {
-    const vehicle = user.vehicles.filter((vehicle) => vehicle.toString() == id);
+  async remove(company: any, fleetId: string, id: string) {
+    const fleet = await this.getFleet(company, fleetId)
+    try {
+      const vehicle = fleet.vehicles.filter((vehicle) => vehicle.toString() == id);
 
-    if (!vehicle) {
-      throw new NotFoundException("No vehicle with the given id was found");
+      if (!vehicle.length) {
+        throw new NotFoundException("No vehicle with the given id was found");
+      }
+      fleet.vehicles.pull({ _id: vehicle[0] });
+      fleet.save();
+      await this.companyVehicleModel.findByIdAndDelete(vehicle[0]);
+
+      return "Vehicle removed successfully";
+    } catch {
+      throw new NotFoundException("No car with the given arguments was found");
+
     }
-    user.vehicles.pull({ _id: vehicle[0] });
-    user.save();
-    await this.companyVehicleModel.findByIdAndDelete(vehicle[0]);    
-
-    return "Vehicle removed successfully";
   }
 }

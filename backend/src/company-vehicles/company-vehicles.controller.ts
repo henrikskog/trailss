@@ -11,35 +11,37 @@ export class CompanyVehiclesController {
   constructor(private readonly companyVehiclesService: CompanyVehiclesService) {}
 
   @UseGuards(JwtCompanyAuthGuard)  
-  @Post()
+  @Post(':fleetid')
   @ApiBearerAuth()
-  async create(@Request() req: any, @Body() createCompanyVehicleDto: CreateCompanyVehicleDto) {
-    return this.companyVehiclesService.create(req.company.fleets, createCompanyVehicleDto);
+  async create(@Request() req: any, @Param("fleetid") fleetId: string, @Body() createCompanyVehicleDto: CreateCompanyVehicleDto) {
+    return this.companyVehiclesService.create(req.user, fleetId, createCompanyVehicleDto);
   }
 
   @UseGuards(JwtCompanyAuthGuard)  
-  @Get()
+  @Get(':fleetid')
   @ApiBearerAuth()
-  async findAll(@Request() req: any) {
-    return this.companyVehiclesService.findAll(req.company.fleets);
+  async findAll(@Request() req: any, @Param("fleetid") fleetId: string) {
+    return this.companyVehiclesService.findAll(req.user, fleetId);
   }
 
   @UseGuards(JwtCompanyAuthGuard)  
-  @Get(':id')
-  async findOne(@Request() req: any, @Param("id") id: string) {
-    return this.companyVehiclesService.findOne(req.company.fleets, id);
-  }
-
-  @UseGuards(JwtCompanyAuthGuard)
-  @Patch(':id')
-  async update(@Request() req: any, @Param('id') id: string, @Body() updateCompanyVehicleDto: UpdateCompanyVehicleDto) {
-    return this.companyVehiclesService.update(req.company.fleets, id, updateCompanyVehicleDto);
-  }
-
-  @UseGuards(JwtCompanyAuthGuard)
-  @Delete(':id')
+  @Get('/:fleetid/:id')
   @ApiBearerAuth()
-  async remove(@Request() req: any, @Param("id") id: string) {
-    return this.companyVehiclesService.remove(req.company, id);
+  async findOne(@Request() req: any, @Param("fleetid") fleetId: string, @Param("id") id: string) {
+    return this.companyVehiclesService.findOne(req.user, fleetId, id);
+  }
+
+  @UseGuards(JwtCompanyAuthGuard)
+  @Patch('/:fleetid/:id')
+  @ApiBearerAuth()
+  async update(@Request() req: any, @Param("fleetid") fleetId: string, @Param('id') id: string, @Body() updateCompanyVehicleDto: UpdateCompanyVehicleDto) {
+    return this.companyVehiclesService.update(req.user, fleetId, id, updateCompanyVehicleDto);
+  }
+
+  @UseGuards(JwtCompanyAuthGuard)
+  @Delete('/:fleetid/:id')
+  @ApiBearerAuth()
+  async remove(@Request() req: any, @Param("fleetid") fleetId: string, @Param("id") id: string) {
+    return this.companyVehiclesService.remove(req.user, fleetId, id);
   }
 }

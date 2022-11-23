@@ -25,7 +25,7 @@ export class FleetsService {
 
   async findOne(company: any, id: string) {
     const fleet = await company.populate("fleets", null, {_id : id}).then(p => p.fleets)
-    if (!fleet) {
+    if (!fleet.length) {
       throw new NotFoundException("No fleet with the given arguments was found");
     }
     return fleet[0];
@@ -38,8 +38,8 @@ export class FleetsService {
   ) {
     const fleet = fleetIds.filter((fleet) => fleet.toString() == id);
 
-    if (!fleet)
-      throw new NotFoundException("No car with the given id was found");
+    if (!fleet.length)
+      throw new NotFoundException("No fleet with the given id was found");
 
     await this.fleetModel.findByIdAndUpdate(fleet[0], updateCompanyVehicleDto);
     return "Fleet updated successfully";
@@ -48,10 +48,10 @@ export class FleetsService {
   async remove(user: any, id: string) {
     const fleet = user.fleets.filter((fleet) => fleet.toString() == id);
 
-    if (!fleet) {
-      throw new NotFoundException("No vehicle with the given id was found");
+    if (!fleet.length) {
+      throw new NotFoundException("No fleet with the given id was found");
     }
-    user.fleet.pull({ _id: fleet[0] });
+    user.fleets.pull({ _id: fleet[0] });
     user.save();
     await this.fleetModel.findByIdAndDelete(fleet[0]);    
 
