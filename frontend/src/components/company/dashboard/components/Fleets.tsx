@@ -1,70 +1,157 @@
-import { Button, Container, Group, ScrollArea, Table } from "@mantine/core";
+import { Button, Container, Group, ScrollArea, Table } from '@mantine/core';
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './Fleets.scss';
 
+interface Car {
+  id: number;
+  name: string;
+  model: string;
+  year: number;
+  color: string;
+  licensePlate: string;
+  mileage: number;
+  status: string;
+}
+
+interface Fleet {
+  id: number;
+  name: string;
+  cars: Car[];
+}
+
+// TODO: Replace with real data
+// 10 cars for testing
+const cars: Car[] = [
+  {
+    id: 1,
+    name: 'Car 1',
+    model: 'Model 1',
+    year: 2021,
+    color: 'Red',
+    licensePlate: 'ABC123',
+    mileage: 1000,
+    status: 'Available',
+  },
+  {
+    id: 2,
+    name: 'Car 2',
+    model: 'Model 2',
+    year: 2021,
+    color: 'Blue',
+    licensePlate: 'ABC124',
+    mileage: 1000,
+    status: 'Available',
+  },
+  {
+    id: 3,
+    name: 'Car 3',
+    model: 'Model 3',
+    year: 2021,
+    color: 'Green',
+    licensePlate: 'ABC125',
+    mileage: 1000,
+    status: 'Available',
+  },
+  {
+    id: 4,
+    name: 'Car 4',
+    model: 'Model 4',
+    year: 2021,
+    color: 'Yellow',
+    licensePlate: 'ABC126',
+    mileage: 1000,
+    status: 'Available',
+  },
+];
+
+const fleetsTestData: Fleet[] = [
+  { name: 'Cars of employees', cars: cars.slice(0, 2), id: 1 },
+  { name: 'Transport trailers', cars: cars.slice(2, 4), id: 2 },
+];
+
 export default function Fleet() {
+  const [activeFleet, setActiveFleet] = useState<{ name: string; cars: Car[]; id: number } | null>(
+    null
+  );
+  const [fleets, setFleets] = useState<Fleet[]>(fleetsTestData);
+  // ToDo: replace by database access?
+  // ToDo: think about better table header names
 
-    // ToDo: replace by database access?
-    // ToDo: think about better table header names
-    const cars = [
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
-        { model: "BMW", year: "2012", origin: "Valencia", destination: 'Madrid', emissions: "200g", duration: "30min", identifier: ""},
+  // Function that adds a new empty car to a fleet
+  const addCar = (fleet: Fleet) => {
+    const newCar: Car = {
+      id: fleet.cars.length,
+      name: '',
+      model: '',
+      year: 0,
+      color: '',
+      licensePlate: '',
+      mileage: 0,
+      status: '',
+    };
 
-      ];
+    const newFleet = {
+      ...fleet,
+      cars: [...fleet.cars, newCar],
+    };
 
-      const rows = cars.map((car) => (
-        <tr key={car.identifier}>
-          <td>{car.model}</td>
-          <td>{car.year}</td>
-          <td>{car.origin}</td>
-          <td>{car.destination}</td>
-          <td>{car.duration}</td>
-          <td>{car.emissions}</td>
-        </tr>
-      ));
+    const newFleets = fleets.map((f) => (f.id === fleet.id ? newFleet : f));
 
+    setFleets(JSON.parse(JSON.stringify(newFleets)));
+  };
 
+  // REQUIREMENTS:
+  // the idea was to have on the left side the table, containing all the registered cars
+  // on the right side we have the editor. Clicking on any car in the table opens the car in the editor
+  // and the car be modified from there. Maybe it should allow for adding stops beside the origin/destination as well
+  // maybe below the Editor have the option of adding new cars by clicking on a button
 
-    // REQUIREMENTS: 
-    // the idea was to have on the left side the table, containing all the registered cars
-    // on the right side we have the editor. Clicking on any car in the table opens the car in the editor
-    // and the car be modified from there. Maybe it should allow for adding stops beside the origin/destination as well
-    // maybe below the Editor have the option of adding new cars by clicking on a button
+  return (
+    <div className="container">
+      <div className="table">
+        <h2>Your fleets</h2>
+        <Table verticalSpacing="sm" striped highlightOnHover>
+            <th>Name</th>
+            <th>Number of cars</th>
+          <tbody>
+            {fleets.map((fleet) => (
+              <tr key={fleet.id} onClick={() => setActiveFleet(fleet)}>
+                <td>{fleet.name}</td>
+                <td>{fleet.cars.length}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
+      <div className="editor">
+        <h2>Edit fleet</h2>
+        {activeFleet !== null && (
+          <div>
+            <h2>{activeFleet.name}</h2>
+            <Table verticalSpacing="sm" striped highlightOnHover>
+                <th>Car name</th>
+                <th>Car model</th>
+                <th>Edit</th>
+              <tbody>
+                {activeFleet.cars.map((car) => (
+                  <tr key={car.id}>
+                    <td>{car.name}</td>
+                    <td>{car.model}</td>
+                    <td>
+                      <Button onClick={() => console.log('edit')}>Edit</Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
 
-    return (<div>
-        <Group>
-            <div className="table">
-                <h2>Registered cars</h2>
-                <ScrollArea style={{ width: "100%", height: "100vh" }}>
-                    <Table verticalSpacing="sm" striped highlightOnHover>
-                        <thead>
-                            <th>Model</th>
-                            <th>Year</th>
-                            <th>Origin</th>
-                            <th>Destination</th>
-                            <th>Duration</th>
-                            <th>Carbon Emissions</th>
-                            <th></th>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                    </Table>
-                </ScrollArea>
-            </div>
-            <div className="editor">
-                Future editor
-                <Button className="newCarButton">
-                    Add a new car
-                </Button>
-            </div>
-        </Group>
-    </div>);
+            <Button className="newCarButton" onClick={() => addCar(activeFleet)}>
+              Add a new car
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

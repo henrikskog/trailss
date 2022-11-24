@@ -25,7 +25,7 @@ import {
 } from '@tabler/icons';
 
 export default function DashboardCompany() {
-    const [content, setContent] = useState<string>("home")
+    const [content, setContent] = useState<string>("Fleets")
 
 const mockdataCompany = [
     { icon: IconHome2, label: 'Home' },
