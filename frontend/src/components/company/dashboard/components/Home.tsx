@@ -1,28 +1,28 @@
-import { Button, Grid, UnstyledButton } from "@mantine/core";
-
-
+import { Button, Grid, UnstyledButton } from '@mantine/core';
+import { IconCar } from '@tabler/icons';
+import './Home.scss';
 
 export default function Home() {
-    return (<div>
-        <Grid justify="center">
-            <Grid.Col span={3} style={{ minHeight: 80 }}>
-                Home
-            </Grid.Col>
-            <Grid.Col span={3} style={{ minHeight: 120 }}>
-                Fleets
-            </Grid.Col>
-            <Grid.Col span={3}>
-                Business Trips
-            </Grid.Col>
-            <Grid.Col span={3} style={{ minHeight: 80 }}>
-                Certificates
-            </Grid.Col>
-            <Grid.Col span={3} style={{ minHeight: 120 }}>
-                Statistics
-            </Grid.Col>
-            <Grid.Col span={3}>
-                Account
-            </Grid.Col>
-        </Grid>
-    </div>);
+  return (
+    <Grid justify="center" className="home-grid">
+      <Grid.Col>
+        Fleets
+
+      <br></br>
+      <br></br>
+
+        <IconCar />
+
+      <br></br>
+        <IconCar />
+      </Grid.Col>
+      <Grid.Col>Business Trips</Grid.Col>
+      <Grid.Col>Certificates</Grid.Col>
+      <Grid.Col>Statistics</Grid.Col>
+      <Grid.Col>Account</Grid.Col>
+      <Grid.Col>Account</Grid.Col>
+      <Grid.Col>Account</Grid.Col>
+      <Grid.Col>Account</Grid.Col>
+    </Grid>
+  );
 }
