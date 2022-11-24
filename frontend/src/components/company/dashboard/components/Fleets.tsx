@@ -108,7 +108,7 @@ export default function Fleet() {
   // maybe below the Editor have the option of adding new cars by clicking on a button
 
   return (
-    <div className="container">
+    <div className="fleets-container">
       <div className="table">
         <h2>Your fleets</h2>
         <Table verticalSpacing="sm" striped highlightOnHover>

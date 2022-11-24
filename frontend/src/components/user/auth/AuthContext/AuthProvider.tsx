@@ -100,7 +100,10 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
         }
 
         const response = await fetch(fetchParams[0], {
-          headers: { Authorization: `Bearer ${user?.accessToken}` },
+          headers: {
+            Authorization: `Bearer ${user?.accessToken}`,
+            'Content-Type': 'application/json',
+          },
           ...fetchParams[1],
         });
 

@@ -33,7 +33,7 @@ const mockdataUser = [
             case 'Cars':
                 return <Cars />;    
             default:
-                return <Cars />;
+                return <Map />;
         }
     }
     return (

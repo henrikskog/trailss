@@ -1,4 +1,4 @@
-import { Button, Divider, Input, Table } from '@mantine/core';
+import { Button, Divider, Input, LoadingOverlay, Table } from '@mantine/core';
 import { IconCheck, IconEdit, IconX } from '@tabler/icons';
 import { useState } from 'react';
 import './Cars.scss';
@@ -6,7 +6,7 @@ import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
 import useAuth from '../../../user/auth/AuthContext/AuthProvider';
 
 interface Car {
-  _id: number;
+  _id?: number;
   name: string;
   model: string;
   year: number;
@@ -91,6 +91,26 @@ export default function Cars() {
       method: 'POST',
       body: JSON.stringify(car),
     });
+
+    setSelectedCar(response as Car);
+
+    return response;
+  };
+
+  const deleteCar = async (carId: string | number) => {
+    const response = await authFetch('http://localhost:5000/vehicles/' + carId, {
+      method: 'DELETE',
+    });
+
+    return response;
+  };
+
+  const updateCar = async (car: Car) => {
+    const response = await authFetch('http://localhost:5000/vehicles/' + car._id, {
+      method: 'PATCH',
+      body: JSON.stringify(car),
+    });
+
     return response;
   };
 
@@ -99,10 +119,83 @@ export default function Cars() {
   const { data, isLoading } = useQuery({ queryKey: ['cars'], queryFn: getCars });
 
   // Mutations
-  const mutation = useMutation({
+  const postCarMutation = useMutation({
     mutationFn: postCar,
     onSuccess: () => {
       // Invalidate and refetch
+      console.log('onSuccess');
+      queryClient.invalidateQueries({ queryKey: ['cars'] });
+    },
+  });
+
+  const deleteCarMutation = useMutation({
+    mutationFn: deleteCar,
+    onMutate: async (id) => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['cars'] });
+
+      // Snapshot the previous value
+      const prevCars = queryClient.getQueryData<Car[]>(['cars']);
+
+      if (prevCars) {
+        // Optimistically update to the new value
+        queryClient.setQueryData<Car[]>(
+          ['cars'],
+          prevCars.filter((car) => car._id !== id)
+        );
+      }
+
+      // Return a context object with the snapshotted value
+      return { prevCars };
+    },
+    onSuccess: () => {
+      // Invalidate and refetch
+      console.log('onSuccess');
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['cars'] });
+    },
+  });
+
+  const updateCarMutation = useMutation({
+    mutationFn: updateCar,
+    // When mutate is called:
+    onMutate: async (newCar) => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['cars'] });
+
+      // Snapshot the previous value
+      const prevCars = queryClient.getQueryData<Car[]>(['cars']);
+
+      if (prevCars) {
+        // Optimistically update to the new value
+        queryClient.setQueryData<Car[]>(
+          ['cars'],
+          prevCars.map((car) => {
+            if (car._id === newCar._id) {
+              return newCar;
+            } else {
+              return car;
+            }
+          })
+        );
+      }
+
+      // Return a context object with the snapshotted value
+      return { prevCars };
+    },
+    // If the mutation fails,
+    // use the context returned from onMutate to roll back
+    onError: (err, variables, context) => {
+      if (context?.prevCars) {
+        queryClient.setQueryData<Car[]>(['cars'], context.prevCars);
+      }
+    },
+    // Always refetch after error or success:
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['cars'] });
     },
   });
@@ -122,14 +215,14 @@ export default function Cars() {
       <Table verticalSpacing="sm" striped highlightOnHover className="vehicle-table">
         <thead>
           <tr>
-            <td>Name</td>
-            <td>Model</td>
-            <td>Year</td>
-            <td>Color</td>
-            <td>License Plate</td>
-            <td>Mileage</td>
-            <td>Status</td>
-            <td>Edit</td>
+            <th>Name</th>
+            <th>Model</th>
+            <th>Year</th>
+            <th>Color</th>
+            <th>License Plate</th>
+            <th>Mileage</th>
+            <th>Status</th>
+            <th>Edit</th>
           </tr>
         </thead>
         <tbody>{displayCarRows(cars)}</tbody>
@@ -153,13 +246,10 @@ export default function Cars() {
       status: carStatus,
     };
 
-    //mutation.mutate(newCar)
+    updateCarMutation.mutate(newCar);
 
-    const newCars = cars.map((car) => (car._id === selectedCar?._id ? newCar : car));
-
-    setCars(newCars);
     setSelectedCar(null);
-    setInputStates(newEmptyCar(cars.length + 1));
+    setInputStates(newEmptyCar());
     setAddButtonEnabled(true);
   }
 
@@ -203,8 +293,12 @@ export default function Cars() {
               <IconCheck onClick={saveCar} className="hover-cursor"></IconCheck>
               <IconX
                 onClick={() => {
-                  setCars(cars.filter((c) => c._id !== car._id));
+                  if (!car._id) {
+                    console.log('Car has no id, deleting from state');
+                    return;
+                  }
                   setSelectedCar(null);
+                  deleteCarMutation.mutate(car._id);
                   setAddButtonEnabled(true);
                 }}
                 className="hover-cursor"
@@ -233,6 +327,13 @@ export default function Cars() {
               <IconX
                 className="hover-cursor"
                 onClick={() => {
+                  if (!car._id) {
+                    console.log('Car has no id, deleting from state');
+                    return;
+                  }
+                  setSelectedCar(null);
+                  deleteCarMutation.mutate(car._id);
+                  setAddButtonEnabled(true);
                   setCars(cars.filter((c) => c._id !== car._id));
                 }}
               />
@@ -242,12 +343,9 @@ export default function Cars() {
       }
     });
   }
-  // ToDo: replace by database access?
-  // ToDo: think about better table header names
 
   // Function that adds a new empty car to a fleet
-  const newEmptyCar = (_id: number) => ({
-    _id: _id,
+  const newEmptyCar = () => ({
     name: '',
     model: '',
     year: 0,
@@ -258,9 +356,13 @@ export default function Cars() {
   });
 
   const addCar = () => {
-    const newCar = newEmptyCar(cars.reduce((max, car) => (car._id > max ? car._id : max), 0) + 1);
-    setCars([...cars, newCar]);
+    const newCar = newEmptyCar();
+
+    newCar.name = 'hello';
+    postCarMutation.mutate(newCar);
+
     setSelectedCar(newCar);
+
     setAddButtonEnabled(false);
   };
 
@@ -275,8 +377,7 @@ export default function Cars() {
       <div className="table">
         <h2>Your cars</h2>
         <Divider my={'lg'} />
-        {/* {!isLoading && displayCars(data as Car[])} */}
-        {displayCars(cars)}
+        {isLoading ? <LoadingOverlay visible></LoadingOverlay> : displayCars(data as Car[])}
         <Button onClick={addCar} disabled={!addButtonEnabled}>
           Add new car
         </Button>
