@@ -96,12 +96,12 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
             title: 'Session timed out',
             message: 'Your session has timed out and you will need to sign in again.',
           });
-          return null;
+          return new Response();
         }
 
         const response = await fetch(fetchParams[0], {
           headers: { Authorization: `Bearer ${user?.accessToken}` },
-          body: fetchParams[1]?.body,
+          ...fetchParams[1],
         });
 
         const data = await response.json();

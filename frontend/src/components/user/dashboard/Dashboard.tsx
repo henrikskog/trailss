@@ -10,7 +10,9 @@ import {
     IconHome2,
     IconCalendarStats,
     IconUser,
+    IconCar,
 } from '@tabler/icons';
+import Cars from '../../company/dashboard/components/Cars';
 
 export default function Dashboard() {
     const [content, setContent] = useState("")
@@ -19,6 +21,7 @@ const mockdataUser = [
     { icon: IconHome2, label: 'Map' },
     { icon: IconCalendarStats, label: 'History' },
     { icon: IconUser, label: 'Account' },
+    { icon: IconCar, label: 'Cars' },
 ];
 
     function renderSwitch(param: string) {
@@ -27,8 +30,10 @@ const mockdataUser = [
                 return <HistoryUser />;
             case 'Account':
                 return <UserSettings />;    
+            case 'Cars':
+                return <Cars />;    
             default:
-                return <Map />;
+                return <Cars />;
         }
     }
     return (
