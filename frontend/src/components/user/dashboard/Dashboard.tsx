@@ -7,16 +7,9 @@ import HistoryUser from './components/history/HistoryUser';
 import UserSettings from '../settings/UserSettings';
 
 import {
-    TablerIcon,
     IconHome2,
     IconCalendarStats,
     IconUser,
-    IconLogout,
-    IconSwitchHorizontal,
-    IconCar,
-    IconPlaneDeparture,
-    IconCertificate,
-    IconChartBar,
 } from '@tabler/icons';
 
 export default function Dashboard() {
