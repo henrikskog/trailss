@@ -8,6 +8,10 @@ import {
     IconUser,
     IconLogout,
     IconSwitchHorizontal,
+    IconCar,
+    IconPlaneDeparture,
+    IconCertificate,
+    IconChartBar,
 } from '@tabler/icons';
 import { Link } from 'react-router-dom';
 import useAuth from '../../../auth/AuthContext/AuthProvider';
@@ -43,24 +47,26 @@ interface NavbarLinkProps {
 }
 
 
-const mockdata = [
-    { icon: IconHome2, label: 'Map' },
-    { icon: IconCalendarStats, label: 'History' },
-    { icon: IconUser, label: 'Account' },
-];
 
-export function MenuBar(props: any) {
+
+interface Props {
+    setContent: (content: string) => void;
+    isCompanyDashboard?: boolean;
+    data: { icon: TablerIcon; label: string }[];
+}
+
+// const data = "isCompanyDashboard" in props ? mockdataCompany : mockdataUser;
+const MenuBar: React.FC<Props> = ({ setContent, isCompanyDashboard, data }) => {
     const [active, setActive] = useState(0);
-    const {logout} = useAuth()
-
-    const links = mockdata.map((link, index) => (
+    const { logout } = useAuth()
+    const links = data.map((link, index) => (
         <NavbarLink
             {...link}
             key={link.label}
             active={index === active}
             onClick={() => {
                 setActive(index)
-                props.setContent(link.label)
+                setContent(link.label)
             }}
         />
     ));
@@ -93,3 +99,4 @@ export function MenuBar(props: any) {
         </Navbar>
     );
 }
+export default MenuBar;

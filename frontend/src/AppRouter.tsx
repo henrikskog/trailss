@@ -12,6 +12,7 @@ import MapsExample from './components/shared/map/MapsExample'
 import { ReactNode } from 'react';
 import SalesPage from './components/enterprise/SalesPage';
 import EnterpriseLogin from "./components/enterprise/EnterpriseLogin";
+import DashboardCompany from './components/company/DashboardCompany';
 
 
 function AppRouter(props: any) {
@@ -36,9 +37,14 @@ function AppRouter(props: any) {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/dashboard" element={
-                    <RequireAuth>
+                    //<RequireAuth>
                         <Dashboard />
-                    </ RequireAuth>
+                    //</ RequireAuth>
+                } />
+                <Route path="/dashboardCompany" element={
+                    //<RequireAuth>
+                        <DashboardCompany />
+                    //</ RequireAuth>
                 } />
                 <Route path='/user/settings' element={<Map />} />
                 <Route path='information' element={<SalesPage />} />
