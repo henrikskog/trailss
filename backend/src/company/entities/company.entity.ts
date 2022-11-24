@@ -1,4 +1,4 @@
 export class CompanyEntity{
-    companyname: string;
+    name: string;
     email: string
 }

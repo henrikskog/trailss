@@ -12,11 +12,8 @@ import {
 import { VehiclesService } from "./vehicles.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
-import { ApiAcceptedResponse, ApiBearerAuth, ApiBody, ApiExtraModels, ApiTags, getSchemaPath } from "@nestjs/swagger";
-import { JwtStrategy } from '../auth/jwt.strategy';
-import { AuthGuard } from "@nestjs/passport";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/jwt-auth-guard.guard";
-import { AuthedUser } from "src/users/user.decorator";
 
 @ApiTags("Vehicles")
 @Controller("vehicles")

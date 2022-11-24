@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtCompanyAuthGuard } from 'src/authCompany/jwt-auth-guard-company.guard';
 import { CompanyVehiclesService } from './company-vehicles.service';
 import { CreateCompanyVehicleDto } from './dto/create-company-vehicle.dto';
 import { UpdateCompanyVehicleDto } from './dto/update-company-vehicle.dto';
@@ -9,28 +10,38 @@ import { UpdateCompanyVehicleDto } from './dto/update-company-vehicle.dto';
 export class CompanyVehiclesController {
   constructor(private readonly companyVehiclesService: CompanyVehiclesService) {}
 
-  @Post()
-  create(@Body() createCompanyVehicleDto: CreateCompanyVehicleDto) {
-    return this.companyVehiclesService.create(createCompanyVehicleDto);
+  @UseGuards(JwtCompanyAuthGuard)  
+  @Post(':fleetid')
+  @ApiBearerAuth()
+  async create(@Request() req: any, @Param("fleetid") fleetId: string, @Body() createCompanyVehicleDto: CreateCompanyVehicleDto) {
+    return this.companyVehiclesService.create(req.user, fleetId, createCompanyVehicleDto);
   }
 
-  @Get()
-  findAll() {
-    return this.companyVehiclesService.findAll();
+  @UseGuards(JwtCompanyAuthGuard)  
+  @Get(':fleetid')
+  @ApiBearerAuth()
+  async findAll(@Request() req: any, @Param("fleetid") fleetId: string) {
+    return this.companyVehiclesService.findAll(req.user, fleetId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.companyVehiclesService.findOne(+id);
+  @UseGuards(JwtCompanyAuthGuard)  
+  @Get('/:fleetid/:id')
+  @ApiBearerAuth()
+  async findOne(@Request() req: any, @Param("fleetid") fleetId: string, @Param("id") id: string) {
+    return this.companyVehiclesService.findOne(req.user, fleetId, id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCompanyVehicleDto: UpdateCompanyVehicleDto) {
-    return this.companyVehiclesService.update(+id, updateCompanyVehicleDto);
+  @UseGuards(JwtCompanyAuthGuard)
+  @Patch('/:fleetid/:id')
+  @ApiBearerAuth()
+  async update(@Request() req: any, @Param("fleetid") fleetId: string, @Param('id') id: string, @Body() updateCompanyVehicleDto: UpdateCompanyVehicleDto) {
+    return this.companyVehiclesService.update(req.user, fleetId, id, updateCompanyVehicleDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.companyVehiclesService.remove(+id);
+  @UseGuards(JwtCompanyAuthGuard)
+  @Delete('/:fleetid/:id')
+  @ApiBearerAuth()
+  async remove(@Request() req: any, @Param("fleetid") fleetId: string, @Param("id") id: string) {
+    return this.companyVehiclesService.remove(req.user, fleetId, id);
   }
 }

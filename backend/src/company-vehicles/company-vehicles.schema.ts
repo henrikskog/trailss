@@ -2,10 +2,10 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { TemplateCompanyRoute } from 'src/company-routes/dto/template-company-route.dto';
 
-export type companyVehicleDocument = companyVehicle & Document;
+export type CompanyVehicleDocument = CompanyVehicle & Document;
 
 @Schema()
-export class companyVehicle {
+export class CompanyVehicle {
   @Prop()
   type: string;
 
@@ -29,4 +29,4 @@ export class companyVehicle {
 
 }
 
-export const CompanyVehiclesSchema = SchemaFactory.createForClass(companyVehicle);
+export const CompanyVehiclesSchema = SchemaFactory.createForClass(CompanyVehicle);
