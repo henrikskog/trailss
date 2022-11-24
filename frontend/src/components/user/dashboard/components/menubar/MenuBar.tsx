@@ -57,6 +57,7 @@ interface Props {
 
 // const data = "isCompanyDashboard" in props ? mockdataCompany : mockdataUser;
 const MenuBar: React.FC<Props> = ({ setContent, isCompanyDashboard, data }) => {
+    console.log(data)
     const [active, setActive] = useState(0);
     const { logout } = useAuth()
     const links = data.map((link, index) => (

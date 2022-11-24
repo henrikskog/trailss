@@ -1,4 +1,4 @@
-import { Anchor, Button, TextInput } from '@mantine/core';
+import { Anchor, Button, PasswordInput, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,7 @@ import './Login.scss';
 
 export default function Login(props: any) {
   const navigate = useNavigate();
-  const { login, error, user } = useAuth();
+  const { login, error, user, loginCompany } = useAuth();
 
   useEffect(() => {
     if (user !== null) {
@@ -29,13 +29,13 @@ export default function Login(props: any) {
     <div className="container">
       <form
         className="form"
-        onSubmit={form.onSubmit((values: any) => login(values['username'], values['password']))}
+        onSubmit={form.onSubmit((values: any) => props.business ? loginCompany("", "") : login(values['username'], values['password']))}
       >
         {error}
         
         <h1 id="header">{props.business ? "Business log in" : "Log in" }</h1>
         <TextInput placeholder="Username" {...form.getInputProps('username')} mb={'sm'} />
-        <TextInput placeholder="Password" {...form.getInputProps('password')} />
+        <PasswordInput placeholder="Password" {...form.getInputProps('password')} />
         <div className="submit">
           <Button type="submit" mt="sm" className="submitButton">
             Login

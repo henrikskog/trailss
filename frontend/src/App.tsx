@@ -8,11 +8,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const queryClient = new QueryClient();
 
 function App() {
+  const pathName = useLocation().pathname
   return (
     <QueryClientProvider client={queryClient}>
       <div>
         <div className="App">
-          {useLocation().pathname !== '/dashboard' && <Navbar />}
+          {!(pathName == '/dashboard' || pathName == '/dashboardCompany' )  && <Navbar />}
           <AppRouter />
         </div>
       </div>

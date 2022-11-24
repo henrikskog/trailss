@@ -25,6 +25,10 @@ interface AuthContext {
   error: string;
 
   login: (email: string, password: string) => void;
+
+  // TODO: Add actual functionality to this function
+  loginCompany: (username: string, password: string) => void;
+
   register: (email: string, name: string, password: string) => void;
   logout: () => void;
   authFetch: (...fetchParams: FetchParams) => Promise<unknown>;
@@ -47,6 +51,9 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
     const REGISTER_PART = '/user/register';
 
     return {
+      loginCompany: async () => {
+        navigate('/dashboardCompany');
+      },
       login: async ({ username, password }: LoginParams): Promise<string | null> => {
         const response = await fetch(
           API_ROOT + LOGIN_PART + `?username=${username}&password=${password}`
@@ -174,6 +181,7 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
       register,
       logout,
       authFetch: authApi().authFetch,
+      loginCompany: authApi().loginCompany,
     }),
     [user, authLoading, authError]
   );

@@ -8,8 +8,6 @@ import Dashboard from './components/user/dashboard/Dashboard';
 import useAuth from './components/user/auth/AuthContext/AuthProvider';
 import Login from './components/user/auth/login/Login';
 import Register from './components/user/auth/register/Register';
-import MapsExample from './components/shared/map/MapsExample'
-import { ReactNode } from 'react';
 import SalesPage from './components/enterprise/SalesPage';
 import EnterpriseLogin from "./components/enterprise/EnterpriseLogin";
 import DashboardCompany from './components/company/DashboardCompany';
