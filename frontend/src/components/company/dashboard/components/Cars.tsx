@@ -1,13 +1,15 @@
-import { Button, Divider, Input, LoadingOverlay, Table } from '@mantine/core';
+import { Button, Divider, Input, LoadingOverlay, Select, Table } from '@mantine/core';
 import { IconCheck, IconEdit, IconX } from '@tabler/icons';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import './Cars.scss';
-import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query';
+import { getCarMakes, getCarModels } from '../../../../api/getCarInfo';
 import useAuth from '../../../user/auth/AuthContext/AuthProvider';
+import './Cars.scss';
 
 interface Car {
   _id?: number;
   name: string;
+  make: string;
   model: string;
   year: number;
   color: string;
@@ -16,57 +18,12 @@ interface Car {
   status: string;
 }
 
-// TODO: Replace with real data
-// 10 cars for testing
-const dummyCars: Car[] = [
-  {
-    _id: 1,
-    name: 'Car 1',
-    model: 'Model 1',
-    year: 2021,
-    color: 'Red',
-    licensePlate: 'ABC123',
-    mileage: 1000,
-    status: 'Available',
-  },
-  {
-    _id: 2,
-    name: 'Car 2',
-    model: 'Model 2',
-    year: 2021,
-    color: 'Blue',
-    licensePlate: 'ABC124',
-    mileage: 1000,
-    status: 'Available',
-  },
-  {
-    _id: 3,
-    name: 'Car 3',
-    model: 'Model 3',
-    year: 2021,
-    color: 'Green',
-    licensePlate: 'ABC125',
-    mileage: 1000,
-    status: 'Available',
-  },
-  {
-    _id: 4,
-    name: 'Car 4',
-    model: 'Model 4',
-    year: 2021,
-    color: 'Yellow',
-    licensePlate: 'ABC126',
-    mileage: 1000,
-    status: 'Available',
-  },
-];
-
 export default function Cars() {
-  const [cars, setCars] = useState<Car[]>(dummyCars);
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [addButtonEnabled, setAddButtonEnabled] = useState<boolean>(true);
 
   const [carName, setCarName] = useState<string>('');
+  const [carMake, setCarMake] = useState<string>('');
   const [carModel, setCarModel] = useState<string>('');
   const [carYear, setCarYear] = useState<number>(2022);
   const [carColor, setCarColor] = useState<string>('');
@@ -75,6 +32,17 @@ export default function Cars() {
   const [carStatus, setCarStatus] = useState<string>('');
 
   const { authFetch } = useAuth();
+
+  const queryClient = useQueryClient();
+
+  const { data: autoCompleteMakes, isLoading: isLoadingMakes } = useQuery({
+    queryKey: ['makes-autocomplete'],
+    queryFn: () => getCarMakes(2000),
+  });
+  const { data: autoCompleteModels, isLoading: isLoadingModels } = useQuery({
+    queryKey: ['models-autocomplete'],
+    queryFn: () => getCarModels(2000, 'audi'),
+  });
 
   const getCars = async () => {
     type CarsApiResponse = Car[];
@@ -85,6 +53,8 @@ export default function Cars() {
     )) as CarsApiResponse;
     return response;
   };
+
+  const { data, isLoading, error, isError } = useQuery({ queryKey: ['cars'], queryFn: getCars });
 
   const postCar = async (car: Car) => {
     const response = await authFetch('http://localhost:5000/vehicles', {
@@ -113,10 +83,6 @@ export default function Cars() {
 
     return response;
   };
-
-  const queryClient = useQueryClient();
-
-  const { data, isLoading } = useQuery({ queryKey: ['cars'], queryFn: getCars });
 
   // Mutations
   const postCarMutation = useMutation({
@@ -238,6 +204,7 @@ export default function Cars() {
     const newCar: Car = {
       _id: selectedCar._id,
       name: carName,
+      make: carMake,
       model: carModel,
       year: carYear,
       color: carColor,
@@ -254,7 +221,6 @@ export default function Cars() {
   }
 
   function displayCarRows(cars: Car[]) {
-    console.log(cars);
     return cars.map((car) => {
       if (car._id === selectedCar?._id) {
         return (
@@ -263,7 +229,14 @@ export default function Cars() {
               <Input value={carName} onChange={(event: any) => setCarName(event.target.value)} />
             </td>
             <td>
-              <Input value={carModel} onChange={(event: any) => setCarModel(event.target.value)} />
+              <Select
+                mt="sm"
+                searchable
+                clearable
+                data={autoCompleteModels ?? []}
+                onSearchChange={setCarModel}
+                searchValue={carModel}
+              />
             </td>
             <td>
               <Input value={carYear} onChange={(event: any) => setCarYear(event.target.value)} />
@@ -334,7 +307,6 @@ export default function Cars() {
                   setSelectedCar(null);
                   deleteCarMutation.mutate(car._id);
                   setAddButtonEnabled(true);
-                  setCars(cars.filter((c) => c._id !== car._id));
                 }}
               />
             </td>
@@ -348,6 +320,7 @@ export default function Cars() {
   const newEmptyCar = () => ({
     name: '',
     model: '',
+    make: '',
     year: 0,
     color: '',
     licensePlate: '',
@@ -358,7 +331,6 @@ export default function Cars() {
   const addCar = () => {
     const newCar = newEmptyCar();
 
-    newCar.name = 'hello';
     postCarMutation.mutate(newCar);
 
     setSelectedCar(newCar);
@@ -366,22 +338,31 @@ export default function Cars() {
     setAddButtonEnabled(false);
   };
 
-  // REQUIREMENTS:
-  // the idea was to have on the left side the table, containing all the registered cars
-  // on the right side we have the editor. Clicking on any car in the table opens the car in the editor
-  // and the car be modified from there. Maybe it should allow for adding stops beside the origin/destination as well
-  // maybe below the Editor have the option of adding new cars by clicking on a button
-
   return (
     <div className="container">
       <div className="table">
         <h2>Your cars</h2>
         <Divider my={'lg'} />
-        {isLoading ? <LoadingOverlay visible></LoadingOverlay> : displayCars(data as Car[])}
+        {isError ? (
+          <div>
+            <p>There was an error loading your cars</p>
+            <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['cars'] })}>
+              Retry
+            </Button>
+          </div>
+        ) : isLoading ? (
+          <div>
+            <LoadingOverlay visible></LoadingOverlay>
+          </div>
+        ) : (
+          displayCars(data)
+        )}
         <Button onClick={addCar} disabled={!addButtonEnabled}>
           Add new car
         </Button>
       </div>
+      {autoCompleteMakes && autoCompleteMakes}
+      {autoCompleteModels && autoCompleteModels}
     </div>
   );
 }

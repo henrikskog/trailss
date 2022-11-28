@@ -50,6 +50,15 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
     const LOGIN_PART = '/user/login';
     const REGISTER_PART = '/user/register';
 
+    const handleExpiredToken = () => {
+      showNotification({
+        title: 'Session timed out',
+        message: 'Your session has timed out and you will need to sign in again.',
+      });
+      setUser(null);
+      navigate('/login');
+    };
+
     return {
       loginCompany: async () => {
         navigate('/dashboardCompany');
@@ -113,6 +122,8 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
           },
           ...fetchParams[1],
         });
+
+        response.status == 401 && handleExpiredToken();
 
         const data = await response.json();
         return data;

@@ -15,10 +15,11 @@ import DashboardCompany from './components/company/DashboardCompany';
 
 function AppRouter(props: any) {
     const { user } = useAuth();
+    const navigate = useNavigate();
 
     function RequireAuth({ children }: {children: JSX.Element}): JSX.Element {
         if(!user) {
-            return <Navigate to="/login" replace />;
+            navigate('/login');
         }
 
         return children 

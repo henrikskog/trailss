@@ -15,10 +15,10 @@ import {
 import Cars from '../../company/dashboard/components/Cars';
 
 export default function Dashboard() {
-    const [content, setContent] = useState("")
+    const [content, setContent] = useState("Cars")
 
 const mockdataUser = [
-    { icon: IconHome2, label: 'Map' },
+    { icon: IconHome2, label: 'Home' },
     { icon: IconCalendarStats, label: 'History' },
     { icon: IconUser, label: 'Account' },
     { icon: IconCar, label: 'Cars' },
@@ -26,14 +26,14 @@ const mockdataUser = [
 
     function renderSwitch(param: string) {
         switch (param) {
+            case 'Home':
+                return <Map />;
             case 'History':
                 return <HistoryUser />;
             case 'Account':
                 return <UserSettings />;    
             case 'Cars':
                 return <Cars />;    
-            default:
-                return <Map />;
         }
     }
     return (
