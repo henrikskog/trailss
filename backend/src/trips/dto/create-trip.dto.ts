@@ -1,8 +1,8 @@
 import { Vehicle } from "src/vehicles/vehicles.schema";
 
 export class CreateTripDto {
-    from: string;
-    to: string; 
+    origin: string;
+    destination: string; 
     distance: number;
     total_emissions: number;
     date: Date;
