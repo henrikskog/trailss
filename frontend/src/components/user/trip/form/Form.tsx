@@ -8,6 +8,7 @@ import { Select } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 
 import axios from 'axios';
+import useAuth from '../../auth/AuthContext/AuthProvider';
 
 interface Props {
   calculateRoute: (
@@ -22,12 +23,13 @@ interface Props {
 
 const Form: React.FC<Props> = ({ calculateRoute }) => {
   const baseURL = 'https://www.fueleconomy.gov/';
+  const { authFetch } = useAuth();
 
   const form = useForm({
     initialValues: {
-      origin: '',
-      destination: '',
-      date: 0,
+      origin: 'Fredrikstad',
+      destination: 'Sarpsborg',
+      date: new Date(),
       passengers: 1,
       carYear: 2000,
       consumption: 0,
@@ -108,13 +110,36 @@ const Form: React.FC<Props> = ({ calculateRoute }) => {
       });
   };
 
+  const saveTrip = async () => {
+    const response = await authFetch('http://localhost:5000/trips', {
+      method: 'POST',
+      body: JSON.stringify({
+        origin: form.values.origin,
+        destination: form.values.destination,
+        date: form.values.date,
+        passengers: form.values.passengers,
+        carYear: form.values.carYear,
+        consumption: form.values.consumption,
+        carMake: searchMakeValue,
+        carModel: searchModelValue,
+      }),
+    });
+    console.log(response);
+  };
+
   return (
     <div className="search-form">
       <h1>Your trip</h1>
       <form
         className="form"
         onSubmit={form.onSubmit((values: any) => {
-          calculateRoute(values.origin, values.destination, searchMakeValue, yearValue.toString(), searchModelValue );
+          calculateRoute(
+            values.origin,
+            values.destination,
+            searchMakeValue,
+            yearValue.toString(),
+            searchModelValue
+          );
           setCalculated(true);
         })}
       >
@@ -222,7 +247,7 @@ const Form: React.FC<Props> = ({ calculateRoute }) => {
             Submit
           </Button>
           {useLocation().pathname === '/dashboard' && calculated && (
-            <Button className="save-button" type="submit" mt="sm">
+            <Button className="save-button" type="submit" mt="sm" onClick={saveTrip}>
               Save Trip
             </Button>
           )}

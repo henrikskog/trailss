@@ -40,8 +40,10 @@ export default function Cars() {
     queryFn: () => getCarMakes(2000),
   });
   const { data: autoCompleteModels, isLoading: isLoadingModels } = useQuery({
-    queryKey: ['models-autocomplete'],
-    queryFn: () => getCarModels(2000, 'audi'),
+    queryKey: ['models-autocomplete', carMake],
+    queryFn: () => {
+      return carMake == '' ? [] : getCarModels(2000, carMake);
+    },
   });
 
   const getCars = async () => {
@@ -182,6 +184,7 @@ export default function Cars() {
         <thead>
           <tr>
             <th>Name</th>
+            <th>Make</th>
             <th>Model</th>
             <th>Year</th>
             <th>Color</th>
@@ -220,69 +223,80 @@ export default function Cars() {
     setAddButtonEnabled(true);
   }
 
+  const displaySelectedCar = () => {
+    if (selectedCar == null) {
+      return;
+    }
+
+    return (
+      <tr key={selectedCar._id}>
+        <td>
+          <Input value={carName} onChange={(event: any) => setCarName(event.target.value)} />
+        </td>
+        <td>
+          <Select
+            searchable
+            clearable
+            data={autoCompleteMakes ?? []}
+            onSearchChange={setCarMake}
+            searchValue={carMake}
+          />
+        </td>
+        <td>
+          <Select
+            searchable
+            clearable
+            data={autoCompleteModels ?? []}
+            onSearchChange={setCarModel}
+            searchValue={carModel}
+          />
+        </td>
+        <td>
+          <Input value={carYear} onChange={(event: any) => setCarYear(event.target.value)} />
+        </td>
+        <td>
+          <Input value={carColor} onChange={(event: any) => setCarColor(event.target.value)} />
+        </td>
+        <td>
+          <Input
+            value={carLicensePlate}
+            onChange={(event: any) => setCarLicensePlate(event.target.value)}
+          />
+        </td>
+        <td>
+          <Input value={carMileage} onChange={(event: any) => setCarMileage(event.target.value)} />
+        </td>
+        <td>
+          <Input value={carStatus} onChange={(event: any) => setCarStatus(event.target.value)} />
+        </td>
+        <td>
+          <IconCheck onClick={saveCar} className="hover-cursor"></IconCheck>
+          <IconX
+            onClick={() => {
+              if (!selectedCar._id) {
+                console.log('Car has no id, deleting from state');
+                return;
+              }
+              setSelectedCar(null);
+              deleteCarMutation.mutate(selectedCar._id);
+              setAddButtonEnabled(true);
+            }}
+            className="hover-cursor"
+          />
+        </td>
+      </tr>
+    );
+  };
+
   function displayCarRows(cars: Car[]) {
     return cars.map((car) => {
       if (car._id === selectedCar?._id) {
-        return (
-          <tr key={car._id}>
-            <td>
-              <Input value={carName} onChange={(event: any) => setCarName(event.target.value)} />
-            </td>
-            <td>
-              <Select
-                mt="sm"
-                searchable
-                clearable
-                data={autoCompleteModels ?? []}
-                onSearchChange={setCarModel}
-                searchValue={carModel}
-              />
-            </td>
-            <td>
-              <Input value={carYear} onChange={(event: any) => setCarYear(event.target.value)} />
-            </td>
-            <td>
-              <Input value={carColor} onChange={(event: any) => setCarColor(event.target.value)} />
-            </td>
-            <td>
-              <Input
-                value={carLicensePlate}
-                onChange={(event: any) => setCarLicensePlate(event.target.value)}
-              />
-            </td>
-            <td>
-              <Input
-                value={carMileage}
-                onChange={(event: any) => setCarMileage(event.target.value)}
-              />
-            </td>
-            <td>
-              <Input
-                value={carStatus}
-                onChange={(event: any) => setCarStatus(event.target.value)}
-              />
-            </td>
-            <td>
-              <IconCheck onClick={saveCar} className="hover-cursor"></IconCheck>
-              <IconX
-                onClick={() => {
-                  if (!car._id) {
-                    console.log('Car has no id, deleting from state');
-                    return;
-                  }
-                  setSelectedCar(null);
-                  deleteCarMutation.mutate(car._id);
-                  setAddButtonEnabled(true);
-                }}
-                className="hover-cursor"
-              />
-            </td>
-          </tr>
-        );
+        return displaySelectedCar();
       } else {
         return (
           <tr key={car._id}>
             <td>{car.name}</td>
+            <td>{car.make}</td>
             <td>{car.model}</td>
             <td>{car.year}</td>
             <td>{car.color}</td>
@@ -339,30 +353,30 @@ export default function Cars() {
   };
 
   return (
-    <div className="container">
-      <div className="table">
-        <h2>Your cars</h2>
-        <Divider my={'lg'} />
-        {isError ? (
-          <div>
-            <p>There was an error loading your cars</p>
-            <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['cars'] })}>
-              Retry
-            </Button>
-          </div>
-        ) : isLoading ? (
-          <div>
-            <LoadingOverlay visible></LoadingOverlay>
-          </div>
-        ) : (
-          displayCars(data)
-        )}
-        <Button onClick={addCar} disabled={!addButtonEnabled}>
-          Add new car
-        </Button>
+    <div>
+      <div className="container">
+        <div className="table">
+          <h2>Your cars</h2>
+          <Divider my={'lg'} />
+          {isError ? (
+            <div>
+              <p>There was an error loading your cars</p>
+              <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['cars'] })}>
+                Retry
+              </Button>
+            </div>
+          ) : isLoading ? (
+            <div>
+              <LoadingOverlay visible></LoadingOverlay>
+            </div>
+          ) : (
+            displayCars(data)
+          )}
+          <Button onClick={addCar} disabled={!addButtonEnabled}>
+            Add new car
+          </Button>
+        </div>
       </div>
-      {autoCompleteMakes && autoCompleteMakes}
-      {autoCompleteModels && autoCompleteModels}
     </div>
   );
 }
