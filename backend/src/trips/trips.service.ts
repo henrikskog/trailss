@@ -1,6 +1,7 @@
 import {
-  BadRequestException, Injectable,
-  NotFoundException
+  BadRequestException,
+  Injectable,
+  NotFoundException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
@@ -10,14 +11,17 @@ import { CreateTripDto } from "./dto/create-trip.dto";
 import { UpdateTripDto } from "./dto/update-trip.dto";
 import { Trip, TripDocument } from "./trips.schema";
 
-export const vehicleFuelSchema = z.literal("diesel").or(z.literal("petrol")).or(z.literal("LPG"));
+export const vehicleFuelSchema = z
+  .literal("diesel")
+  .or(z.literal("petrol"))
+  .or(z.literal("LPG"));
 export type VehicleFuelType = z.infer<typeof vehicleFuelSchema>;
 
 @Injectable()
 export class TripsService {
   constructor(
     private readonly vehicleService: VehiclesService,
-    @InjectModel(Trip.name) private tripModel: Model<TripDocument>,
+    @InjectModel(Trip.name) private tripModel: Model<TripDocument>
   ) {}
   /**
    * Fetch the fuel consumption for a given car
@@ -69,23 +73,29 @@ export class TripsService {
     const trip = await this.tripModel.create(createTripDto);
     user.trips.push(trip);
     user.save();
-    return "Created a new trip";
+    return trip;
   }
 
   async findAll(user: any) {
-    const trips = await user.populate("trips").then(p => p.trips)
+    const trips = await user.populate("trips").then((p) => p.trips);
     return trips;
   }
 
   async findOne(user: any, id: string) {
-    const trip = await user.populate("trips", null, {_id : id}).then(p => p.trips)
+    const trip = await user
+      .populate("trips", null, { _id: id })
+      .then((p) => p.trips);
     if (!trip.length) {
       throw new NotFoundException("No trip with the given arguments was found");
     }
     return trip[0];
   }
 
-  async update(tripsIds: [mongoose.Schema.Types.ObjectId], id: string, updateTripDto: UpdateTripDto) {
+  async update(
+    tripsIds: [mongoose.Schema.Types.ObjectId],
+    id: string,
+    updateTripDto: UpdateTripDto
+  ) {
     const trip = tripsIds.filter((trip) => trip.toString() == id);
     if (!trip.length) {
       throw new NotFoundException("No trip with the given id was found");
@@ -100,10 +110,10 @@ export class TripsService {
     if (!trip.length) {
       throw new NotFoundException("No trip with the given id was found");
     }
-    user.trips.pull({ _id: trip[0]})
-    user.save()
+    user.trips.pull({ _id: trip[0] });
+    user.save();
     await this.tripModel.findByIdAndDelete(trip[0]);
-    
+
     return "Trip deleted successfully";
   }
 }

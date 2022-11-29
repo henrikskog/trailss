@@ -96,7 +96,6 @@ const Map: React.FC = () => {
         <Form calculateRoute={calculateRoute} />
       </div>
       <div className='overlay-calculations calculations'>
-        {showResults && <CalculationResultsBar emissions={emissions} distance={distance} /> }
       </div>
       <div className='background-map'>
         {/* <Box position='absolute' left={0} top={0} h='100%' w='100%'> */}

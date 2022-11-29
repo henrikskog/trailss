@@ -1,6 +1,6 @@
 export class CreateCompanyRouteDto {
-    from: string;  
-    to: string;  
+    origin: string;  
+    destination: string;  
     distance: string;  
     emissions: number;    
     capacity: number;  

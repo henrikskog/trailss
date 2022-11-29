@@ -8,16 +8,18 @@ import Dashboard from './components/user/dashboard/Dashboard';
 import useAuth from './components/user/auth/AuthContext/AuthProvider';
 import Login from './components/user/auth/login/Login';
 import Register from './components/user/auth/register/Register';
-import MapsExample from './components/shared/map/MapsExample'
-import { ReactNode } from 'react';
+import SalesPage from './components/enterprise/SalesPage';
+import EnterpriseLogin from "./components/enterprise/EnterpriseLogin";
+import DashboardCompany from './components/company/DashboardCompany';
 
 
 function AppRouter(props: any) {
     const { user } = useAuth();
+    const navigate = useNavigate();
 
     function RequireAuth({ children }: {children: JSX.Element}): JSX.Element {
         if(!user) {
-            return <Navigate to="/login" replace />;
+            navigate('/login');
         }
 
         return children 
@@ -38,7 +40,14 @@ function AppRouter(props: any) {
                         <Dashboard />
                     </ RequireAuth>
                 } />
+                <Route path="/dashboardCompany" element={
+                    //<RequireAuth>
+                        <DashboardCompany />
+                    //</ RequireAuth>
+                } />
                 <Route path='/user/settings' element={<Map />} />
+                <Route path='information' element={<SalesPage />} />
+                <Route path='enterprise-login' element={<EnterpriseLogin />} />
             </Routes>
         </div>
     )
