@@ -41,9 +41,7 @@ export default function Cars() {
   });
   const { data: autoCompleteModels, isLoading: isLoadingModels } = useQuery({
     queryKey: ['models-autocomplete', carMake],
-    queryFn: () => {
-      return carMake == '' ? [] : getCarModels(2000, carMake);
-    },
+    queryFn: () => (carMake == '' ? [] : getCarModels(2000, carMake)),
   });
 
   const getCars = async () => {
