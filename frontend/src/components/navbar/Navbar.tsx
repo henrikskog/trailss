@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import logo from '../../logo.svg';
+import logo from '../../logoDark.svg';
 import React, { useState } from 'react';
 import './Navbar.scss';
 import useAuth from '../user/auth/AuthContext/AuthProvider';

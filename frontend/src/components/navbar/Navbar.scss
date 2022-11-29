@@ -1,18 +1,19 @@
 @import "../../general-variables.scss";
 
 .navbar {
+  color: $principal_color;
   position: fixed;
-  width: 100%;
+  width: 98%;
   z-index: 10;
   padding: 8px 20px;
-  height: 35px;
+  height: 45px;
   list-style-type: none;
   overflow: hidden;
-  background-color: $principal_color;
+  //background-color: $principal_color;
   color: white;
   display: flex;
   align-items: center;
-
+  justify-content: space-between;
   .logo {
     height: 17px;
     margin-right: 20px;
@@ -67,14 +68,14 @@
       line-height: 1.5rem;
       font-size: 1rem;
       padding: 6px 12px;
-      color: #F1F1F3;
+      color: $principal_color;
       padding: 6px 8px;
       position: relative;
       transition: color .3s;
 
     }
     a:hover {
-      color: pink;
+      color: rgba(52, 52, 52, 0.986);
     }
     float: left;
   }
