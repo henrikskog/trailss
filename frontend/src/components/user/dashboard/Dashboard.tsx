@@ -15,7 +15,7 @@ import {
 import Cars from '../../company/dashboard/components/Cars';
 
 export default function Dashboard() {
-    const [content, setContent] = useState("Cars")
+    const [content, setContent] = useState("Home")
 
 const mockdataUser = [
     { icon: IconHome2, label: 'Home' },

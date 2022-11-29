@@ -27,8 +27,8 @@ const Form: React.FC<Props> = ({ calculateRoute }) => {
 
   const form = useForm({
     initialValues: {
-      origin: 'Fredrikstad',
-      destination: 'Sarpsborg',
+      origin: '',
+      destination: '',
       date: new Date(),
       passengers: 1,
       carYear: 2000,

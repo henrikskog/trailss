@@ -5,7 +5,6 @@ export class CreateVehicleDto {
   year: number;
   consumptions?: number;
   fuelType?: string;
-
   type: string;
   emissions: number;
   capacity: number;
