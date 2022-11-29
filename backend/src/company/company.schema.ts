@@ -1,5 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
+import { BusinessTrip } from 'src/business-trip/business-trip-vehicles.schema';
 import { Fleet } from 'src/fleets/fleets.schema';
 import { Trip } from 'src/trips/trips.schema';
 
@@ -28,8 +29,8 @@ export class Company {
   @Prop()
   subscription: number
   //TODO: create TripCompany and change the type
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Trip', default: []})
-  company_trips: Trip[]
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'BusinessTrip', default: []})
+  business_trips: BusinessTrip[]
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);
