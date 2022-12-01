@@ -6,6 +6,6 @@ export class TemplateCompanyRoute {
     capacity: number;  
     employee: number;  
     date: Date;
-    frequency: string[];
+    frequency: number[];
 }
   

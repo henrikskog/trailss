@@ -10,6 +10,8 @@ import { AuthCompanyModule } from './authCompany/auth-company.module';
 import { CompanyRoutesModule } from './company-routes/company-routes.module';
 import { CompanyVehiclesModule } from './company-vehicles/company-vehicles.module';
 import { FleetsModule } from './fleets/fleets.module';
+import { AppService } from './app.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 
 const createMongoConnectionString = () => `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER_URL}/halla?retryWrites=true&w=majority`
@@ -17,6 +19,7 @@ const createMongoConnectionString = () => `mongodb+srv://${process.env.DB_USER}:
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     MongooseModule.forRoot(createMongoConnectionString()),
     UsersModule,
@@ -29,5 +32,6 @@ const createMongoConnectionString = () => `mongodb+srv://${process.env.DB_USER}:
     CompanyVehiclesModule,
     CompanyRoutesModule
   ],
+  providers: [AppService]
 })
 export class AppModule {}

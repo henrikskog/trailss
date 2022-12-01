@@ -7,7 +7,7 @@ import { UpdateCompanyDto } from "./dto/update-company.dto";
 @Injectable()
 export class CompanyService{
     constructor(
-        @InjectModel("company") private readonly companyModel: Model<CompanyDocument>
+        @InjectModel("Company") private readonly companyModel: Model<CompanyDocument>
     ) {}
 
     async createCompany(name: string, password: string, email: string) {

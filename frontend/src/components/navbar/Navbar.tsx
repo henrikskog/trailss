@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import logo from '../../logo.svg';
+import logo from '../../logoDark.svg';
 import React, { useState } from 'react';
 import './Navbar.scss';
 import useAuth from '../user/auth/AuthContext/AuthProvider';
@@ -43,10 +43,10 @@ export default function Navbar() {
       </div>
 
       <div className="dropdown">
-        <button className="dropbtn">For Businesses</button>
+        <div className="dropbtn">For Businesses</div>
         <div className="dropdown-content">
-          <a className='top-hover'><Link to="information">Information</Link></a>
-          <a className='bottom-hover'><Link to="enterprise-login">Sign in</Link></a>
+          <Link className='top-hover' to="information">Information</Link>
+          <Link className='bottom-hover' to="enterprise-login">Sign in</Link>
         </div>
       </div>
 

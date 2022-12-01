@@ -4,14 +4,9 @@ import './Home.scss';
 
 export default function Home() {
   return (
-    <Grid justify="center" className="home-grid">
+    <Grid grow className="home-grid">
       <Grid.Col>
         Fleets
-
-      <br></br>
-      <br></br>
-
-        <IconCar />
 
       <br></br>
         <IconCar />
