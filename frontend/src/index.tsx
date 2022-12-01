@@ -6,16 +6,19 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { NotificationsProvider } from '@mantine/notifications';
 import { AuthProvider } from './components/user/auth/AuthContext/AuthProvider';
+import { CompanyAuthProvider } from './components/company/AuthContext/CompanyAuthProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-      <NotificationsProvider>
-        <App />
-      </NotificationsProvider>
-      </AuthProvider>
+      <CompanyAuthProvider>
+        <AuthProvider>
+          <NotificationsProvider>
+            <App />
+          </NotificationsProvider>
+        </AuthProvider>
+      </CompanyAuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

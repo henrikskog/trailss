@@ -5,10 +5,10 @@ import Login from '../user/auth/login/Login';
 
 
 
-export default function EnterpriseLogin() {
+export default function CompanyLogin() {
     return (
         <div>
-            <Login business/>
+            <Login company/>
         </div>
     );
 }

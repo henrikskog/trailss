@@ -1,56 +1,68 @@
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
-import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 
-import Landing from "./components/landing/Landing";
+import { useEffect } from 'react';
+import { setAxiosAuthToken } from './api/axiosConfig';
+import CompanyLogin from './components/company/CompanyLogin';
+import DashboardCompany from './components/company/DashboardCompany';
+import SalesPage from './components/company/SalesPage';
+import Landing from './components/landing/Landing';
 import Map from './components/shared/map/Map';
 import NotFound from './components/shared/notfound/NotFound';
-import Dashboard from './components/user/dashboard/Dashboard';
 import useAuth from './components/user/auth/AuthContext/AuthProvider';
 import Login from './components/user/auth/login/Login';
 import Register from './components/user/auth/register/Register';
-import SalesPage from './components/enterprise/SalesPage';
-import EnterpriseLogin from "./components/enterprise/EnterpriseLogin";
-import DashboardCompany from './components/company/DashboardCompany';
+import Dashboard from './components/user/dashboard/Dashboard';
 
+function AppRouter() {
+  const { user } = useAuth();
+  const location = useLocation();
 
-function AppRouter(props: any) {
-    const { user } = useAuth();
-    const navigate = useNavigate();
+  const routes = [
+    { path: '/', element: <Landing />, protected: false },
+    { path: '/map', element: <Map />, protected: false },
+    { path: '/mapTemp', element: <Map />, protected: false },
+    { path: '/login', element: <Login />, protected: false },
+    { path: '/register', element: <Register />, protected: false },
+    { path: '/dashboard', element: <Dashboard />, protected: true },
+    { path: '/dashboardCompany', element: <DashboardCompany />, protected: false },
+    { path: '/user/settings', element: <Map />, protected: true },
+    { path: 'information', element: <SalesPage />, protected: false },
+    { path: 'companyLogin', element: <CompanyLogin />, protected: false },
+  ];
 
-    function RequireAuth({ children }: {children: JSX.Element}): JSX.Element {
-        if(!user) {
-            navigate('/login');
-        }
-
-        return children 
+  useEffect(() => {
+    if(user?.accessToken) {
+        setAxiosAuthToken(user.accessToken);
     }
 
-    const location = useLocation();  
-    return (
-        <div className={location.pathname !== "/dashboard"? "main" : "main-logged"}>
-            <Routes>
-                <Route path='*' element={<NotFound />} />
-                <Route path="/" element={<Landing />} />
-                <Route path="/map" element={<Map />} />
-                <Route path="/mapTemp" element={<Map />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/dashboard" element={
-                    <RequireAuth>
-                        <Dashboard />
-                    </ RequireAuth>
-                } />
-                <Route path="/dashboardCompany" element={
-                    //<RequireAuth>
-                        <DashboardCompany />
-                    //</ RequireAuth>
-                } />
-                <Route path='/user/settings' element={<Map />} />
-                <Route path='information' element={<SalesPage />} />
-                <Route path='enterprise-login' element={<EnterpriseLogin />} />
-            </Routes>
-        </div>
-    )
+  }, [user]);
+
+  function ProtectedRoute({ children }: { children: JSX.Element }): JSX.Element {
+    const prevLocation = useLocation();
+
+    if (!user) {
+      return <Navigate to="/login" replace state={{ attemptedPath: prevLocation }} />;
+    }
+    return children;
+  }
+
+  return (
+    <div className={location.pathname !== '/dashboard' ? 'main' : 'main-logged'}>
+      <Routes>
+        <Route path="*" element={<NotFound />} />
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={
+              route.protected ? <ProtectedRoute>{route.element}</ProtectedRoute> : route.element
+            }
+          />
+        ))}
+      </Routes>
+    </div>
+  );
 }
 
 export default AppRouter;

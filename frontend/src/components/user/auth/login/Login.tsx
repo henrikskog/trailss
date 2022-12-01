@@ -2,15 +2,23 @@ import { Anchor, Button, PasswordInput, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useCompanyAuth from '../../../company/AuthContext/CompanyAuthProvider';
 import useAuth from '../AuthContext/AuthProvider';
 import './Login.scss';
 
-export default function Login(props: any) {
+interface Props {
+  company?: boolean;
+}
+
+export default function Login({company}: Props)  {
   const navigate = useNavigate();
-  const { login, error, user, loginCompany } = useAuth();
+  const { login, error, user } = useAuth();
+  const { login: companyLogin } = useCompanyAuth();
 
   useEffect(() => {
     if (user !== null) {
+      // Sometimes user is redirected to login because of unauthenticated request to protected route.
+      // In this case we want to redirect him back to the page he was trying to access. In this case, 'from' is set.
       navigate('/dashboard');
     }
   }, [user]);
@@ -29,11 +37,13 @@ export default function Login(props: any) {
     <div className="container">
       <form
         className="form"
-        onSubmit={form.onSubmit((values: any) => props.business ? loginCompany("", "") : login(values['username'], values['password']))}
+        onSubmit={form.onSubmit((values: any) =>
+          company ? companyLogin('', '') : login(values['username'], values['password'])
+        )}
       >
         {error}
-        
-        <h1 id="header">{props.business ? "Business log in" : "Log in" }</h1>
+
+        <h1 id="header">{company ? 'Business log in' : 'Log in'}</h1>
         <TextInput placeholder="Username" {...form.getInputProps('username')} mb={'sm'} />
         <PasswordInput placeholder="Password" {...form.getInputProps('password')} />
         <div className="submit">

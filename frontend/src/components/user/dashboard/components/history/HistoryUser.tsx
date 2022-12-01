@@ -1,161 +1,8 @@
 import { createStyles, ScrollArea, Table } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { getTripsFromDB, Trip } from '../../../../../api/newTrip';
 import './HistoryUser.scss';
-
-const trips = [
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-  {
-    origin: 'Casa',
-    destination: 'UPV',
-    duration: '30min',
-    date: '30/10/2022',
-    distance: '5km',
-    emissions: '500g',
-  },
-];
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -185,35 +32,47 @@ export default function HistoryUser() {
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
 
-  const rows = trips.map((element, i) => (
-    <tr key={i}>
-      <td align="center">{element.origin}</td>
-      <td align="center">{element.destination}</td>
-      <td align="center">{element.date}</td>
-      <td align="center">{element.duration}</td>
-      <td align="center">{element.distance}</td>
-      <td align="center">{element.emissions}</td>
-    </tr>
-  ));
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['user-trips'],
+    queryFn: () => getTripsFromDB(),
+    retry: false,
+  });
+
+  const showData = (rows: Trip[]) => {
+    return (
+      <Table verticalSpacing="sm" striped highlightOnHover>
+        <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
+          <tr>
+            <th>Origin</th>
+            <th>Destination</th>
+            <th>Date</th>
+            <th>Duration</th>
+            <th>Distance</th>
+            <th>Carbon Emissions</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((element, i) => (
+            <tr key={i}>
+              <td align="center">{element.origin}</td>
+              <td align="center">{element.destination}</td>
+              <td align="center">DATE</td>
+              <td align="center">DURATION</td>
+              <td align="center">{element.distance}</td>
+              <td align="center">{element.total_emissions}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    );
+  };
   return (
     <div className="history-user">
       <h1>Your trips</h1>
       <div className="history-user-table">
         <ScrollArea style={{ width: '100%', height: '65vh' }}>
-          <Table verticalSpacing="sm" striped highlightOnHover>
-            <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
-              <tr>
-                <th>Origin</th>
-                <th>Destination</th>
-                <th>Date</th>
-                <th>Duration</th>
-                <th>Distance</th>
-                <th>Carbon Emissions</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>{rows}</tbody>
-          </Table>
+          {isLoading ? <div>LOADING...</div> : data ? showData(data) : <div>LOADING</div>}
         </ScrollArea>
       </div>
     </div>

@@ -7,7 +7,8 @@ import { useLocation } from 'react-router-dom';
 import './Form.scss';
 
 import { getCarMakes, getCarModels } from '../../../../api/getCarInfo';
-import useAuth from '../../auth/AuthContext/AuthProvider';
+import { saveTripToDB } from '../../../../api/newTrip';
+import { showNotification } from '@mantine/notifications';
 
 interface Props {
   calculateRoute: (
@@ -21,8 +22,7 @@ interface Props {
 }
 
 const Form: React.FC<Props> = ({ calculateRoute }) => {
-  const baseURL = 'https://www.fueleconomy.gov/';
-  const { authFetch } = useAuth();
+  const REACT_APP_API_ROOT = 'https://www.fueleconomy.gov/';
 
   const form = useForm({
     initialValues: {
@@ -100,25 +100,23 @@ const Form: React.FC<Props> = ({ calculateRoute }) => {
   };
 
   const saveTrip = async () => {
-    const response = await authFetch('http://localhost:5000/trips', {
-      method: 'POST',
-      body: JSON.stringify({
-        origin: form.values.origin,
-        destination: form.values.destination,
-        date: form.values.date,
-        passengers: form.values.passengers,
-        carYear: form.values.carYear,
-        consumption: form.values.consumption,
-        carMake: searchMakeValue,
-        carModel: searchModelValue,
-      }),
+    const response = await saveTripToDB({
+      origin: form.values.origin,
+      destination: form.values.destination,
+      distance: 0,
+      total_emissions: 0,
     });
-    console.log(response);
+    if(!(response.status === 200)){
+    showNotification({
+      title: 'Error',
+      message:
+        'There was an error saving your trip. Please try again later.',
+    });
+    }
   };
 
   return (
     <div className="search-form">
-      <h1>Your trip</h1>
       <form
         className="form"
         onSubmit={form.onSubmit((values: any) => {
@@ -132,6 +130,7 @@ const Form: React.FC<Props> = ({ calculateRoute }) => {
           setCalculated(true);
         })}
       >
+        <h1>Your trip</h1>
         <TextInput
           label="Origin:"
           placeholder="E.g. Times Square"

@@ -1,22 +1,25 @@
 import { Button, Divider, Input, LoadingOverlay, Select, Table } from '@mantine/core';
 import { IconCheck, IconEdit, IconX } from '@tabler/icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 import { useState } from 'react';
+import { z } from 'zod';
 import { getCarMakes, getCarModels } from '../../../../api/getCarInfo';
-import useAuth from '../../../user/auth/AuthContext/AuthProvider';
 import './Cars.scss';
 
-interface Car {
-  _id?: number;
-  name: string;
-  make: string;
-  model: string;
-  year: number;
-  color: string;
-  licensePlate: string;
-  mileage: number;
-  status: string;
-}
+const CarSchema = z.object({
+  _id: z.optional(z.string()),
+  name: z.string(),
+  make: z.string(),
+  model: z.string(),
+  year: z.number(),
+  color: z.string(),
+  licensePlate: z.string(),
+  mileage: z.number(),
+  status: z.string(),
+});
+
+export type Car = z.infer<typeof CarSchema>;
 
 export default function Cars() {
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
@@ -31,8 +34,6 @@ export default function Cars() {
   const [carMileage, setCarMileage] = useState<number>(0);
   const [carStatus, setCarStatus] = useState<string>('');
 
-  const { authFetch } = useAuth();
-
   const queryClient = useQueryClient();
 
   const { data: autoCompleteMakes, isLoading: isLoadingMakes } = useQuery({
@@ -44,42 +45,43 @@ export default function Cars() {
     queryFn: () => (carMake == '' ? [] : getCarModels(2000, carMake)),
   });
 
-  const getCars = async () => {
-    type CarsApiResponse = Car[];
+  const getCars = async (): Promise<Car[]> => {
+    console.log(process.env.REACT_APP_API_ROOT)
+    const response = await axios.get(`${process.env.REACT_APP_API_ROOT}/vehicles`);
 
-    const response = (await authFetch(
-      'http://localhost:5000/vehicles',
-      undefined
-    )) as CarsApiResponse;
-    return response;
+    const result: Car[] = [];
+
+    response.data.forEach((element: any) => {
+      const parsedCar = CarSchema.safeParse(element);
+      if (parsedCar.success) {
+        result.push(parsedCar.data);
+      } else {
+        console.log(parsedCar.error);
+      }
+    });
+
+    return result;
   };
 
   const { data, isLoading, error, isError } = useQuery({ queryKey: ['cars'], queryFn: getCars });
 
   const postCar = async (car: Car) => {
-    const response = await authFetch('http://localhost:5000/vehicles', {
-      method: 'POST',
-      body: JSON.stringify(car),
-    });
+    delete car._id;
+    const response = await axios.post(`${process.env.REACT_APP_API_ROOT}/vehicles`, car);
 
-    setSelectedCar(response as Car);
+    setSelectedCar(car);
 
     return response;
   };
 
   const deleteCar = async (carId: string | number) => {
-    const response = await authFetch('http://localhost:5000/vehicles/' + carId, {
-      method: 'DELETE',
-    });
+    const response = await axios.delete(`${process.env.REACT_APP_API_ROOT}/vehicles/` + carId);
 
     return response;
   };
 
   const updateCar = async (car: Car) => {
-    const response = await authFetch('http://localhost:5000/vehicles/' + car._id, {
-      method: 'PATCH',
-      body: JSON.stringify(car),
-    });
+    const response = await axios.patch(`${process.env.REACT_APP_API_ROOT}/vehicles/` + car._id, car);
 
     return response;
   };
@@ -330,14 +332,15 @@ export default function Cars() {
 
   // Function that adds a new empty car to a fleet
   const newEmptyCar = () => ({
-    name: '',
-    model: '',
-    make: '',
+    _id: 'a',
+    name: 'a',
+    model: 'a',
+    make: 'a',
     year: 0,
-    color: '',
-    licensePlate: '',
+    color: 'a',
+    licensePlate: 'a',
     mileage: 0,
-    status: '',
+    status: 'a',
   });
 
   const addCar = () => {
@@ -347,7 +350,7 @@ export default function Cars() {
 
     setSelectedCar(newCar);
 
-    setAddButtonEnabled(false);
+    setAddButtonEnabled(true);
   };
 
   return (

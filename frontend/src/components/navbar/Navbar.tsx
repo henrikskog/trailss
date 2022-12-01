@@ -9,7 +9,7 @@ export default function Navbar() {
 
   return (
     <header className="navbar">
-      <div className='left-nav'>
+      <div className="left-nav">
         <Link to="/">
           <img src={logo} className="logo" alt="Logo" />
         </Link>
@@ -49,8 +49,6 @@ export default function Navbar() {
           <Link className='bottom-hover' to="enterprise-login">Sign in</Link>
         </div>
       </div>
-
     </header>
-
   );
 }
