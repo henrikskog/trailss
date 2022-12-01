@@ -1,6 +1,7 @@
 @import "../../general-variables.scss";
 
 .navbar {
+  background-color: white;
   color: $principal_color;
   position: fixed;
   width: 98%;
@@ -8,17 +9,71 @@
   padding: 8px 20px;
   height: 45px;
   list-style-type: none;
-  overflow: hidden;
   //background-color: $principal_color;
   color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  .logo {
-    height: 17px;
-    margin-right: 20px;
-    margin-bottom: 0px;
+
+  .left-nav {
+    display: flex;
+    align-items: center;
+
+    .logo {
+      height: 17px;
+      margin-right: 20px;
+      margin-bottom: 0px;
+      margin-top: auto;
+    }
   }
+
+  .dropbtn {
+    cursor: pointer;
+    color: $principal_color;
+    font-size: 16px;
+    border: none;
+    padding: 10px 0;
+  }
+
+  .dropdown {
+    z-index: 100;
+    position: relative;
+    display: inline-block;
+    padding: 0 1.5%;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 0.5rem;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 0.45rem 0.75rem;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+
+  .top-hover:hover {
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
+  .bottom-hover:hover {
+    border-radius: 0 0 0.5rem 0.5rem ;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
 }
 
 #nav-list {
@@ -74,9 +129,11 @@
       transition: color .3s;
 
     }
+
     a:hover {
       color: rgba(52, 52, 52, 0.986);
     }
+
     float: left;
   }
 

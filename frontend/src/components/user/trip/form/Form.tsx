@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import './Form.scss';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useForm } from '@mantine/form';
-import { NumberInput, TextInput, Button } from '@mantine/core';
+import { Button, NumberInput, Select, TextInput } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import { Select } from '@mantine/core';
+import { useForm } from '@mantine/form';
 import { useDebouncedValue } from '@mantine/hooks';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import './Form.scss';
 
-import axios from 'axios';
+import { getCarMakes, getCarModels } from '../../../../api/getCarInfo';
+import useAuth from '../../auth/AuthContext/AuthProvider';
 
 interface Props {
   calculateRoute: (
@@ -22,12 +22,13 @@ interface Props {
 
 const Form: React.FC<Props> = ({ calculateRoute }) => {
   const baseURL = 'https://www.fueleconomy.gov/';
+  const { authFetch } = useAuth();
 
   const form = useForm({
     initialValues: {
       origin: '',
       destination: '',
-      date: 0,
+      date: new Date(),
       passengers: 1,
       carYear: 2000,
       consumption: 0,
@@ -51,8 +52,8 @@ const Form: React.FC<Props> = ({ calculateRoute }) => {
     },
   });
 
-  const [makes, setMakes] = useState([]);
-  const [models, setModels] = useState([]);
+  const [makes, setMakes] = useState<string[]>([]);
+  const [models, setModels] = useState<string[]>([]);
 
   const [yearValue, setYearValue] = useDebouncedValue(form.values.carYear, 200);
   const [searchMakeValue, onSearchMakeChange] = useState('');
@@ -73,39 +74,46 @@ const Form: React.FC<Props> = ({ calculateRoute }) => {
 
   const CurrentYear = new Date().getFullYear();
 
-  const handleYear = () => {
+  const handleYear = async () => {
     if (form.values.carYear > 1960 && form.values.carYear <= CurrentYear) {
-      axios
-        .get(baseURL + `/ws/rest/vehicle/menu/make?year=${form.values.carYear}`)
-        .then((response) => {
-          try {
-            let responseMakes = response.data.menuItem.map((item: any) => item.value);
-            setMakes(responseMakes);
-          } catch {
-            setModels([]);
-            setMakes([]);
-          }
-          setModels([]);
-          onSearchMakeChange('');
-          onSearchModelChange('');
-        });
+      setModels([]);
+      onSearchMakeChange('');
+      onSearchModelChange('');
+      try {
+        const makes = await getCarMakes(form.values.carYear);
+        setMakes(makes);
+      } catch {
+        setMakes([]);
+        setModels([]);
+      }
     }
   };
 
-  const handleMake = () => {
-    axios
-      .get(
-        baseURL + `/ws/rest/vehicle/menu/model?year=${form.values.carYear}&make=${searchMakeValue}`
-      )
-      .then((response) => {
-        try {
-          let responseModels = response.data.menuItem.map((item: any) => item.value);
-          setModels(responseModels);
-        } catch {
-          setModels([]);
-        }
-        onSearchModelChange('');
-      });
+  const handleMake = async () => {
+    onSearchModelChange('');
+    try {
+      const models = await getCarModels(form.values.carYear, searchMakeValue);
+      setModels(models);
+    } catch {
+      setModels([]);
+    }
+  };
+
+  const saveTrip = async () => {
+    const response = await authFetch('http://localhost:5000/trips', {
+      method: 'POST',
+      body: JSON.stringify({
+        origin: form.values.origin,
+        destination: form.values.destination,
+        date: form.values.date,
+        passengers: form.values.passengers,
+        carYear: form.values.carYear,
+        consumption: form.values.consumption,
+        carMake: searchMakeValue,
+        carModel: searchModelValue,
+      }),
+    });
+    console.log(response);
   };
 
   return (
@@ -114,7 +122,13 @@ const Form: React.FC<Props> = ({ calculateRoute }) => {
       <form
         className="form"
         onSubmit={form.onSubmit((values: any) => {
-          calculateRoute(values.origin, values.destination, searchMakeValue, yearValue.toString(), searchModelValue );
+          calculateRoute(
+            values.origin,
+            values.destination,
+            searchMakeValue,
+            yearValue.toString(),
+            searchModelValue
+          );
           setCalculated(true);
         })}
       >
@@ -222,7 +236,7 @@ const Form: React.FC<Props> = ({ calculateRoute }) => {
             Submit
           </Button>
           {useLocation().pathname === '/dashboard' && calculated && (
-            <Button className="save-button" type="submit" mt="sm">
+            <Button className="save-button" type="submit" mt="sm" onClick={saveTrip}>
               Save Trip
             </Button>
           )}

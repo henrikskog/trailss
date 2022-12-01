@@ -9,36 +9,48 @@ export default function Navbar() {
 
   return (
     <header className="navbar">
-      <Link to="/">
-        <img src={logo} className="logo" alt="Logo" />
-      </Link>
-      <ul id="nav-list">
-        {user ? (
-          <>
-            <li>
-              <Link to="dashboard">Dashboard</Link>
-            </li>
-            <li>
-              <Link to="user/settings">Profile</Link>
-            </li>
-            <li>
-              <a onClick={() => logout()}>Sign out</a>
-            </li>
-          </>
-        ) : (
-          <>
-          <li>
-              <Link to="map">Map</Link>
-            </li>
-            <li>
-              <Link to="login">Sign in</Link>
-            </li>
-            <li>
-              <Link to="register">Register</Link>
-            </li>
-          </>
-        )}
-      </ul>
+      <div className='left-nav'>
+        <Link to="/">
+          <img src={logo} className="logo" alt="Logo" />
+        </Link>
+        <ul id="nav-list">
+          {user ? (
+            <>
+              <li>
+                <Link to="dashboard">Dashboard</Link>
+              </li>
+              <li>
+                <Link to="user/settings">Profile</Link>
+              </li>
+              <li>
+                <a onClick={() => logout()}>Sign out</a>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link to="map">Map</Link>
+              </li>
+              <li>
+                <Link to="login">Sign in</Link>
+              </li>
+              <li>
+                <Link to="register">Register</Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </div>
+
+      <div className="dropdown">
+        <div className="dropbtn">For Businesses</div>
+        <div className="dropdown-content">
+          <Link className='top-hover' to="information">Information</Link>
+          <Link className='bottom-hover' to="enterprise-login">Sign in</Link>
+        </div>
+      </div>
+
     </header>
+
   );
 }

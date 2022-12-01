@@ -1,0 +1,43 @@
+@import "../../general-variables.scss";
+
+.salespage-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+
+
+    .salespage-left {
+        flex: 1;
+        text-align: left;
+        .salespage-content {
+            margin: 13% 10%;
+        }
+        h1 {
+            text-align: center !important;
+        }
+        Button {
+            margin-top: 2%;
+            background-color: $principal-color;
+        }
+        a {
+            font-weight: bold;
+        }
+        .submission-message {
+            padding-top: 1%;
+            hr {
+                border-color: $principal-color;
+                border-style:solid;
+            }
+        }
+    }
+
+    .salespage-right {
+        flex: 1.2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        canvas {
+            width: 100% !important;
+        }
+    }
+}

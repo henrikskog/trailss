@@ -25,6 +25,10 @@ interface AuthContext {
   error: string;
 
   login: (email: string, password: string) => void;
+
+  // TODO: Add actual functionality to this function
+  loginCompany: (username: string, password: string) => void;
+
   register: (email: string, name: string, password: string) => void;
   logout: () => void;
   authFetch: (...fetchParams: FetchParams) => Promise<unknown>;
@@ -46,7 +50,19 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
     const LOGIN_PART = '/user/login';
     const REGISTER_PART = '/user/register';
 
+    const handleExpiredToken = () => {
+      showNotification({
+        title: 'Session timed out',
+        message: 'Your session has timed out and you will need to sign in again.',
+      });
+      setUser(null);
+      navigate('/login');
+    };
+
     return {
+      loginCompany: async () => {
+        navigate('/dashboardCompany');
+      },
       login: async ({ username, password }: LoginParams): Promise<string | null> => {
         const response = await fetch(
           API_ROOT + LOGIN_PART + `?username=${username}&password=${password}`
@@ -96,13 +112,18 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
             title: 'Session timed out',
             message: 'Your session has timed out and you will need to sign in again.',
           });
-          return null;
+          return new Response();
         }
 
         const response = await fetch(fetchParams[0], {
-          headers: { Authorization: `Bearer ${user?.accessToken}` },
-          body: fetchParams[1]?.body,
+          headers: {
+            Authorization: `Bearer ${user?.accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          ...fetchParams[1],
         });
+
+        response.status == 401 && handleExpiredToken();
 
         const data = await response.json();
         return data;
@@ -171,6 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
       register,
       logout,
       authFetch: authApi().authFetch,
+      loginCompany: authApi().loginCompany,
     }),
     [user, authLoading, authError]
   );

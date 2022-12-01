@@ -25,6 +25,18 @@ export class Vehicle {
 
   @Prop()
   capacity: number;
+
+  @Prop()
+  color: string;
+  
+  @Prop()
+  licensePlate: string;
+  
+  @Prop()
+  mileage: number;
+  
+  @Prop()
+  status: string;
 }
 
 export const VehicleSchema = SchemaFactory.createForClass(Vehicle);

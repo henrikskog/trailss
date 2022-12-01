@@ -9,10 +9,10 @@ export type CompanyRouteDocument = CompanyRoute & Document;
 @Schema()
 export class CompanyRoute {
   @Prop()
-  from: string;
+  origin: string;
 
   @Prop()
-  to: string;
+  destination: string;
 
   @Prop()
   distance: string;

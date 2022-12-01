@@ -2,7 +2,13 @@
 
 .landing{
     .page {
-        min-height: 95vh;
-        height: 95vh;
+        min-height: 100vh;
+        height: 100vh;
     }
+
+    button {
+        background-color: $blue!important;
+    }
+    
 }
+
