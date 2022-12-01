@@ -1,3 +1,5 @@
+@import "../../../general-variables.scss";
+
 .toppage-shortform{
     position: absolute;    
     bottom: 15vh;
@@ -9,8 +11,8 @@
     .shortform{
         background-color: white;
         margin-left: 13vw;
-        border-radius: 20px;
-        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        border-radius: $borderRadiusBig;
+        box-shadow: $boxShadow;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -26,11 +28,11 @@
             background-color: rgba(0, 40, 109, 0.222);
         }
         .left-input{
-            border-top-left-radius: 20px;
-            border-bottom-left-radius: 20px; 
+            border-top-left-radius: $borderRadiusBig;
+            border-bottom-left-radius: $borderRadiusBig; 
             input{
-                border-top-left-radius: 20px;
-                border-bottom-left-radius: 20px; 
+                border-top-left-radius: $borderRadiusBig;
+                border-bottom-left-radius: $borderRadiusBig; 
             }
         }
         .shortform-submit{
@@ -41,8 +43,8 @@
             margin: 0;
             border: none;
             height: 100%;
-            border-top-right-radius: 20px;
-            border-bottom-right-radius:  20px; 
+            border-top-right-radius: $borderRadiusBig;
+            border-bottom-right-radius:  $borderRadiusBig; 
             background-color: #4696F5;
             display: inline-flex;
             align-items: center;

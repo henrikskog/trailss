@@ -1,0 +1,28 @@
+@import "../../general-variables.scss";
+
+.dashboard-user{
+    height: 100vh;
+}
+.dashboard-user-content {
+    font-family: 'Roboto', sans-serif;
+    background-color: #FAFAFB;
+    min-height: 100vh;
+    overflow-y: scroll;
+    .box{
+        min-height: 100px;
+        background-color: white;
+        box-shadow: $boxShadow;
+        border-radius: $borderRadiusSmall;
+    }
+    .big-box{
+        height: 300px;
+    }
+    .multiple-box{
+        display: flex;
+        flex-direction: column;
+        gap: 1.4em;
+        .box{
+            flex: 1;
+        }
+    }
+}
