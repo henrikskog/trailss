@@ -12,6 +12,7 @@ import { CompanyVehiclesModule } from './company-vehicles/company-vehicles.modul
 import { FleetsModule } from './fleets/fleets.module';
 import { AppService } from './app.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AppController } from './app.controller';
 
 
 const createMongoConnectionString = () => `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER_URL}/halla?retryWrites=true&w=majority`
@@ -32,6 +33,7 @@ const createMongoConnectionString = () => `mongodb+srv://${process.env.DB_USER}:
     CompanyVehiclesModule,
     CompanyRoutesModule
   ],
+  controllers: [AppController],
   providers: [AppService]
 })
 export class AppModule {}
