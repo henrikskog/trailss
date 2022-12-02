@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import MainCard from './MainCard';
 
 import './Home.scss';
 import { Typography } from '@mui/material';
@@ -15,7 +16,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function Home() {
+const Home : React.FC = () => {
   return (
     <div className='company-home-wrapper'>
       <Grid container rowSpacing={2} columnSpacing={{ xs: 1.5, sm: 2, md: 3 }}>
@@ -46,31 +47,21 @@ export default function Home() {
           <h3>Stats</h3>
         </Grid>
         <Grid item xs={12} md={7}>
-          <div className='box big-box'>
-
-          </div>
+          <MainCard title="Your Co2 Emmisions" mainStat={3000} change={100*(1-3000/3670)} description="…better than last month"/>
         </Grid>
         <Grid item xs={12} md={5}>
           <div className='multiple-box big-box'>
-            <div className='box'>
-
-            </div>
-            <div className='box'>
-
-            </div>
+            <MainCard change={13.37} description="This is not a factual number, but it looks very cool"/>
+            <MainCard description="You are in the top"change={98}/>
           </div>
         </Grid>
         <Grid item xs={6} md={7}>
           <h3 className='inside-title'>Fleets</h3>
-          <div className='box big-box'>
-
-          </div>
+          <MainCard title="You have:" mainStat={2} description="fleets"/>
         </Grid>
         <Grid item xs={6} md={5}>
           <h3 className='inside-title'>Vehicles</h3>
-          <div className='box big-box'>
-
-          </div>
+          <MainCard mainStat={5} description="vehicles" title="Total, in your fleets" />
         </Grid>
 
         <Grid container item columnSpacing={3} xs={12} md={7}>
@@ -99,3 +90,4 @@ export default function Home() {
     </div>
   );
 }
+export default Home;
