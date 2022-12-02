@@ -20,7 +20,8 @@ export class AppService {
     ) { }
     private readonly logger = new Logger(AppService.name);
 
-   @Cron('1 * * * * *')
+    //Save the routes in database everyday at 00:00
+   @Cron('0 00 00 * * 1-6')
     async handleCron() {
         const currentDay = new Date().getDay()
         const vehicles = await this.companyVehicleModel.find()
