@@ -34,14 +34,14 @@ export class FleetsService {
   async update(
     fleetIds: [mongoose.Schema.Types.ObjectId],
     id: string,
-    updateCompanyVehicleDto: UpdateFleetDto
+    updateFleetDto: UpdateFleetDto
   ) {
     const fleet = fleetIds.filter((fleet) => fleet.toString() == id);
 
     if (!fleet.length)
       throw new NotFoundException("No fleet with the given id was found");
 
-    await this.fleetModel.findByIdAndUpdate(fleet[0], updateCompanyVehicleDto);
+    await this.fleetModel.findByIdAndUpdate(fleet[0], updateFleetDto);
     return "Fleet updated successfully";
   }
 
