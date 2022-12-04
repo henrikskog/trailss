@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Company, CompanyDocument } from 'src/company/company.schema';
 import { CompanyRoute, CompanyRouteDocument } from './company-routes.schema';
+import { TemplateCompanyRoute } from './dto/template-company-route.dto';
 
 @Injectable()
 export class CompanyRoutesService {
@@ -10,6 +11,7 @@ export class CompanyRoutesService {
     @InjectModel(Company.name) private readonly companyVehicleModel: Model<CompanyDocument>,
     @InjectModel(CompanyRoute.name) private readonly companyRouteModel: Model<CompanyRouteDocument>
   ) { }
+
 
   findAll() {
     return this.companyRouteModel.find();

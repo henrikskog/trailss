@@ -28,7 +28,7 @@ export class Company {
 
   @Prop()
   subscription: number
-  //TODO: create TripCompany and change the type
+  
   @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'BusinessTrip', default: []})
   business_trips: BusinessTrip[]
 }

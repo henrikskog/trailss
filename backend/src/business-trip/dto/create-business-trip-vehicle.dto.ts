@@ -6,6 +6,7 @@ export class CreateBusinessTripVehicleDto{
     model: string;
     emissions: number;
     consumption: number;
-    routes: TemplateCompanyRoute;
+    year: number;
+    route: TemplateCompanyRoute;
     passengers: string[];
 }

@@ -14,6 +14,12 @@ export class BusinessTrip {
   date: Date;
 
   @Prop()
+  from: string;
+
+  @Prop()
+  to: string;
+
+  @Prop()
   description: string;
 
   @Prop()
@@ -26,7 +32,7 @@ export class BusinessTripVehicle {
   type: string;
 
   @Prop()
-  brand: string;
+  make: string;
 
   @Prop()
   model: string;
@@ -38,7 +44,10 @@ export class BusinessTripVehicle {
   consumption: number;
 
   @Prop()
-  routes: TemplateCompanyRoute;
+  year: number;
+
+  @Prop()
+  route: TemplateCompanyRoute;
 
   @Prop()
   passengers: string[];

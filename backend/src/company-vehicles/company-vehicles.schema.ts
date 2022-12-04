@@ -10,10 +10,13 @@ export class CompanyVehicle {
   type: string;
 
   @Prop()
-  brand: string;
+  make: string;
 
   @Prop()
   model: string;
+
+  @Prop()
+  year: string;
 
   @Prop()
   emissions: number;

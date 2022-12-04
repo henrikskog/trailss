@@ -37,7 +37,6 @@ export class AppService {
                             to: route.to,
                             from: route.from,
                             distance: route.distance,
-                            emissions: route.emissions,
                             capacity: route.capacity,
                             employee: route.employee,
                             date: route.date,

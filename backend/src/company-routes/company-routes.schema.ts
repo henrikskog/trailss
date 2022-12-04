@@ -15,7 +15,7 @@ export class CompanyRoute {
   to: string;
 
   @Prop()
-  distance: string;
+  distance: number;
 
   @Prop()
   emissions: number;

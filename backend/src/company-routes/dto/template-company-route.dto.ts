@@ -1,8 +1,7 @@
 export class TemplateCompanyRoute {
     from: string;  
     to: string;  
-    distance: string;  
-    emissions: number;    
+    distance: number;  
     capacity: number;  
     employee: number;  
     date: Date;

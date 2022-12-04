@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { Vehicle } from 'src/vehicles/vehicles.schema';
+import { TripsService, vehicleFuelSchema, VehicleFuelType } from '../trips/trips.service';
 import { BusinessTrip, BusinessTripDocument } from './business-trip-vehicles.schema';
 import { CreateBusinessTripDto } from './dto/create-business-trip.dto';
 import { UpdateBusinessTripDto } from './dto/update-business-trip.dto';
@@ -9,17 +9,49 @@ import { UpdateBusinessTripDto } from './dto/update-business-trip.dto';
 @Injectable()
 export class BusinessTripService {
   constructor(
-    @InjectModel(BusinessTrip.name) private readonly businessTripModel: Model<BusinessTripDocument>
-      ) { }
+    @InjectModel(BusinessTrip.name) private readonly businessTripModel: Model<BusinessTripDocument>,
+    private readonly tripsService: TripsService,
+  ) { }
+
+  async calculateTotalEmissions(businessTripCompanyDto: CreateBusinessTripDto | UpdateBusinessTripDto) {
+    for (let index = 0; index < businessTripCompanyDto.vehicles.length; index++) {
+      const vehicle = businessTripCompanyDto.vehicles[index];
+
+      // Check if the trip is valid
+      if (vehicle.passengers.length > 7) {
+        throw new BadRequestException("The maximum number of passengers is 7");
+      }
+
+      //parse the fuel type to enum
+      const fuelType = vehicleFuelSchema.safeParse(vehicle.type);
+      // Fuel types are restricted, therefore validate value
+      if (!fuelType.success) {
+        throw new BadRequestException("Illegal value given for fuel type");
+      }
+
+      // Calculate the emissions
+      const emissions = await this.tripsService.calculateTripEmissions(
+        vehicle.route.distance,
+        fuelType.data,
+        vehicle.make,
+        vehicle.model,
+        vehicle.year,
+        vehicle.consumption
+      )
+      // Add the emissions to the vehicle
+      businessTripCompanyDto.vehicles[index].emissions = emissions;
+      return businessTripCompanyDto;
+    }
+
+  }
 
   async create(company: any, businessTripCompanyDto: CreateBusinessTripDto) {
-    const trip = await this.businessTripModel.create(businessTripCompanyDto)
-    
-    trip.vehicles.forEach(vehicle => {
-      if (vehicle.passengers.length > 7) 
-        return "The maximum number of passengers is 7"
-    });
+    // Calculate the emissions
+    const businessTrip = await this.calculateTotalEmissions(businessTripCompanyDto)
+    // Create the business trip
+    const trip = await this.businessTripModel.create(businessTrip)
 
+    // Add the business trip to the company
     company.business_trips.push(trip)
     company.save()
     return "Created a new trip";
@@ -31,7 +63,7 @@ export class BusinessTripService {
   }
 
   async findOne(company: any, tripId: string) {
-    const trip = await company.populate("business_trips", null, {_id : tripId}).then(p => p.business_trips)
+    const trip = await company.populate("business_trips", null, { _id: tripId }).then(p => p.business_trips)
     if (!trip.length) {
       throw new NotFoundException("No trip with the given arguments was found");
     }
@@ -48,12 +80,10 @@ export class BusinessTripService {
     if (!business_trips.length)
       throw new NotFoundException("No trip with the given id was found");
 
-    updateBusinessTripDto.vehicles.forEach(vehicle => {
-      if (vehicle.passengers.length > 7) {
-        return "The maximum number of passengers is 7"
-      }
-    });
-    await this.businessTripModel.findByIdAndUpdate(business_trips[0], updateBusinessTripDto);
+    // Calculate the emissions
+    const businessTrip = this.calculateTotalEmissions(updateBusinessTripDto)
+    // Update the business trip
+    await this.businessTripModel.findByIdAndUpdate(business_trips[0], businessTrip);
     return "Trip updated successfully";
   }
 
@@ -65,7 +95,7 @@ export class BusinessTripService {
     }
     company.business_trips.pull({ _id: business_trips[0] });
     company.save();
-    await this.businessTripModel.findByIdAndDelete(business_trips[0]);    
+    await this.businessTripModel.findByIdAndDelete(business_trips[0]);
 
     return "Fleet removed successfully";
   }
