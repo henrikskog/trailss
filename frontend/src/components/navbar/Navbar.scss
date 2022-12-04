@@ -1,6 +1,7 @@
 @import "../../general-variables.scss";
 
 .navbar {
+  background-color: white;
   color: $principal_color;
   position: fixed;
   width: 98%;
@@ -8,7 +9,11 @@
   padding: 8px 20px;
   height: 45px;
   list-style-type: none;
+<<<<<<< HEAD
   background-color: $principal_color;
+=======
+  //background-color: $principal_color;
+>>>>>>> 06f53c6219b5ae572635dfd814b193202ff036c7
   color: white;
   display: flex;
   align-items: center;
@@ -27,14 +32,15 @@
   }
 
   .dropbtn {
-    background-color: $principal-color;
-    color: white;
-    padding: 16px;
+    cursor: pointer;
+    color: $principal_color;
     font-size: 16px;
     border: none;
+    padding: 10px 0;
   }
 
   .dropdown {
+    z-index: 100;
     position: relative;
     display: inline-block;
     padding: 0 1.5%;
@@ -47,7 +53,6 @@
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     border-radius: 0.5rem;
-
   }
 
   .dropdown-content a {

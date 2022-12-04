@@ -9,10 +9,10 @@ export default function TopPage() {
     <div className="toppage page">
        <div className='toppage-left'>
         <div className='toppage-left-title'>
-          <h1>Por un planeta mas sostenible</h1>
+          <h1>For a More Sustainable Planet</h1>
         </div>
         <div className='toppage-left-button'>
-          <Button>Crear cuenta</Button>
+          <Button>Register</Button>
         </div>
        </div>
        <div className='toppage-right'>
