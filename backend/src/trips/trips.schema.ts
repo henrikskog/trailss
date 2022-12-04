@@ -7,10 +7,10 @@ export type TripDocument = HydratedDocument<Trip>;
 @Schema()
 export class Trip {
   @Prop()
-  from: string;
+  origin: string;
 
   @Prop()
-  to: string;
+  destination: string;
 
   @Prop()
   distance: number;

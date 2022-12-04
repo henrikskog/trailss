@@ -5,7 +5,6 @@ export class CreateCompanyRouteDto {
     from: string;
     to: string;
     distance: number;
-    emissions: number;
     capacity: number;
     employee: number;
     date: Date;

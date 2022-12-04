@@ -24,7 +24,7 @@ export class VehiclesService {
     const vehicle = await this.vehicleModel.create(createVehicleDto);
     user.vehicles.push(vehicle);
     user.save();
-    return "Added a new vehicle";
+    return vehicle
   }
 
   async findAll(user: any) {
@@ -50,8 +50,8 @@ export class VehiclesService {
     if (!vehicle.length)
       throw new NotFoundException("No car with the given id was found");
 
-    await this.vehicleModel.findByIdAndUpdate(vehicle[0], updateVehicleDto);
-    return "Vehicle updated successfully";
+    const updatedVehicle = await this.vehicleModel.findByIdAndUpdate(vehicle[0], updateVehicleDto);
+    return updatedVehicle
   }
 
   async remove(user: any, id: string) {
@@ -62,9 +62,9 @@ export class VehiclesService {
     }
     user.vehicles.pull({ _id: vehicle[0] });
     user.save();
-    await this.vehicleModel.findByIdAndDelete(vehicle[0]);    
+    const removedVehicle = await this.vehicleModel.findByIdAndDelete(vehicle[0]);    
 
-    return "Vehicle removed successfully";
+    return removedVehicle;
   }
 
   /**
