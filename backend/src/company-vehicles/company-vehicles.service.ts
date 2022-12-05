@@ -37,7 +37,6 @@ export class CompanyVehiclesService {
 
       // Calculate the emissions
       const emissions = await this.tripsService.calculateTripEmissions(
-        vehicle.routes[index].distance,
         fuelType.data,
         vehicle.make,
         vehicle.model,

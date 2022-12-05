@@ -37,7 +37,6 @@ export class TripsService {
    * @returns The emissions of the trip given in grams of CO2
    */
   async calculateTripEmissions(
-    distance: number,
     fuelType: VehicleFuelType,
     make?: string | undefined,
     model?: string | undefined,
@@ -68,9 +67,12 @@ export class TripsService {
 
   async create(user: any, createTripDto: CreateTripDto) {
     const trip = await this.tripModel.create(createTripDto);
+    console.log(user)
+    console.log(createTripDto)
+    console.log(trip)
     user.trips.push(trip);
     user.save();
-    return trip;
+    return "Created a new trip";
   }
 
   async findAll(user: any) {

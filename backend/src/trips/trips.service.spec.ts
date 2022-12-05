@@ -15,4 +15,17 @@ describe('TripsService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('should return x,x', () => {
+    expect(service.calculateTripEmissions("diesel","","",2000)).toBe('x,x');
+  });
+
+  it('should return x,x', () => {
+    expect(service.calculateTripEmissions("diesel","","",2000,5)).toBe('x,x');
+  });
+
+  // it('should return Created a new trip', () => {
+  //   expect(service.create("pacorro", "")).toBe('Created a new trip');
+  // });
+
 });
