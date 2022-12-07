@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { InjectRepository } from "@nestjs/typeorm";
 import mongoose, { Model } from "mongoose";
 import { z } from "zod";
 import { VehiclesService } from "../vehicles/vehicles.service";
@@ -63,7 +64,8 @@ export class TripsService {
 
     const emissions = this.vehicleService.getEmissions(fuel.data, consumption);
 
-    return emissions*distance;
+    // Round to one decimal place
+    return Math.round(emissions * distance * 10) / 10;
   }
 
   async calculateTotalEmissions(tripDto: CreateTripDto | UpdateTripDto) {
