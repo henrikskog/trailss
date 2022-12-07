@@ -20,6 +20,9 @@ export class BusinessTrip {
   to: string;
 
   @Prop()
+  distance: number;
+
+  @Prop()
   description: string;
 
   @Prop()
@@ -38,7 +41,7 @@ export class BusinessTripVehicle {
   model: string;
 
   @Prop()
-  emissions: number;
+  total_emissions: number;
   
   @Prop()
   consumption: number;

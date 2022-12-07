@@ -16,6 +16,9 @@ export class Trip {
   distance: number;
 
   @Prop()
+  total_emissions: number;
+
+  @Prop()
   date: Date;
 
   @Prop()

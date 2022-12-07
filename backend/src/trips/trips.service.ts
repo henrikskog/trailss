@@ -37,6 +37,7 @@ export class TripsService {
    * @returns The emissions of the trip given in grams of CO2
    */
   async calculateTripEmissions(
+    distance: number,
     fuelType: VehicleFuelType,
     make?: string | undefined,
     model?: string | undefined,
@@ -62,14 +63,40 @@ export class TripsService {
 
     const emissions = this.vehicleService.getEmissions(fuel.data, consumption);
 
-    return emissions;
+    return emissions*distance;
   }
 
+  async calculateTotalEmissions(tripDto: CreateTripDto | UpdateTripDto) {
+    const vehicle = tripDto.vehicle;
+
+    //parse the fuel type to enum
+    const fuelType = vehicleFuelSchema.safeParse(vehicle.type);
+    // Fuel types are restricted, therefore validate value      
+    if (!fuelType.success) {
+        throw new BadRequestException("Illegal value give for fuel type");
+    }
+    
+      // Calculate the emissions
+    const emissions = await this.calculateTripEmissions(
+      tripDto.distance,
+      fuelType.data,
+      vehicle.make,
+      vehicle.model,
+      vehicle.year,
+      vehicle.consumption
+    )
+      // Add the emissions to the vehicle
+    tripDto.total_emissions = emissions;
+    return tripDto;
+  }
+
+
   async create(user: any, createTripDto: CreateTripDto) {
-    const trip = await this.tripModel.create(createTripDto);
-    console.log(user)
-    console.log(createTripDto)
-    console.log(trip)
+    // Calculate the emissions
+    const userTrip = await this.calculateTotalEmissions(createTripDto)
+    // Create the trip
+    const trip = await this.tripModel.create(userTrip)
+
     user.trips.push(trip);
     user.save();
     return "Created a new trip";
@@ -99,7 +126,11 @@ export class TripsService {
     if (!trip.length) {
       throw new NotFoundException("No trip with the given id was found");
     }
-    await this.tripModel.findByIdAndUpdate(trip[0], updateTripDto);
+
+    // Calculate the emissions
+    const userTrip = await this.calculateTotalEmissions(updateTripDto)
+
+    await this.tripModel.findByIdAndUpdate(trip[0], userTrip);
     return "Trip updated successfully";
   }
 

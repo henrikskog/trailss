@@ -20,6 +20,7 @@ export class TripsController {
    * Conditions for endpoint
    * - (Consumption) is not compatible with (car-make, car-model and car-model-year)
    */
+  @ApiQuery({ name: "distance", required: true, description: "Distance of the trip" })
   @ApiQuery({ name: "fuel-type", required: true, description: "Type of fuel. (diesel, petrol, LPG)" })
   @ApiQuery({ name: "car-make", required: false, description: "E.g. volvo" })
   @ApiQuery({ name: "car-model", required: false, description: "E.g. XC90" })
@@ -28,6 +29,7 @@ export class TripsController {
   @ApiOperation({ summary: "Recieve the emissions of a trip" })
   @ApiResponse({ status: 200, description: "Grams CO2" })
   calculateEmissions(
+    @Query("distance") distance: number,
     @Query("fuel-type") fuelType: VehicleFuelType,
     @Query("car-make") make: string,
     @Query("car-model") model?: string,
@@ -35,6 +37,7 @@ export class TripsController {
     @Query("consumptions") consumptions?: number
   ) {
     return this.tripsService.calculateTripEmissions(
+      distance,
       fuelType,
       make,
       model,

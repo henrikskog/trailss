@@ -17,15 +17,11 @@ describe('TripsService', () => {
   });
 
   it('should return x,x', () => {
-    expect(service.calculateTripEmissions("diesel","","",2000)).toBe('x,x');
+    expect(service.calculateTripEmissions(20,"diesel","","",2000)).toBe('x,x');
   });
 
   it('should return x,x', () => {
-    expect(service.calculateTripEmissions("diesel","","",2000,5)).toBe('x,x');
+    expect(service.calculateTripEmissions(20,"diesel","","",2000,5)).toBe('x,x');
   });
-
-  // it('should return Created a new trip', () => {
-  //   expect(service.create("pacorro", "")).toBe('Created a new trip');
-  // });
 
 });

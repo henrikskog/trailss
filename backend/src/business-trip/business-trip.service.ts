@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { TripsService, vehicleFuelSchema, VehicleFuelType } from '../trips/trips.service';
-import { BusinessTrip, BusinessTripDocument } from './business-trip-vehicles.schema';
+import { BusinessTrip, BusinessTripDocument } from './business-trip.schema';
 import { CreateBusinessTripDto } from './dto/create-business-trip.dto';
 import { UpdateBusinessTripDto } from './dto/update-business-trip.dto';
 
@@ -31,6 +31,7 @@ export class BusinessTripService {
 
       // Calculate the emissions
       const emissions = await this.tripsService.calculateTripEmissions(
+        businessTripCompanyDto.distance,
         fuelType.data,
         vehicle.make,
         vehicle.model,
@@ -38,7 +39,7 @@ export class BusinessTripService {
         vehicle.consumption
       )
       // Add the emissions to the vehicle
-      businessTripCompanyDto.vehicles[index].emissions = emissions;
+      businessTripCompanyDto.vehicles[index].total_emissions = emissions;
       return businessTripCompanyDto;
     }
 
