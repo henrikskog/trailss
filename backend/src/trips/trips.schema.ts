@@ -16,13 +16,28 @@ export class Trip {
   distance: number;
 
   @Prop()
+  duration: number;
+
+  @Prop()
   date: Date;
 
   @Prop()
   passengers: number;
 
   @Prop()
-  vehicle: Vehicle;
+  car: Vehicle;
+
+  @Prop()
+  emissions: number;
+
+  @Prop()
+  carModel?: string;
+
+  @Prop()
+  carMake?: string;
+
+  @Prop()
+  carYear?: number;
 
 }
 
