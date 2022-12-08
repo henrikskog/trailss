@@ -30,12 +30,10 @@ export default function SalesPage() {
         <div className='salespage-container'>
             <div className='salespage-left'>
                 <div className='salespage-content'>
-                    <h1>Did you think trailss was only for consumers?</h1>
-                    <a>Think again… </a>
                     <h2>Start sharing company values with your customers through the trailss platform. </h2>
                     <p>In 2022, the consumer is very conscious about the rising CO2 emissions. To be their #1 choice you don't only have to have the best product, you also have to align with their values. </p>
                     <p>Not only can you manage your fleets of vehicles, manage emissions of company trips, but you can also share certificates of how you are handling your emissions compared to other businesses.</p>
-                    <a><p>Contact us through the form below, for a free consultation about how trailss can help your customers understand your values</p></a>
+                    <h4>Contact us through the form below, for a free consultation about how trailss can help your customers understand your values</h4>
 
                     {
                         hasSubmitted ?
