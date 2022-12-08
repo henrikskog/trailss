@@ -1,0 +1,67 @@
+.box {
+    max-height: 1000px!important;
+}
+
+@import "../../../../general-variables.scss";
+
+.business-trip-form{
+    position: absolute;    
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 100%;
+
+    .shortform{
+        background-color: white;
+        margin-left: 13vw;
+        border-radius: $borderRadiusBig;
+        box-shadow: $shadowBig;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 65px;
+        .mantine-InputWrapper-root{
+            display: inline;
+            margin: 0;
+        }
+        .lines{
+            height: 40px;
+            width: 1px;
+            background-color: rgba(0, 40, 109, 0.222);
+        }
+        .left-input{
+            border-top-left-radius: $borderRadiusBig;
+            border-bottom-left-radius: $borderRadiusBig; 
+            input{
+                border-top-left-radius: $borderRadiusBig;
+                border-bottom-left-radius: $borderRadiusBig; 
+            }
+        }
+        .shortform-submit{
+            cursor: pointer;
+            font-size: 18px;
+            width: 70px;
+            color: white;
+            margin: 0;
+            border: none;
+            height: 100%;
+            border-top-right-radius: $borderRadiusBig;
+            border-bottom-right-radius:  $borderRadiusBig; 
+            background-color: #4696F5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        input{
+            text-align: center;
+            padding: 0;
+            border: 0;
+            font-size: 18px;
+            color: #23719C;
+        }
+    }
+}
+
+
+
