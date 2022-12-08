@@ -240,6 +240,7 @@ export default function Cars() {
             data={autoCompleteMakes ?? []}
             onSearchChange={setCarMake}
             searchValue={carMake}
+            placeholder="Eg. Toyota"
           />
         </td>
         <td>
@@ -249,25 +250,32 @@ export default function Cars() {
             data={autoCompleteModels ?? []}
             onSearchChange={setCarModel}
             searchValue={carModel}
+            placeholder="Eg. Camry"
           />
         </td>
         <td>
-          <Input value={carYear} onChange={(event: any) => setCarYear(event.target.value)} />
+          <Input placeholder='2001' value={carYear} onChange={(event: any) => setCarYear(event.target.value)} />
         </td>
         <td>
-          <Input value={carColor} onChange={(event: any) => setCarColor(event.target.value)} />
+          <Input placeholder='Red' value={carColor} onChange={(event: any) => setCarColor(event.target.value)} />
         </td>
         <td>
           <Input
             value={carLicensePlate}
             onChange={(event: any) => setCarLicensePlate(event.target.value)}
+            placeholder='ABC123'
           />
         </td>
         <td>
-          <Input value={carMileage} onChange={(event: any) => setCarMileage(event.target.value)} />
+          <Input placeholder='5000' value={carMileage} onChange={(event: any) => setCarMileage(event.target.value)} />
         </td>
         <td>
-          <Input value={carStatus} onChange={(event: any) => setCarStatus(event.target.value)} />
+          <Select
+            searchable
+            data={['Available', 'Unavailable'] ?? []}
+            onSearchChange={setCarStatus}
+            searchValue={carStatus}
+          />
         </td>
         <td>
           <IconCheck onClick={saveCar} className="hover-cursor"></IconCheck>
@@ -277,6 +285,7 @@ export default function Cars() {
                 console.log('Car has no id, deleting from state');
                 return;
               }
+
               setSelectedCar(null);
               deleteCarMutation.mutate(selectedCar._id);
               setAddButtonEnabled(true);
@@ -332,15 +341,15 @@ export default function Cars() {
 
   // Function that adds a new empty car to a fleet
   const newEmptyCar = () => ({
-    _id: 'a',
-    name: 'a',
-    model: 'a',
-    make: 'a',
+    _id: '',
+    name: '',
+    model: '',
+    make: '',
     year: 0,
-    color: 'a',
-    licensePlate: 'a',
+    color: '',
+    licensePlate: '',
     mileage: 0,
-    status: 'a',
+    status: '',
   });
 
   const addCar = () => {

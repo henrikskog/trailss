@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './DashboardCompany.scss';
-import Map from '../shared/map/Map';
 import useAuth from '../user/auth/AuthContext/AuthProvider';
 import UserSettings from '../user/settings/UserSettings';
 import Home from './dashboard/components/Home';

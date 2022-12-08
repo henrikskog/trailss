@@ -1,7 +1,9 @@
 import { createStyles, ScrollArea, Table } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { getTripsFromDB, Trip } from '../../../../../api/newTrip';
+import { formatDate, formatEmissions, formatMeters, formatSeconds } from "../../../trip/calculations/utils";
 import './HistoryUser.scss';
 
 const useStyles = createStyles((theme) => ({
@@ -32,9 +34,9 @@ export default function HistoryUser() {
   const { classes, cx } = useStyles();
   const [scrolled, setScrolled] = useState(false);
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error } = useQuery<Trip[], AxiosError>({
     queryKey: ['user-trips'],
-    queryFn: () => getTripsFromDB(),
+    queryFn: getTripsFromDB,
     retry: false,
   });
 
@@ -53,14 +55,14 @@ export default function HistoryUser() {
           </tr>
         </thead>
         <tbody>
-          {rows.map((element, i) => (
+          {rows.map((trip, i) => (
             <tr key={i}>
-              <td align="center">{element.origin}</td>
-              <td align="center">{element.destination}</td>
-              <td align="center">DATE</td>
-              <td align="center">DURATION</td>
-              <td align="center">{element.distance}</td>
-              <td align="center">{element.total_emissions}</td>
+              <td align="center">{trip.origin}</td>
+              <td align="center">{trip.destination}</td>
+              <td align="center">{formatDate(trip.date)}</td>
+              <td align="center">{formatSeconds(trip.duration)}</td>
+              <td align="center">{formatMeters(trip.distance)}</td>
+              <td align="center">{formatEmissions(trip.emissions)}</td>
             </tr>
           ))}
         </tbody>
@@ -72,7 +74,12 @@ export default function HistoryUser() {
       <h1>Your trips</h1>
       <div className="history-user-table">
         <ScrollArea style={{ width: '100%', height: '65vh' }}>
-          {isLoading ? <div>LOADING...</div> : data ? showData(data) : <div>LOADING</div>}
+          {isLoading 
+          ? <div>LOADING...</div> 
+          : isError 
+            ? <div>An error occured: <i>{error.message}</i></div>
+            : showData(data) 
+          }
         </ScrollArea>
       </div>
     </div>

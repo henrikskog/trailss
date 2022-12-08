@@ -46,7 +46,7 @@ export default function Navbar() {
         <div className="dropbtn">For Businesses</div>
         <div className="dropdown-content">
           <Link className='top-hover' to="information">Information</Link>
-          <Link className='bottom-hover' to="enterprise-login">Sign in</Link>
+          <Link className='bottom-hover' to="companyLogin">Sign in</Link>
         </div>
       </div>
     </header>

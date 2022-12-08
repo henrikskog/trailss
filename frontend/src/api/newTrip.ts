@@ -1,34 +1,32 @@
-import axios from "axios";
-import { z } from "zod";
+import axios from 'axios';
+import { z } from 'zod';
 
 const TripSchema = z.object({
+  date: z.string(),
   origin: z.string(),
   destination: z.string(),
   distance: z.number(),
-  total_emissions: z.number(),
-})
+  duration: z.number(),
+  emissions: z.number(),
+  car: z.optional(z.any()),
+  carModel: z.optional(z.string()),
+  carMake: z.optional(z.string()),
+  carYear: z.optional(z.number()),
+});
 
 export type Trip = z.infer<typeof TripSchema>;
 
 export const saveTripToDB = async (trip: Trip) => {
-    const URL = `${process.env.REACT_APP_API_ROOT}/trips`
-    return axios.post(`${URL}`, trip);
+  console.log(trip)
+  const URL = `${process.env.REACT_APP_API_ROOT}/trips`;
+  return axios.post(`${URL}`, trip);
 };
 
 export const getTripsFromDB = async (): Promise<Trip[]> => {
-    const URL = `${process.env.REACT_APP_API_ROOT}/trips`
-    const data = await axios.get(`${URL}`);
+  const URL = `${process.env.REACT_APP_API_ROOT}/trips`;
+  const data = await axios.get(`${URL}`);
 
-    const result: Trip[] = []
-
-    data.data.forEach((trip: unknown) => {
-        const parsedTrip = TripSchema.safeParse(trip)
-        if (parsedTrip.success) {
-            result.push(parsedTrip.data)
-        }
-    })
-
-    return result
-
-    
-}
+  return z.object({
+    data: z.array(TripSchema)
+  }).parse(data).data
+};

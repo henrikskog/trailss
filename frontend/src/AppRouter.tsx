@@ -7,12 +7,12 @@ import CompanyLogin from './components/company/CompanyLogin';
 import DashboardCompany from './components/company/DashboardCompany';
 import SalesPage from './components/company/SalesPage';
 import Landing from './components/landing/Landing';
-import Map from './components/shared/map/Map';
 import NotFound from './components/shared/notfound/NotFound';
 import useAuth from './components/user/auth/AuthContext/AuthProvider';
 import Login from './components/user/auth/login/Login';
 import Register from './components/user/auth/register/Register';
 import Dashboard from './components/user/dashboard/Dashboard';
+import MapPage from './components/map-page/MapPage';
 
 function AppRouter() {
   const { user } = useAuth();
@@ -20,20 +20,18 @@ function AppRouter() {
 
   const routes = [
     { path: '/', element: <Landing />, protected: false },
-    { path: '/map', element: <Map />, protected: false },
-    { path: '/mapTemp', element: <Map />, protected: false },
+    { path: '/map', element: <MapPage />, protected: false },
     { path: '/login', element: <Login />, protected: false },
     { path: '/register', element: <Register />, protected: false },
     { path: '/dashboard', element: <Dashboard />, protected: true },
     { path: '/dashboardCompany', element: <DashboardCompany />, protected: false },
-    { path: '/user/settings', element: <Map />, protected: true },
-    { path: 'information', element: <SalesPage />, protected: false },
-    { path: 'companyLogin', element: <CompanyLogin />, protected: false },
+    { path: '/information', element: <SalesPage />, protected: false },
+    { path: '/companyLogin', element: <CompanyLogin />, protected: false },
   ];
 
   useEffect(() => {
     if(user?.accessToken) {
-        setAxiosAuthToken(user.accessToken);
+      setAxiosAuthToken(user.accessToken);
     }
 
   }, [user]);

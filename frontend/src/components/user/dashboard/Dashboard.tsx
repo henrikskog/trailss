@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Dashboard.scss';
 import MenuBar from './components/menubar/MenuBar';
-import Map  from "../../shared/map/Map"
-import useAuth from '../auth/AuthContext/AuthProvider';
 import HistoryUser from './components/history/HistoryUser';
 import UserSettings from '../settings/UserSettings';
 
@@ -13,6 +11,7 @@ import {
     IconCar,
 } from '@tabler/icons';
 import Cars from '../../company/dashboard/components/Cars';
+import MapPage from '../../map-page/MapPage';
 
 export default function Dashboard() {
     const [content, setContent] = useState("Home")
@@ -27,7 +26,7 @@ const mockdataUser = [
     function renderSwitch(param: string) {
         switch (param) {
             case 'Home':
-                return <Map />;
+                return <MapPage />;
             case 'History':
                 return <HistoryUser />;
             case 'Account':
