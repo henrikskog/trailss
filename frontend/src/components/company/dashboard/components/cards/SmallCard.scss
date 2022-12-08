@@ -1,0 +1,23 @@
+@import "../../../../../general-variables.scss";
+
+
+.small-card-container {
+    display: flex;
+    background-color: $principal-color;
+    color: white;
+    box-shadow: $boxShadow;
+    border-radius: $borderRadiusSmall;
+    width: 269px;
+    height: 100px;
+    flex-direction: column;
+    align-items: flex-start;
+    h2 {
+        margin: 5px 10px;
+    }
+    h3 {
+        margin: 10px 0px 0px 10px;
+    }
+    p {
+        margin: 0px 10px;
+    }
+}
