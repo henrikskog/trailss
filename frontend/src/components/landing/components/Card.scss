@@ -1,0 +1,71 @@
+@import "../../../general-variables.scss";
+
+.landing-card {
+    position: relative;
+    font-family: 'Roboto';
+    width: 300px;
+    margin: 20px 40px;
+    border-radius: $borderRadiusBig;
+    box-shadow: $shadowBig;
+    background-color: $white;
+    border: 1px solid rgba(253, 253, 253, 0.06);
+    padding: 15px 20px;
+
+    .landing-card-title{
+        font-size: $fontSizeTitle2;
+        color: $principal-color;
+
+    }
+    .landing-bottom-icon{
+        padding-top: 8%;
+    }
+
+    .landing-card-text{
+        padding-bottom: 10px;
+        color: $principal-color;
+        font-size: $fontSizeTextSmall;
+        line-height: $lineHeight;
+
+    }
+
+    .landing-card-body{        
+        text-align: left;
+
+        .links {
+            position: absolute;
+            bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .learn-more{
+            cursor: pointer;
+            color: $principal-color;
+            border-bottom: #dd7fa2 0em solid;
+            transition: border-bottom 0.1s;
+            font-size: $fontSizeText;
+            background-color: rgba(78, 78, 78, 0.12);;
+            padding: 5px;
+            border-radius: $borderRadiusBig;
+            box-shadow: $boxShadow;
+        }
+        .learn-more:hover{
+            color: rgba(30, 30, 30, 0.775);
+            border-bottom: #dd7fa2 0.2em solid;
+            transition: border-bottom 0.1s;
+        }
+        .learn-more:active {
+            background-color: #c850c035;
+        } 
+        .git-icon {
+            padding-top: 11px;
+            margin-right: 10px;
+            color: $grey;
+            font-size: 37px;
+            filter: drop-shadow(1px 3px 1px rgba(0, 0, 0, 0.322));
+        }
+    }
+    .landing-card-title-link {
+        color: $principal-color;
+    }
+}

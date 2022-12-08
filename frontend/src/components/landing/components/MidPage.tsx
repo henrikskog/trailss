@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import './MidPage.scss';
 import Snippet from '../media/environment.svg';
+import Camino from './Camino';
 
 export default function MidPage() {
 
   return (
     <div className='midpage page'>
       <div className='landing-midpage-right'>
-          <img src={Snippet} className="snippet" alt="Project Snippet" />
+          <Camino />
       </div>
       <div className='landing-midpage-left'>
         <div className='landing-midpage-left-title'>

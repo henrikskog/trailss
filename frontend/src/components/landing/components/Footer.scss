@@ -1,0 +1,68 @@
+@import "../../../general-variables.scss";
+
+.landing-footer {
+    position: relative;
+    height: 50vh;
+}
+
+.footer-card {
+    color: white;
+    height: 100%;
+    margin: 0% 2% 0% 2%;
+    background-color: $principal-color;
+    border-top-right-radius: $borderRadiusBig;
+    border-top-left-radius: $borderRadiusBig;
+    display: flex;
+    flex-direction: row;
+
+    .footer-left {
+        margin-top: 5%;
+        text-align: left;
+        margin-left: 16%;
+        flex: 3;
+
+        img {
+            height: 50px;
+        }
+    }
+
+    .footer-right {
+        margin-top: 5%;
+        text-align: left;
+        flex: 5;
+        display: flex;
+        flex-direction: row;
+
+        h3 {
+            margin-top: 0;
+        }
+
+        ul {
+            font-weight: 300 !important;
+            padding-left: 0;
+            list-style-type: none;
+
+            li {
+                padding-bottom: 10px;
+            }
+        }
+
+        .columns {
+            flex: 1;
+        }
+
+        margin-right: 8%;
+    }
+
+    .footer-model {
+        margin: 0;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: flex;
+
+        img {
+            height: 300px;
+        }
+    }
+}
