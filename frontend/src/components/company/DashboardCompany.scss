@@ -1,27 +1,38 @@
 @import "../../general-variables.scss";
 
-.dashboard-user{
+.dashboard-user {
     height: 100vh;
 }
+
 .dashboard-user-content {
     font-family: 'Roboto', sans-serif;
     background-color: #FAFAFB;
     min-height: 100vh;
     overflow-y: scroll;
-    .box{
+
+    .box {
+        display: flex;
         min-height: 100px;
         background-color: white;
         box-shadow: $boxShadow;
         border-radius: $borderRadiusSmall;
     }
-    .big-box{
+
+    .purple-box {
+        background-color: $principal-color;
+        color: white;
+    }
+
+    .big-box {
         height: 300px;
     }
-    .multiple-box{
+
+    .multiple-box {
         display: flex;
         flex-direction: column;
         gap: 1.4em;
-        .box{
+
+        .box {
             flex: 1;
         }
     }
