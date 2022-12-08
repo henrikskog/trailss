@@ -20,6 +20,7 @@ type MyProps = {
     mainStat?: number,
     change?: number,
     description?: string
+    additionalText?: string
 };
 
 const MainCard: React.FC<MyProps> = (props) => {
@@ -39,6 +40,8 @@ const MainCard: React.FC<MyProps> = (props) => {
                         element = <h3>{percentage}</h3>
                     } else if (key == "description") {
                         element = <p>{value}</p>
+                    } else if (key =="additionalText") {
+                        element = <h3>{value}</h3>
                     }
                     return element
                 })}
