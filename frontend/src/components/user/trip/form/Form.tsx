@@ -106,7 +106,7 @@ const Form: React.FC<Props> = ({ calculateRoute }) => {
       distance: 0,
       total_emissions: 0,
     });
-    if(!(response.status === 200)){
+    if(!(response.status < 400)){
     showNotification({
       title: 'Error',
       message:
