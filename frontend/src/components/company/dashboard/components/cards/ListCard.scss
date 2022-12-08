@@ -18,4 +18,13 @@
         display: flex;
         justify-content: center;    
     }
+    .list-card-row-quantity{
+        color: $principal-color;
+        padding: 0 6px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+    .list-card-row-quantity2{
+        font-size: $fontSizeTextSmaller;
+    }
 }

@@ -10,14 +10,7 @@ import './Home.scss';
 import { Typography } from '@mui/material';
 import BajaAreaChartCard from './cards/BajaAreaChart';
 import SmallCard from './cards/SmallCard';
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
+import TableCard from './cards/TableCard';
 
 const series = [{
   name: 'series1',
@@ -89,6 +82,71 @@ const fleets = [
     quantity2: 4
   },
 ];
+
+//create an array of 10 trips with name emissions number and date
+const trips = [
+  {
+    name: "Trip 1",
+    emissions: 100,
+    number: 1,
+    date: "01/01/2021"
+  },
+  {
+    name: "Trip 2",
+    emissions: 100,
+    number: 2,
+    date: "01/01/2021"
+  },
+  {
+    name: "Trip 3",
+    emissions: 100,
+    number: 3,
+    date: "01/01/2021"
+  },
+  {
+    name: "Trip 4",
+    emissions: 100,
+    number: 4,
+    date: "01/01/2021"
+  },
+  {
+    name: "Trip 5",
+    emissions: 100,
+    number: 5,
+    date: "01/01/2021"
+  },
+  {
+    name: "Trip 6",
+    emissions: 100,
+    number: 6,
+    date: "01/01/2021"
+  },
+  {
+    name: "Trip 7",
+    emissions: 100,
+    number: 7,
+    date: "01/01/2021"
+  },
+  {
+    name: "Trip 8",
+    emissions: 100,
+    number: 8,
+    date: "01/01/2021"
+  },
+  {
+    name: "Trip 9",
+    emissions: 100,
+    number: 9,
+    date: "01/01/2021"
+  },
+  {
+    name: "Trip 10",
+    emissions: 100,
+    number: 10,
+    date: "01/01/2021"
+  }
+];
+
 const Home: React.FC = () => {
   return (
     <div className='company-home-wrapper'>
@@ -129,44 +187,21 @@ const Home: React.FC = () => {
         <Grid item xs={12} md={4}>
           <h3 className='inside-title'>Fleets</h3>
           <div className='box big-box'>
-            <ListCard elements={fleets.slice(0, 5)}></ListCard>
+            <ListCard elements={fleets.slice(0, 5)} text="Emitted" textAfter='kg'></ListCard>
         </div>
       </Grid>
-      <Grid item xs={6} md={7}>
-        <h3 className='inside-title'>Fleets</h3>
-        <div className='box big-box'>
-          <MainCard title="You have:" mainStat={2} description="fleets" />
+      <Grid item xs={12} md={8}>
+        <h3 className='inside-title'>Business trips</h3>
+        <div className='box bigger-box'>
+          <TableCard trips={trips}/>
         </div>
       </Grid>
-      <Grid item xs={6} md={5}>
-        <h3 className='inside-title'>Vehicles</h3>
-        <div className='box'>
+      <Grid item xs={12} md={4}>
+        <h3 className='inside-title'>Certificates</h3>
+        <div className='box bigger-box'>
           <MainCard mainStat={5} description="vehicles" title="Total, in your fleets" />
         </div>
       </Grid>
-
-      {/* <Grid container item columnSpacing={3} xs={12} md={7}>
-        <Grid item xs={12}>
-          <h3 className='inside-title'>Trips</h3>
-        </Grid>
-        <Grid item xs={9} md={7}>
-          <div className='box big-box'>
-
-          </div>
-        </Grid>
-        <Grid item xs={9} md={5}>
-          <div className='box big-box'>
-
-          </div>
-        </Grid>
-      </Grid>
-
-      <Grid item xs={12} md={5}>
-        <h3 className='inside-title'>Certificates</h3>
-        <div className='box big-box'>
-
-        </div>
-      </Grid> */}
     </Grid >
     </div >
   );

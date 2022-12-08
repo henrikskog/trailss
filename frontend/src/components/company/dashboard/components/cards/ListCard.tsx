@@ -24,18 +24,21 @@ const listItemStyle = {
 
 export interface Props {
     elements: Element[]
+    text: string;
+    textAfter: string;
 }
 
 interface Element {
     id: number;
     name: string;
     quantity: number;
-    quantity2: number;
+    quantity2: string | number;
+    
 }
 
 
 
-const ListCard: React.FC<Props> = ({ elements }) => {
+const ListCard: React.FC<Props> = ({ elements, text, textAfter }) => {
     return (
         <div className='list-card-wrapper'>
                 <div className='list-card-rows'>
@@ -45,7 +48,7 @@ const ListCard: React.FC<Props> = ({ elements }) => {
                                 id={element.id}
                                 name={element.name}
                                 quantity={element.quantity}
-                                quantity2={element.quantity2}
+                                quantity2={`${text} ${element.quantity2} ${textAfter}`}
                                 lastOne={i === elements.length - 1}
                             />
                         );
@@ -81,7 +84,7 @@ const ListRows: React.FC<RowData> = (element) => {
                             <Grid item>
                                 <Grid container alignItems="center" justifyContent="space-between">
                                     <Grid item>
-                                        <Typography variant="subtitle1" color="inherit">
+                                        <Typography className="list-card-row-quantity" variant="subtitle1" color="inherit">
                                             {element.quantity}
                                         </Typography>
                                     </Grid>
@@ -90,7 +93,7 @@ const ListRows: React.FC<RowData> = (element) => {
                         </Grid>
                     </Grid>
                     <Grid item>
-                        <Typography variant="subtitle2" sx={{ color: 'success.dark' }}>
+                        <Typography className="list-card-row-quantity2" variant="subtitle2" >
                             {element.quantity2}
                         </Typography>
                     </Grid>
