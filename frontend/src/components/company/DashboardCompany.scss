@@ -12,19 +12,34 @@
 
     .box {
         display: flex;
-        min-height: 100px;
+        min-height: 150px;
+        max-height: 150px;
         background-color: white;
         box-shadow: $boxShadow;
         border-radius: $borderRadiusSmall;
+        h4 {
+            color: rgb(70, 70, 70);
+        }
     }
 
     .purple-box {
         background-color: $principal-color;
+        color: white!important;
+        h4 {
+            color: white!important;
+        }
+    }
+    .blue-box {
+        background-color: $blue;
         color: white;
+        h4 {
+            color: white!important;
+        }
     }
 
     .big-box {
-        height: 300px;
+        height: 420px;
+        max-height: 420px;
     }
 
     .multiple-box {
@@ -35,5 +50,9 @@
         .box {
             flex: 1;
         }
+    }
+    button{
+        font-weight: 600;
+        color: $blue!important;
     }
 }

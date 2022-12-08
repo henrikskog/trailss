@@ -2,22 +2,25 @@
 
 
 .small-card-container {
+    padding: $boxPadding;
     display: flex;
-    background-color: $principal-color;
-    color: white;
-    box-shadow: $boxShadow;
-    border-radius: $borderRadiusSmall;
-    width: 269px;
-    height: 100px;
+    width: 100%;
+    
     flex-direction: column;
     align-items: flex-start;
     h2 {
-        margin: 5px 10px;
+        font-size: $fontSizeTitle2;
+        margin: 0;
     }
-    h3 {
-        margin: 10px 0px 0px 10px;
+    h4 {
+        font-weight: 300;
+        font-size: $fontSizeTextSmall;
+        margin: 0;
+        padding-bottom: 5px;
     }
     p {
-        margin: 0px 10px;
+        font-size: $fontSizeTextSmaller;
+        
+        margin: auto 0 0 0;
     }
 }
