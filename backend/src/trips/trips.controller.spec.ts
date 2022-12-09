@@ -35,15 +35,4 @@ describe('TripsController', () => {
 
     controller = module.get<TripsController>(TripsController);
   });
-
-  // it('should be defined', () => {
-  //   expect(controller).toBeDefined();
-  // });      
-  
-  // describe('calculateTripEmissions', async () => {
-  //   const result = 43295.2;
-  //   jest.spyOn(service, 'calculateTripEmissions').mockImplementation(async () => result);
-
-  //   expect(await service.calculateTripEmissions(100,"petrol","Ferrari","F430",2008,18.1)).toBe(result)
-  // })
 });
