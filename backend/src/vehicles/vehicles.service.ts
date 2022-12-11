@@ -1,12 +1,11 @@
 import { HttpService } from "@nestjs/axios";
 import {
-  BadRequestException, Injectable,
+  Injectable,
   NotFoundException
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 import { lastValueFrom } from "rxjs";
-import { Trip, TripDocument } from "src/trips/trips.schema";
 import { VehicleFuelType } from "src/trips/trips.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
@@ -17,7 +16,6 @@ export class VehiclesService {
   constructor(
     private readonly httpService: HttpService,
     @InjectModel(Vehicle.name) private readonly vehicleModel: Model<VehicleDocument>,
-    @InjectModel(Trip.name) private readonly tripModel: Model<TripDocument>
   ) {}
 
   async create(user: any, createVehicleDto: CreateVehicleDto) {

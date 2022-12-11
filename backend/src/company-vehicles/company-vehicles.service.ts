@@ -45,7 +45,7 @@ export class CompanyVehiclesService {
         vehicle.consumption
       )
       // Add the emissions to the vehicle
-      vehicle.emissions = emissions;
+      vehicle.total_emissions = emissions;
       return vehicle;
     }
 

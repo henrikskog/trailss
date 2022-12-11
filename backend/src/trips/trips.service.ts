@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { InjectRepository } from "@nestjs/typeorm";
 import mongoose, { Model } from "mongoose";
 import { z } from "zod";
 import { VehiclesService } from "../vehicles/vehicles.service";
@@ -63,14 +64,44 @@ export class TripsService {
 
     const emissions = this.vehicleService.getEmissions(fuel.data, consumption);
 
-    return emissions;
+    // Round to one decimal place
+    return Math.round(emissions * distance * 10) / 10;
   }
 
+  async calculateTotalEmissions(tripDto: CreateTripDto | UpdateTripDto) {
+    const vehicle = tripDto.vehicle;
+
+    //parse the fuel type to enum
+    const fuelType = vehicleFuelSchema.safeParse(vehicle.type);
+    // Fuel types are restricted, therefore validate value      
+    if (!fuelType.success) {
+        throw new BadRequestException("Illegal value give for fuel type");
+    }
+    
+      // Calculate the emissions
+    const emissions = await this.calculateTripEmissions(
+      tripDto.distance,
+      fuelType.data,
+      vehicle.make,
+      vehicle.model,
+      vehicle.year,
+      vehicle.consumption
+    )
+      // Add the emissions to the vehicle
+    tripDto.total_emissions = emissions;
+    return tripDto;
+  }
+
+
   async create(user: any, createTripDto: CreateTripDto) {
-    const trip = await this.tripModel.create(createTripDto);
+    // Calculate the emissions
+    const userTrip = await this.calculateTotalEmissions(createTripDto)
+    // Create the trip
+    const trip = await this.tripModel.create(userTrip)
+
     user.trips.push(trip);
     user.save();
-    return trip;
+    return "Created a new trip";
   }
 
   async findAll(user: any) {
@@ -97,7 +128,11 @@ export class TripsService {
     if (!trip.length) {
       throw new NotFoundException("No trip with the given id was found");
     }
-    await this.tripModel.findByIdAndUpdate(trip[0], updateTripDto);
+
+    // Calculate the emissions
+    const userTrip = await this.calculateTotalEmissions(updateTripDto)
+
+    await this.tripModel.findByIdAndUpdate(trip[0], userTrip);
     return "Trip updated successfully";
   }
 
