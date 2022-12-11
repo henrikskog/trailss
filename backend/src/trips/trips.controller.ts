@@ -4,8 +4,6 @@ import { TripsService, VehicleFuelType } from "./trips.service";
 import { ApiTags } from '@nestjs/swagger';
 import { CreateTripDto } from "./dto/create-trip.dto";
 import { UpdateTripDto } from "./dto/update-trip.dto";
-import { AuthGuard } from "@nestjs/passport";
-import { JwtStrategy } from "src/auth/jwt.strategy";
 import { JwtAuthGuard } from "src/auth/jwt-auth-guard.guard";
 
 
