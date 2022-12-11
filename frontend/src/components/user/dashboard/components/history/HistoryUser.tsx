@@ -62,7 +62,7 @@ export default function HistoryUser() {
               <td align="center">{formatDate(trip.date)}</td>
               <td align="center">{formatSeconds(trip.duration)}</td>
               <td align="center">{formatMeters(trip.distance)}</td>
-              <td align="center">{formatGrams(trip.emissions)}</td>
+              <td align="center">{formatGrams(trip.total_emissions)}</td>
             </tr>
           ))}
         </tbody>

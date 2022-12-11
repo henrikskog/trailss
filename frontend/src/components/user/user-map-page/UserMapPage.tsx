@@ -16,7 +16,7 @@ import { AxiosError } from 'axios';
 import { useLocation } from 'react-router-dom';
 import { getCarMakes, getCarModels } from '../../../api/getCarInfo';
 import { getEmissions } from '../../../api/getEmissions';
-import { saveTripToDB } from '../../../api/newTrip';
+import { saveTripToDB, Trip } from '../../../api/newTrip';
 import { getCars } from '../../company/dashboard/components/Cars';
 import { showGoogleMapsError } from '../../map-page/utils';
 import GoogleMaps from '../../shared/googlemaps/GoogleMaps';
@@ -231,12 +231,12 @@ const UserMapPage: React.FC = () => {
   };
 
   const saveTrip = async () => {
-    const trip = {
+    const trip: Trip = {
       origin: form.values.origin,
       destination: form.values.destination,
       distance: distance!,
       duration: duration!,
-      emissions: emissions!,
+      total_emissions: emissions!,
       date: form.values.date.toString(),
       carYear: form.values.carYear,
       carMake: searchMakeValue,

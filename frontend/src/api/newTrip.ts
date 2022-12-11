@@ -7,7 +7,7 @@ const TripSchema = z.object({
   destination: z.string(),
   distance: z.number(),
   duration: z.number(),
-  emissions: z.number(),
+  total_emissions: z.number(),
   car: z.optional(z.any()),
   carModel: z.optional(z.string()),
   carMake: z.optional(z.string()),
