@@ -4,13 +4,16 @@ import { useForm } from '@mantine/form';
 import { TextInput } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { FaSearch } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 export default function ShortForm() {
+    const navigate = useNavigate();
+
     const form = useForm({
         initialValues: {
             origin: '',
             destination: '',
-            date: 0,
+            date: new Date(),
         },
 
         // functions will be used to validate values at corresponding key
@@ -24,8 +27,8 @@ export default function ShortForm() {
     });
     return (
         <form className="shortform"
-            onSubmit={form.onSubmit((values: any) => {
-                console.log(values)
+            onSubmit={form.onSubmit((values) => {
+                navigate('/map', { state: values })
             })}>
             <TextInput className='left-input'
                 placeholder="E.g. Times Square"

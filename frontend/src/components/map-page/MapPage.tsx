@@ -18,6 +18,7 @@ import { saveTripToDB } from '../../api/newTrip';
 import useAuth from '../user/auth/AuthContext/AuthProvider';
 import CalculationResultsBar from '../user/trip/calculations/CalculationResultsBar';
 import { showGoogleMapsError } from './utils';
+import { useLocation } from 'react-router-dom';
 
 const MapPage: React.FC = () => {
   const [distance, setDistance] = useState<number | null>(null);
@@ -25,6 +26,7 @@ const MapPage: React.FC = () => {
   const [emissions, setEmissions] = useState<number | null>(null);
   const [showSaveTrip, setShowSaveTrip] = useState<boolean>(false);
   const { user } = useAuth();
+  const { state } = useLocation();
 
   const [directionsResponse, setDirectionsResponse] = useState<
     google.maps.DirectionsResult | undefined
@@ -32,9 +34,9 @@ const MapPage: React.FC = () => {
 
   const form = useForm({
     initialValues: {
-      origin: '',
-      destination: '',
-      date: new Date(),
+      origin: state.origin || '',
+      destination: state.destination || '',
+      date: state.date || new Date(),
       passengers: 1,
       carYear: 2000,
     },
@@ -76,17 +78,24 @@ const MapPage: React.FC = () => {
 
     setDirectionsResponse(results);
 
+    // --- TRIP CALCULATIONS
     const resultDistance = results.routes[0].legs[0].distance?.value; // meters
     const resultDuration = results.routes[0].legs[0].duration?.value; // seconds
 
-    if (!resultDistance || !resultDuration) {
-      showGoogleMapsError('Could not calculate distance or duration');
+    if (!resultDistance) {
+      showGoogleMapsError('Could not calculate trip distance. Try again later.');
+      return;
+    }
+
+    if(!resultDuration) {
+      showGoogleMapsError('Could not calculate trip duration. Try again later. ');
       return;
     }
 
     setDistance(resultDistance);
     setDuration(resultDuration);
 
+    // emissions
     try {
       const calculatedEmissions = await getEmissions({
         carMake: carMake,
@@ -109,7 +118,6 @@ const MapPage: React.FC = () => {
       return;
     }
 
-    console.log("in submit")
     user?.accessToken && setShowSaveTrip(true);
   }
 
