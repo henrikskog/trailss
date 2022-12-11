@@ -44,6 +44,7 @@ export default function ShortForm() {
             <DatePicker
                 placeholder="Pick date"
                 {...form.getInputProps('date')}
+                className="datepicker"
             />
             <button className="shortform-submit">
                 <FaSearch />

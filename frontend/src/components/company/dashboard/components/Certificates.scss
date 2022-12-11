@@ -1,16 +1,23 @@
-.test33 {
-    height: 10px;
-    margin-top: 100px;
+@import "../../../../general-variables.scss";
+
+
+.bottom-grid {
+    opacity: 0.6;
+    z-index: 10;
 }
 
+
+
 .bottom-text {
-    padding-top: 10rem;
     text-align: center;
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .image-div {
     margin-top: 5rem;
-    
+
     .image {
         height: 10rem;
     }

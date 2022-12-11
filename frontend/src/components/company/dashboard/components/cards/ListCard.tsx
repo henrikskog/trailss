@@ -1,8 +1,8 @@
 import { IconCar } from '@tabler/icons';   
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import Grid from '@mui/material/Grid';
+import ListItem from '@mui/material/ListItem';
 import { Divider, Typography } from '@mui/material';
 import { Button } from '@mui/material/';
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
@@ -31,9 +31,10 @@ export interface Props {
 interface Element {
     id: number;
     name: string;
-    quantity: number;
-    quantity2: string | number;
-    
+    quantity?: number;
+    quantity2?: number;
+    origin?: string;
+    destination?: string;
 }
 
 
@@ -48,7 +49,9 @@ const ListCard: React.FC<Props> = ({ elements, text, textAfter }) => {
                                 id={element.id}
                                 name={element.name}
                                 quantity={element.quantity}
-                                quantity2={`${text} ${element.quantity2} ${textAfter}`}
+                                quantity2={element.quantity2}
+                                origin={element.origin}
+                                destination={element.destination}
                                 lastOne={i === elements.length - 1}
                                 key={element.id}
                             />
