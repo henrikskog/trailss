@@ -41,13 +41,7 @@ export default function DashboardCompany() {
       case 'Home':
         return <Home />;
       case 'Fleets':
-        return (
-          <>
-            <Fleets />
-            <Fleets />
-            <Fleets />
-          </>
-        );
+        return <Fleets />;
       case 'Statistics':
         return <Statistics />;
       case 'Business trips':
