@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from "@nestjs/mongoose";
-import { BusinessTrip, BusinessTripSchema } from './business-trip-vehicles.schema';
+import { BusinessTrip, BusinessTripSchema } from './business-trip.schema';
 import { BusinessTripController } from './business-trip.controller';
 import { BusinessTripService } from './business-trip.service';
 import { TripsService } from '../trips/trips.service';

@@ -4,9 +4,9 @@ export class CreateTripDto {
     origin: string;
     destination: string; 
     distance: number;
-    emissions: number;
+    total_emissions: number;
     date: Date;
-    car?: Vehicle;
+    vehicle?: Vehicle;
     carModel?: string;
     carMake?: string;
     carYear?: number;

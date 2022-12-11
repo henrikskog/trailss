@@ -1,32 +1,38 @@
 import { HttpService } from '@nestjs/axios';
-import { Controller, Injectable } from '@nestjs/common';
+import { Controller, Injectable, Post } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ApiTags } from '@nestjs/swagger';
 import { Test, TestingModule } from '@nestjs/testing';
+import exp from 'constants';
 import { Model } from 'mongoose';
+import mod from 'zod/lib';
 import { TripsController } from './trips.controller';
 import { TripDocument } from './trips.schema';
+import { TripsService } from './trips.service';
+import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
+
+const moduleMocker = new ModuleMocker(global);
 
 describe('TripsController', () => {
   let controller: TripsController;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       controllers: [TripsController],
-      providers: [TripsService],
-    }).compile();
+    })
+    .useMocker((token) => {
+        const result = 43295.2;
+        if (token === TripsService) {
+          return { calculateTripEmissions: jest.fn().mockResolvedValue(result) };
+        }
+        if (typeof token === 'function') {
+          const mockMetadata = moduleMocker.getMetadata(token) as MockFunctionMetadata<any, any>;
+          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
+          return new Mock();
+        }
+      })
+      .compile();
 
     controller = module.get<TripsController>(TripsController);
   });
-
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
 });
-
-@ApiTags("Trip")
-@Controller("trips")
-export class TripsService {
-  constructor(@InjectModel('vehicle') private readonly tripModel: Model<TripDocument>) {}
-
-}

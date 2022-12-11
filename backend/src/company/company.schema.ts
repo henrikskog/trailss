@@ -1,6 +1,6 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { BusinessTrip } from 'src/business-trip/business-trip-vehicles.schema';
+import { BusinessTrip } from 'src/business-trip/business-trip.schema';
 import { Fleet } from 'src/fleets/fleets.schema';
 import { Trip } from 'src/trips/trips.schema';
 
