@@ -14,16 +14,10 @@ export class UsersMetricsController {
   calculateStatsPerMonth(@Request() req: any, @Param("year") year: Date, @Param("month") month: Date) {
     return this.usersMetricsService.calculateStatsPerMonth(req.user, year, month);
   }
-
-  @UseGuards(JwtAuthGuard)  
-  @Get(':year/By Month')
+ 
+  @Get(':year')
   @ApiBearerAuth()
-  calculateStatsPerYearByMonth(@Request() req: any, @Param("year") year: Date) {
-    return this.usersMetricsService.calculateStatsPerYearByMonth(req.user, year)
-  }@UseGuards(JwtAuthGuard)  
-  @Get(':year/By Day')
-  @ApiBearerAuth()
-  calculateStatsPerYearByDay(@Request() req: any, @Param("year") year: Date) {
+  calculateStatsPerYear(@Request() req: any, @Param("year") year: Date) {
     return this.usersMetricsService.calculateStatsPerYearByDay(req.user, year)
   }
 }

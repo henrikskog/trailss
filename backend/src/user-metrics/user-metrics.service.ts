@@ -29,6 +29,7 @@ export class UserMetricsService {
     async getYearTrips(user: any, year: number) {
         const trips = await this.getAllTrips(user)
         let yearTrips = []
+
         trips.forEach(trip => {
             if (trip.date.getFullYear() == year) {
                 yearTrips.push(trip)
@@ -45,6 +46,7 @@ export class UserMetricsService {
         const year = new Date(yearSelected).getFullYear()
         const month = new Date(monthSelected).getMonth()
         const monthTrips = await this.getMonthTrips(user, year, month)
+        
 
         monthTrips.forEach(trip => {
             const tripEmissions = trip.total_emissions;
@@ -56,10 +58,6 @@ export class UserMetricsService {
         return emissionsMonth;
     }
 
-
-    async calculateStatsPerYearByMonth(user: any, year: Date) {
-
-    }
     async calculateStatsPerYearByDay(user: any, yearSelected: Date) {
         const emissionsYear = []
         const year = new Date(yearSelected).getFullYear()
