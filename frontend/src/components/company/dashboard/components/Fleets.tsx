@@ -2,6 +2,9 @@ import { Button, Container, Group, ScrollArea, Table } from '@mantine/core';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Fleets.scss';
+import Grid from '@mui/material/Grid';
+import Model from "../../../landing/media/carretera_ 1.png";
+import FooterDashboard from "./FooterDashboard";
 
 interface Car {
   id: number;
@@ -108,50 +111,65 @@ export default function Fleet() {
   // maybe below the Editor have the option of adding new cars by clicking on a button
 
   return (
-    <div className="fleets-container">
-      <div className="table">
-        <h2>Your fleets</h2>
-        <Table verticalSpacing="sm" striped highlightOnHover>
-            <th>Name</th>
-            <th>Number of cars</th>
-          <tbody>
-            {fleets.map((fleet) => (
-              <tr key={fleet.id} onClick={() => setActiveFleet(fleet)}>
-                <td>{fleet.name}</td>
-                <td>{fleet.cars.length}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </div>
-      <div className="editor">
-        <h2>Edit fleet</h2>
-        {activeFleet !== null && (
-          <div>
-            <h2>{activeFleet.name}</h2>
-            <Table verticalSpacing="sm" striped highlightOnHover>
-                <th>Car name</th>
-                <th>Car model</th>
-                <th>Edit</th>
-              <tbody>
-                {activeFleet.cars.map((car) => (
-                  <tr key={car.id}>
-                    <td>{car.name}</td>
-                    <td>{car.model}</td>
-                    <td>
-                      <Button onClick={() => console.log('edit')}>Edit</Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+    // <div className='main-container'>
+      <div className='company-home-wrapper'>
+        <Grid container rowSpacing={4} columnSpacing={{ xs: 1.5, sm: 2, md: 3 }} justifyContent="space-evenly" alignItems={"start"}>
+          <Grid item xs={12}>
+            <h1>Fleets</h1>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <div className='box'>
+              <h2>Your fleets</h2>
+              <Table verticalSpacing="sm" striped highlightOnHover>
+                <th>Name</th>
+                <th>Number of cars</th>
+                <tbody>
+                  {fleets.map((fleet) => (
+                    <tr key={fleet.id} onClick={() => setActiveFleet(fleet)}>
+                      <td>{fleet.name}</td>
+                      <td>{fleet.cars.length}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <div className="box">
+              <div>
+                <h2>Edit fleet</h2>
+              </div>
+              {activeFleet !== null && (
+                <div>
+                  <h2>{activeFleet.name}</h2>
+                  <Table verticalSpacing="sm" striped highlightOnHover>
+                    <th>Car name</th>
+                    <th>Car model</th>
+                    <th>Edit</th>
+                    <tbody>
+                      {activeFleet.cars.map((car) => (
+                        <tr key={car.id}>
+                          <td>{car.name}</td>
+                          <td>{car.model}</td>
+                          <td>
+                            <Button onClick={() => console.log('edit')}>Edit</Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
 
-            <Button className="newCarButton" onClick={() => addCar(activeFleet)}>
-              Add a new car
-            </Button>
-          </div>
-        )}
+
+                  <Button className="newCarButton" onClick={() => addCar(activeFleet)}>
+                    Add a new car
+                  </Button>
+                </div>
+              )}
+            </div>
+          </Grid>
+        </Grid>
+        <FooterDashboard/>
       </div>
-    </div>
+      
   );
 }

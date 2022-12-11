@@ -1,4 +1,4 @@
-.table{
+.table {
     width: 100%;
 }
 
@@ -12,4 +12,16 @@
 .fleets-container {
     display: flex;
     flex-direction: row;
+}
+
+.box {
+    max-height: 1000px !important;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    z-index: 100;
+}
+
+.company-home-wrapper {
+    
 }

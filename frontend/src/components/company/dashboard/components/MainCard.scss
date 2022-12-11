@@ -2,6 +2,8 @@
 
 .box {
     display: flex;
+    position: relative;
+    z-index: 3;
 
     .card-content {
         margin:1rem
