@@ -3,7 +3,6 @@
 .midpage {
     position: relative;
     color: $white;
-    background-color: $principal-color;
     min-height: 100vh;
     display: flex;
     flex-direction: row;
@@ -11,9 +10,11 @@
     justify-content: center;
 
     .landing-midpage-left {
-	  margin-right: 10%;
-	  text-align: right;
-        flex: 1;
+        color: $principal-color;
+
+        margin-right: 10%;
+        text-align: right;
+        flex: 2;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -23,49 +24,56 @@
         margin-bottom: 5%;
 
         font-size: $fontSizeTitle1;
-        color: $white;
+        color: $blue;
         font-weight: $fontWeightBold;
-        
+
     }
 
     .landing-midpage-left-text {
-        font-size: $fontSizeText!important;
+        font-size: $fontSizeText !important;
 
         font-weight: $fontWeightBold;
-        
+
         line-height: $lineHeight;
-        
-        a{
+
+        a {
             text-decoration: none;
             cursor: pointer;
             color: $white;
             border-bottom: #dd7fa2 0em solid;
             transition: border-bottom 0.1s;
             transition: background-color 0.1s;
-            background-color: rgba(255, 255, 255, 0.267);
+            background-color: $blue;
             padding: 5px;
             border-radius: 0.2em;
         }
-        a:hover{
+
+        a:hover {
             color: rgba(30, 30, 30, 0.95);
             border-bottom: #dd7fa2 0.2em solid;
             transition: border-bottom 0.1s;
             transition: background-color 0.1s;
             background-color: rgba(255, 255, 255, 0.817);
         }
+
         a:active {
             background-color: #c850c035;
-        } 
+        }
     }
 
     .landing-midpage-right {
+        canvas {
+            width: 100% !important;
+            text-shadow: $shadowBig;
+        }
         height: 100%;
-        flex: 1;
+        flex: 3;
         display: flex;
         justify-content: base;
         align-items: center;
         margin-left: 0;
         margin-top: 5%;
+
         .snippet-title {
             margin-bottom: -4%;
             text-align: left;
@@ -74,14 +82,16 @@
             color: $white;
             font-weight: $fontWeightBold;
         }
-        .snippet {            
+
+        .snippet {
             height: 400px;
             filter: $shadowBig;
             transition: filter .3s;
         }
+
         .snippet:hover {
             filter: $shadowSmall;
-            
+
             transition: filter .3s;
         }
     }
@@ -92,6 +102,7 @@
         bottom: -10vh;
         left: 6%;
     }
+
     .logoUPV {
         position: absolute;
         width: 250px;

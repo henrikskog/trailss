@@ -3,15 +3,23 @@ $secondary-color: #9C89B8;
 $white: #ffffff;
 $grey: #b3b3b347;
 $green: #5ca34d;
-$blue: #53B3CB;
+$blue: #3C9FC5;
 $dark: #4C4C47;
 
 $fontSizeTitle1: 10vh;
+$fontSizeTitle2: 1.8em;
 $fontWeightBold: 600;
 
 $lineHeight: 40px;
 $fontSizeText: 1.2em;
-$fontSizeTextSmall: 0.9em;
+$fontSizeTextSmall: 1em;
+$fontSizeTextSmaller: 0.8em;
 
-$shadowBig: rgba(0, 0, 0, 0.441) 0px 0px 10px;
+$shadowBig: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;;
 $shadowSmall: rgba(0, 0, 0, 0.441) 0px 0px 2px;
+
+$boxShadow:rgba(0, 0, 0, 0.16) 0px 1px 4px;
+$borderRadiusBig: 25px;
+$borderRadiusSmall: 0.6em;
+
+$boxPadding: 1.5em;

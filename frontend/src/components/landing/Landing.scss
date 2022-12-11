@@ -9,6 +9,17 @@
     button {
         background-color: $blue!important;
     }
-    
+    .landing-spacer{
+        height: 25vh;
+        background-color: $principal-color;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        h3 {
+            width: 60%;
+            font-weight: 400;
+        }
+    }
 }
 

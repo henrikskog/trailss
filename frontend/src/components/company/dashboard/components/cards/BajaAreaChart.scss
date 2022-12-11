@@ -1,0 +1,24 @@
+@import "../../../../../general-variables.scss";
+
+.area-chart-wrapper{
+    padding:$boxPadding $boxPadding 1em 1em;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    .area-chart{
+        flex: 1;
+        height: auto;
+    }
+    h6 {
+        color: grey;
+        font-size: $fontSizeTextSmaller;
+        padding-bottom: 6px;
+
+    }
+    h4 {
+        color: black;
+        font-weight: 600;
+        font-size: $fontSizeText;
+    }
+    
+}

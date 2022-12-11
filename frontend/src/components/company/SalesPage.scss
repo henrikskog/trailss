@@ -12,15 +12,12 @@
         .salespage-content {
             margin: 13% 10%;
         }
-        h1 {
-            text-align: center !important;
+        h2, h4, p, label {
+            color: $dark;
         }
         Button {
             margin-top: 2%;
             background-color: $principal-color;
-        }
-        a {
-            font-weight: bold;
         }
         .submission-message {
             padding-top: 1%;

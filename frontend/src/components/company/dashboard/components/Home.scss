@@ -1,17 +1,18 @@
-/* 
-.home-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  grid-gap: 2rem;
-  margin: 1rem;
-  height: 100%;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
+@import "../../../../general-variables.scss";
 
-.home-grid > div {
-  background-color: #fff;
-  border-radius: 5px;
-  padding: 1rem;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-} */
+.company-home-wrapper{
+  margin: 1% 2% 3% 2%;
+  text-align: left;
+  h3{
+    font-size: $fontSizeTextSmall;
+    font-weight: 600;
+    color: rgb(70, 70, 70);
+    margin: 25px 0 5px 0;
+  }
+  .inside-title{
+    padding-bottom: 16px;
+  }
+  .inside-title-partial{
+    padding-bottom: 16px;
+  }
+}
