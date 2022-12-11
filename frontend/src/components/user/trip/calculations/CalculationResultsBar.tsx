@@ -1,6 +1,6 @@
 import React from 'react';
 import './CalculationResultsBar.scss';
-import { formatMeters, formatSeconds, formatEmissions } from './utils';
+import { formatMeters, formatSeconds, formatGrams } from './utils';
 
 interface Props {
   distance: number;
@@ -15,7 +15,7 @@ const CalculationResultsBar: React.FC<Props> = ({ distance, duration, emissions 
         <div>
           <p className="subheader">Length</p>
           <div>
-            <p>{formatMeters(distance)}km</p>
+            <p>{formatMeters(distance)}</p>
           </div>
         </div>
         <div>
@@ -27,7 +27,7 @@ const CalculationResultsBar: React.FC<Props> = ({ distance, duration, emissions 
         <div>
           <p className="subheader">Emissions</p>
           <div>
-            <p>{formatEmissions(emissions)}g</p>
+            <p>{formatGrams(emissions)} CO2</p>
           </div>
         </div>
       </div>

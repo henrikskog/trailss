@@ -34,11 +34,12 @@ const MapPage: React.FC = () => {
 
   const form = useForm({
     initialValues: {
-      origin: state.origin || '',
-      destination: state.destination || '',
-      date: state.date || new Date(),
+      origin: state?.origin || '',
+      destination: state?.destination || '',
+      date: state?.date || new Date(),
       passengers: 1,
       carYear: 2000,
+      consumption: null,
     },
 
     // functions will be used to validate values at corresponding key
@@ -52,6 +53,10 @@ const MapPage: React.FC = () => {
         value === 0 || value > 10 ? 'Wrong number of passengers' : null,
       carYear: (value: number) =>
         value < 1980 || value > currentYear ? `Select a year between 1960-${currentYear}` : null,
+      consumption: (value) =>
+        value === 0 && searchMakeValue === '' && searchMakeValue === ''
+          ? "Indicate consumption if your model isn't in the list"
+          : null,
     },
   });
 
@@ -67,7 +72,8 @@ const MapPage: React.FC = () => {
     destination: string,
     carMake: string,
     carYear: number,
-    carModel: string
+    carModel: string,
+    consumption?: number
   ) {
     const directionsService = new google.maps.DirectionsService();
     const results = await directionsService.route({
@@ -87,7 +93,7 @@ const MapPage: React.FC = () => {
       return;
     }
 
-    if(!resultDuration) {
+    if (!resultDuration) {
       showGoogleMapsError('Could not calculate trip duration. Try again later. ');
       return;
     }
@@ -103,6 +109,7 @@ const MapPage: React.FC = () => {
         carModel: carModel,
         distance: resultDistance,
         fuelType: 'petrol',
+        consumptions: consumption,
       });
 
       setEmissions(calculatedEmissions);
@@ -117,7 +124,6 @@ const MapPage: React.FC = () => {
       showGoogleMapsError('Unable to calculate emissions!' + error);
       return;
     }
-
     user?.accessToken && setShowSaveTrip(true);
   }
 
@@ -208,7 +214,8 @@ const MapPage: React.FC = () => {
                 values.destination,
                 searchMakeValue,
                 yearValue,
-                searchModelValue
+                searchModelValue,
+                values.consumption == null ? undefined : values.consumption
               );
             })}
           >
@@ -244,66 +251,51 @@ const MapPage: React.FC = () => {
                 />
               </div>
             </div>
+            {/* Form section about finding the emissions of the car */}
             <NumberInput
               mt="sm"
               label="Car Year"
               placeholder="E.g. 1985"
               min={1960}
               max={currentYear}
+              disabled={form.values.consumption != null}
               {...form.getInputProps('carYear')}
             />
             <div className="double-line">
               <div className="double-line-div margin">
-                {makes.length !== 0 && (
-                  <Select
-                    mt="sm"
-                    label="Car Make:"
-                    searchable
-                    clearable
-                    data={makes}
-                    onSearchChange={onSearchMakeChange}
-                    searchValue={searchMakeValue}
-                  />
-                )}
-                {makes.length === 0 && (
-                  <Select
-                    mt="sm"
-                    label="Car Make:"
-                    searchable
-                    clearable
-                    disabled
-                    data={makes}
-                    onSearchChange={onSearchMakeChange}
-                    searchValue={searchMakeValue}
-                  />
-                )}
+                <Select
+                  mt="sm"
+                  label="Car Make:"
+                  searchable
+                  clearable
+                  disabled={makes.length === 0 || form.values.consumption != null}
+                  data={makes}
+                  onSearchChange={onSearchMakeChange}
+                  searchValue={searchMakeValue}
+                />
               </div>
               <div className="double-line-div">
-                {models.length !== 0 && (
-                  <Select
-                    mt="sm"
-                    label="Car model:"
-                    searchable
-                    clearable
-                    data={models}
-                    onSearchChange={onSearchModelChange}
-                    searchValue={searchModelValue}
-                  />
-                )}
-                {models.length === 0 && (
-                  <Select
-                    mt="sm"
-                    label="Car model:"
-                    searchable
-                    clearable
-                    disabled
-                    data={models}
-                    onSearchChange={onSearchModelChange}
-                    searchValue={searchModelValue}
-                  />
-                )}
+                <Select
+                  mt="sm"
+                  label="Car model:"
+                  searchable
+                  clearable
+                  disabled={models.length === 0 || form.values.consumption != null}
+                  data={models}
+                  onSearchChange={onSearchModelChange}
+                  searchValue={searchModelValue}
+                />
               </div>
             </div>
+            <NumberInput
+              mt="sm"
+              label="Comsumption"
+              placeholder="E.g. 5 (liters/100km)"
+              min={0}
+              max={100}
+              {...form.getInputProps('consumption')}
+            />
+
             <div className="submit">
               <Button type="submit" mt="sm">
                 Submit

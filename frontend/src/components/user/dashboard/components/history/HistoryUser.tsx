@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { getTripsFromDB, Trip } from '../../../../../api/newTrip';
-import { formatDate, formatEmissions, formatMeters, formatSeconds } from "../../../trip/calculations/utils";
+import { formatDate, formatGrams, formatMeters, formatSeconds } from "../../../trip/calculations/utils";
 import './HistoryUser.scss';
 
 const useStyles = createStyles((theme) => ({
@@ -62,7 +62,7 @@ export default function HistoryUser() {
               <td align="center">{formatDate(trip.date)}</td>
               <td align="center">{formatSeconds(trip.duration)}</td>
               <td align="center">{formatMeters(trip.distance)}</td>
-              <td align="center">{formatEmissions(trip.emissions)}</td>
+              <td align="center">{formatGrams(trip.emissions)}</td>
             </tr>
           ))}
         </tbody>
