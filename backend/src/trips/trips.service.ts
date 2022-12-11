@@ -63,7 +63,7 @@ export class TripsService {
 
     const emissions = this.vehicleService.getEmissions(fuel.data, consumption);
 
-    return emissions;
+    return emissions * distance;
   }
 
   async create(user: any, createTripDto: CreateTripDto) {
