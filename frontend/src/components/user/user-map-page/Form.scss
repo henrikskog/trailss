@@ -1,4 +1,4 @@
-@import "../../general-variables.scss";
+@import "../../../general-variables.scss";
 
 
 
@@ -8,16 +8,6 @@
     margin: 5%;
     max-width: 400px;
     width: 80%;
-
-    .customCarButton {
-        font-size: small;
-        color: $principal-color;
-    }
-
-    .customCarButton:hover {
-        cursor: pointer;
-        color: $secondary-color;
-    }
 
     h1 {
         text-decoration: solid;

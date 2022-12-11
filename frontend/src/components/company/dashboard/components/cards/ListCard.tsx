@@ -50,6 +50,7 @@ const ListCard: React.FC<Props> = ({ elements, text, textAfter }) => {
                                 quantity={element.quantity}
                                 quantity2={`${text} ${element.quantity2} ${textAfter}`}
                                 lastOne={i === elements.length - 1}
+                                key={element.id}
                             />
                         );
                     })}

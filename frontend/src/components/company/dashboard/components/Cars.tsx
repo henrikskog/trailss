@@ -21,6 +21,21 @@ const CarSchema = z.object({
 
 export type Car = z.infer<typeof CarSchema>;
 
+export const getCars = async (): Promise<Car[]> => {
+  const response = await axios.get(`${process.env.REACT_APP_API_ROOT}/vehicles`);
+
+  const ResultSchema = z.array(CarSchema);
+
+  return ResultSchema.parse(response.data);
+};
+
+export const postCar = async (car: Car) => {
+  delete car._id;
+  const response = await axios.post(`${process.env.REACT_APP_API_ROOT}/vehicles`, car);
+
+  return response;
+};
+
 export default function Cars() {
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [addButtonEnabled, setAddButtonEnabled] = useState<boolean>(true);
@@ -45,34 +60,7 @@ export default function Cars() {
     queryFn: () => (carMake == '' ? [] : getCarModels(2000, carMake)),
   });
 
-  const getCars = async (): Promise<Car[]> => {
-    console.log(process.env.REACT_APP_API_ROOT)
-    const response = await axios.get(`${process.env.REACT_APP_API_ROOT}/vehicles`);
-
-    const result: Car[] = [];
-
-    response.data.forEach((element: any) => {
-      const parsedCar = CarSchema.safeParse(element);
-      if (parsedCar.success) {
-        result.push(parsedCar.data);
-      } else {
-        console.log(parsedCar.error);
-      }
-    });
-
-    return result;
-  };
-
   const { data, isLoading, error, isError } = useQuery({ queryKey: ['cars'], queryFn: getCars });
-
-  const postCar = async (car: Car) => {
-    delete car._id;
-    const response = await axios.post(`${process.env.REACT_APP_API_ROOT}/vehicles`, car);
-
-    setSelectedCar(car);
-
-    return response;
-  };
 
   const deleteCar = async (carId: string | number) => {
     const response = await axios.delete(`${process.env.REACT_APP_API_ROOT}/vehicles/` + carId);
@@ -81,7 +69,10 @@ export default function Cars() {
   };
 
   const updateCar = async (car: Car) => {
-    const response = await axios.patch(`${process.env.REACT_APP_API_ROOT}/vehicles/` + car._id, car);
+    const response = await axios.patch(
+      `${process.env.REACT_APP_API_ROOT}/vehicles/` + car._id,
+      car
+    );
 
     return response;
   };
@@ -229,7 +220,7 @@ export default function Cars() {
     }
 
     return (
-      <tr key={selectedCar._id}>
+      <tr>
         <td>
           <Input value={carName} onChange={(event: any) => setCarName(event.target.value)} />
         </td>
@@ -254,20 +245,32 @@ export default function Cars() {
           />
         </td>
         <td>
-          <Input placeholder='2001' value={carYear} onChange={(event: any) => setCarYear(event.target.value)} />
+          <Input
+            placeholder="2001"
+            value={carYear}
+            onChange={(event: any) => setCarYear(event.target.value)}
+          />
         </td>
         <td>
-          <Input placeholder='Red' value={carColor} onChange={(event: any) => setCarColor(event.target.value)} />
+          <Input
+            placeholder="Red"
+            value={carColor}
+            onChange={(event: any) => setCarColor(event.target.value)}
+          />
         </td>
         <td>
           <Input
             value={carLicensePlate}
             onChange={(event: any) => setCarLicensePlate(event.target.value)}
-            placeholder='ABC123'
+            placeholder="ABC123"
           />
         </td>
         <td>
-          <Input placeholder='5000' value={carMileage} onChange={(event: any) => setCarMileage(event.target.value)} />
+          <Input
+            placeholder="5000"
+            value={carMileage}
+            onChange={(event: any) => setCarMileage(event.target.value)}
+          />
         </td>
         <td>
           <Select
@@ -281,13 +284,7 @@ export default function Cars() {
           <IconCheck onClick={saveCar} className="hover-cursor"></IconCheck>
           <IconX
             onClick={() => {
-              if (!selectedCar._id) {
-                console.log('Car has no id, deleting from state');
-                return;
-              }
-
               setSelectedCar(null);
-              deleteCarMutation.mutate(selectedCar._id);
               setAddButtonEnabled(true);
             }}
             className="hover-cursor"
@@ -299,7 +296,7 @@ export default function Cars() {
 
   function displayCarRows(cars: Car[]) {
     return cars.map((car) => {
-      if (car._id === selectedCar?._id) {
+      if (selectedCar && selectedCar.name === car.name) {
         return displaySelectedCar();
       } else {
         return (

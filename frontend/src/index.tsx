@@ -1,22 +1,32 @@
+import { MantineProvider } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
+import { NotificationsProvider } from '@mantine/notifications';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
-import { NotificationsProvider } from '@mantine/notifications';
-import { AuthProvider } from './components/user/auth/AuthContext/AuthProvider';
+import App from './App';
 import { CompanyAuthProvider } from './components/company/AuthContext/CompanyAuthProvider';
+import { AuthProvider } from './components/user/auth/AuthContext/AuthProvider';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
 
+const queryClient = new QueryClient();
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <CompanyAuthProvider>
         <AuthProvider>
-          <NotificationsProvider>
-            <App />
-          </NotificationsProvider>
+          <MantineProvider>
+            <QueryClientProvider client={queryClient}>
+              <ModalsProvider>
+                <NotificationsProvider>
+                  <App />
+                </NotificationsProvider>
+              </ModalsProvider>
+            </QueryClientProvider>
+          </MantineProvider>
         </AuthProvider>
       </CompanyAuthProvider>
     </BrowserRouter>

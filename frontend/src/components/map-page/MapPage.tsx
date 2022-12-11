@@ -4,28 +4,28 @@ import './Map.scss';
 import { useState } from 'react';
 import GoogleMaps from '../shared/googlemaps/GoogleMaps';
 
-import { Button, NumberInput, Select, TextInput } from '@mantine/core';
+import { Button, Divider, NumberInput, Select, TextInput, Title } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useDebouncedValue } from '@mantine/hooks';
 import React, { useEffect } from 'react';
 
 import { showNotification } from '@mantine/notifications';
+import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { useLocation } from 'react-router-dom';
 import { getCarMakes, getCarModels } from '../../api/getCarInfo';
 import { getEmissions } from '../../api/getEmissions';
 import { saveTripToDB } from '../../api/newTrip';
+import { getCars } from '../company/dashboard/components/Cars';
 import useAuth from '../user/auth/AuthContext/AuthProvider';
 import CalculationResultsBar from '../user/trip/calculations/CalculationResultsBar';
 import { showGoogleMapsError } from './utils';
-import { useLocation } from 'react-router-dom';
 
 const MapPage: React.FC = () => {
   const [distance, setDistance] = useState<number | null>(null);
   const [duration, setDuration] = useState<number | null>(null);
   const [emissions, setEmissions] = useState<number | null>(null);
-  const [showSaveTrip, setShowSaveTrip] = useState<boolean>(false);
-  const { user } = useAuth();
   const { state } = useLocation();
 
   const [directionsResponse, setDirectionsResponse] = useState<
@@ -124,7 +124,6 @@ const MapPage: React.FC = () => {
       showGoogleMapsError('Unable to calculate emissions!' + error);
       return;
     }
-    user?.accessToken && setShowSaveTrip(true);
   }
 
   function clearRoute() {
@@ -137,10 +136,6 @@ const MapPage: React.FC = () => {
   useEffect(() => {
     handleYear();
   }, [yearValue]);
-
-  useEffect(() => {
-    setShowSaveTrip(false);
-  }, [form.values]);
 
   useEffect(() => {
     handleMake();
@@ -171,35 +166,6 @@ const MapPage: React.FC = () => {
     } catch {
       setModels([]);
     }
-  };
-
-  const saveTrip = async () => {
-    const trip = {
-      origin: form.values.origin,
-      destination: form.values.destination,
-      distance: distance!,
-      duration: duration!,
-      emissions: emissions!,
-      date: form.values.date.toString(),
-      carYear: form.values.carYear,
-      carMake: searchMakeValue,
-      carModel: searchModelValue,
-    };
-    const response = await saveTripToDB(trip);
-
-    if (!(response.status < 400)) {
-      return showNotification({
-        title: 'Error',
-        message: 'There was an error saving your trip. Please try again later.',
-      });
-    }
-
-    showNotification({
-      title: 'Success',
-      message: 'Your trip was saved successfully!',
-    });
-
-    setShowSaveTrip(false);
   };
 
   return (
@@ -252,6 +218,10 @@ const MapPage: React.FC = () => {
               </div>
             </div>
             {/* Form section about finding the emissions of the car */}
+            <Title order={5} mt="sm">
+              The emissions of your car
+            </Title>
+            <Divider mt={0} />
             <NumberInput
               mt="sm"
               label="Car Year"
@@ -289,7 +259,7 @@ const MapPage: React.FC = () => {
             </div>
             <NumberInput
               mt="sm"
-              label="Comsumption"
+              label="Consumption"
               placeholder="E.g. 5 (liters/100km)"
               min={0}
               max={100}
@@ -300,17 +270,6 @@ const MapPage: React.FC = () => {
               <Button type="submit" mt="sm">
                 Submit
               </Button>
-              {showSaveTrip && (
-                <Button
-                  className="save-button"
-                  type="submit"
-                  mt="sm"
-                  onClick={saveTrip}
-                  disabled={emissions == null || distance == null || duration == null}
-                >
-                  Save Trip
-                </Button>
-              )}
             </div>
           </form>
         </div>

@@ -1,26 +1,17 @@
-import React, { useState } from 'react';
-import './DashboardCompany.scss';
-import useAuth from '../user/auth/AuthContext/AuthProvider';
-import UserSettings from '../user/settings/UserSettings';
-import Home from './dashboard/components/Home';
-import Fleets from './dashboard/components/Fleets';
-import Statistics from './dashboard/components/Statistics';
-import BusinessTrips from './dashboard/components/BusinessTrips';
-import Certificates from './dashboard/components/Certificates';
+import { useState } from 'react';
 import NotFoundTitle from '../shared/notfound/NotFound';
 import MenuBar from '../user/dashboard/components/menubar/MenuBar';
+import UserSettings from '../user/settings/UserSettings';
+import BusinessTrips from './dashboard/components/BusinessTrips';
+import Certificates from './dashboard/components/Certificates';
+import Fleets from './dashboard/components/Fleets';
+import Home from './dashboard/components/Home';
+import Statistics from './dashboard/components/Statistics';
+import './DashboardCompany.scss';
 
 import {
-    TablerIcon,
-    IconHome2,
-    IconCalendarStats,
-    IconUser,
-    IconLogout,
-    IconSwitchHorizontal,
-    IconCar,
-    IconPlaneDeparture,
-    IconCertificate,
-    IconChartBar,
+    IconCar, IconCertificate,
+    IconChartBar, IconHome2, IconPlaneDeparture, IconUser
 } from '@tabler/icons';
 
 export default function DashboardCompany() {

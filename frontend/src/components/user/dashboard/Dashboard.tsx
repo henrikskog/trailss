@@ -11,7 +11,7 @@ import {
     IconCar,
 } from '@tabler/icons';
 import Cars from '../../company/dashboard/components/Cars';
-import MapPage from '../../map-page/MapPage';
+import UserMapPage from '../user-map-page/UserMapPage';
 
 export default function Dashboard() {
     const [content, setContent] = useState("Home")
@@ -26,7 +26,7 @@ const mockdataUser = [
     function renderSwitch(param: string) {
         switch (param) {
             case 'Home':
-                return <MapPage />;
+                return <UserMapPage />;
             case 'History':
                 return <HistoryUser />;
             case 'Account':

@@ -1,6 +1,7 @@
 import { showNotification } from '@mantine/notifications';
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
+import { removeAxiosAuthToken } from '../../../../api/axiosConfig';
 import useLocalStorage from '../../../shared/hooks/useLocalStorage';
 import { JwtTokenResponse, RegisteredUserResponse, User } from '../../types';
 
@@ -165,7 +166,10 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   }
 
   function logout() {
+    console.log('logging out')
+    removeAxiosAuthToken()
     setUser(null);
+    navigate('/');
   }
 
   // Make the provider update only when it should.
