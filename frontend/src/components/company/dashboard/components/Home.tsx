@@ -1,16 +1,11 @@
-import { IconCar } from '@tabler/icons';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import MainCard from './cards/MainCard';
 import ListCard from "./cards/ListCard";
+import MainCard from './cards/MainCard';
 
-import './Home.scss';
-import { Typography } from '@mui/material';
 import BajaAreaChartCard from './cards/BajaAreaChart';
 import SmallCard from './cards/SmallCard';
 import TableCard from './cards/TableCard';
+import './Home.scss';
 
 const series = [{
   name: 'series1',

@@ -1,4 +1,11 @@
-import { IconCar, IconCertificate, IconChartBar, IconHome2, IconPlaneDeparture, IconUser } from '@tabler/icons';
+import {
+  IconCar,
+  IconCertificate,
+  IconChartBar,
+  IconHome2,
+  IconPlaneDeparture,
+  IconUser,
+} from '@tabler/icons';
 import { useState } from 'react';
 import NotFoundTitle from '../shared/notfound/NotFound';
 import MenuBar from '../user/dashboard/components/menubar/MenuBar';
@@ -10,6 +17,8 @@ import Home from './dashboard/components/Home';
 import Statistics from './dashboard/components/Statistics';
 import './DashboardCompany.scss';
 
+import { red } from '@mui/material/colors';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export default function DashboardCompany() {
   const [content, setContent] = useState<string>('Home');
@@ -41,10 +50,15 @@ export default function DashboardCompany() {
         return <NotFoundTitle />;
     }
   }
+
+  const theme = createTheme();
+
   return (
-    <div className="dashboard-user">
-      <MenuBar isCompanyDashboard setContent={setContent} data={mockdataCompany} />
-      <div className="dashboard-user-content">{renderSwitch(content)}</div>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="dashboard-user">
+        <MenuBar isCompanyDashboard setContent={setContent} data={mockdataCompany} />
+        <div className="dashboard-user-content">{renderSwitch(content)}</div>
+      </div>
+    </ThemeProvider>
   );
 }

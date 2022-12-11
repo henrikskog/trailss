@@ -2,7 +2,6 @@ import './Form.scss';
 import './Map.scss';
 
 import { useState } from 'react';
-import GoogleMaps from '../shared/googlemaps/GoogleMaps';
 
 import { Button, Divider, NumberInput, Select, TextInput, Title } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
@@ -10,19 +9,21 @@ import { useForm } from '@mantine/form';
 import { useDebouncedValue } from '@mantine/hooks';
 import React, { useEffect } from 'react';
 
-import { showNotification } from '@mantine/notifications';
-import { useQuery } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 import { useLocation } from 'react-router-dom';
 import { getCarMakes, getCarModels } from '../../api/getCarInfo';
-import { getEmissions } from '../../api/getEmissions';
-import { saveTripToDB } from '../../api/newTrip';
-import { getCars } from '../company/dashboard/components/Cars';
-import useAuth from '../user/auth/AuthContext/AuthProvider';
+import { getVehicleConsumptions } from '../../api/getEmissions';
+import GoogleMaps from '../shared/googlemaps/GoogleMaps';
 import CalculationResultsBar from '../user/trip/calculations/CalculationResultsBar';
+import {
+  extractTripInformation,
+  googleMapsTripsCalculation,
+  TripCalculationError,
+} from '../user/user-map-page/utils';
 import { showGoogleMapsError } from './utils';
 
-const MapPage: React.FC = () => {
+const isNumber = (value: any): value is number => typeof value === 'number';
+
+const UserMapPage: React.FC = () => {
   const [distance, setDistance] = useState<number | null>(null);
   const [duration, setDuration] = useState<number | null>(null);
   const [emissions, setEmissions] = useState<number | null>(null);
@@ -34,12 +35,12 @@ const MapPage: React.FC = () => {
 
   const form = useForm({
     initialValues: {
-      origin: state?.origin || '',
-      destination: state?.destination || '',
+      origin: state?.origin || 'Sarpsborg',
+      destination: state?.destination || 'Fredrikstad',
       date: state?.date || new Date(),
       passengers: 1,
-      carYear: 2000,
-      consumption: null,
+      carYear: undefined,
+      consumptions: undefined,
     },
 
     // functions will be used to validate values at corresponding key
@@ -51,18 +52,19 @@ const MapPage: React.FC = () => {
       date: (value: any) => (value ? null : 'Date must be provided'),
       passengers: (value: number) =>
         value === 0 || value > 10 ? 'Wrong number of passengers' : null,
-      carYear: (value: number) =>
-        value < 1980 || value > currentYear ? `Select a year between 1960-${currentYear}` : null,
-      consumption: (value) =>
+      carYear: (value) =>
+        isNumber(value) &&
+        (value < 1980 || value > currentYear ? `Select a year between 1960-${currentYear}` : null),
+      consumptions: (value) =>
         value === 0 && searchMakeValue === '' && searchMakeValue === ''
           ? "Indicate consumption if your model isn't in the list"
           : null,
     },
   });
 
+  const [userCar, setUserCar] = useState<string>('');
   const [makes, setMakes] = useState<string[]>([]);
   const [models, setModels] = useState<string[]>([]);
-
   const [yearValue] = useDebouncedValue(form.values.carYear, 200);
   const [searchMakeValue, onSearchMakeChange] = useState('');
   const [searchModelValue, onSearchModelChange] = useState('');
@@ -73,57 +75,44 @@ const MapPage: React.FC = () => {
     carMake: string,
     carYear: number,
     carModel: string,
-    consumption?: number
+    consumptions?: number
   ) {
-    const directionsService = new google.maps.DirectionsService();
-    const results = await directionsService.route({
-      origin: origin,
-      destination: destination,
-      travelMode: google.maps.TravelMode.DRIVING,
-    });
+    let results: google.maps.DirectionsResult;
 
-    setDirectionsResponse(results);
-
-    // --- TRIP CALCULATIONS
-    const resultDistance = results.routes[0].legs[0].distance?.value; // meters
-    const resultDuration = results.routes[0].legs[0].duration?.value; // seconds
-
-    if (!resultDistance) {
-      showGoogleMapsError('Could not calculate trip distance. Try again later.');
-      return;
-    }
-
-    if (!resultDuration) {
-      showGoogleMapsError('Could not calculate trip duration. Try again later. ');
-      return;
-    }
-
-    setDistance(resultDistance);
-    setDuration(resultDuration);
-
-    // emissions
     try {
-      const calculatedEmissions = await getEmissions({
-        carMake: carMake,
-        carModelYear: carYear,
-        carModel: carModel,
-        distance: resultDistance,
-        fuelType: 'petrol',
-        consumptions: consumption,
-      });
-
-      setEmissions(calculatedEmissions);
-      console.log(calculatedEmissions);
+      results = await googleMapsTripsCalculation(origin, destination);
     } catch (error) {
-      // Handle error if the staus code is 404, meaning that the car is not supported
-      if ((error as AxiosError).response?.status === 404) {
-        showGoogleMapsError('Could not calculate emissions for this car!');
+      form.setValues({ origin: '', destination: '' });
+      showGoogleMapsError('Unable to calculate route for these locations . Try again.');
+      return;
+    }
+
+    if (!consumptions) {
+      try {
+        consumptions = await getVehicleConsumptions({ carMake, carModelYear: carYear, carModel });
+      } catch (error) {
+        showGoogleMapsError('Could not calculate the consumptions for this car');
+        return;
+      }
+    }
+
+    let tripCalculations;
+
+    try {
+      tripCalculations = await extractTripInformation(results, consumptions);
+    } catch (error) {
+      if (error instanceof TripCalculationError) {
+        showGoogleMapsError(error.getErrorMessage());
         return;
       }
 
-      showGoogleMapsError('Unable to calculate emissions!' + error);
+      showGoogleMapsError("Could not calculate the trip's information");
       return;
     }
+
+    setDirectionsResponse(results);
+    setDistance(tripCalculations.distance);
+    setDuration(tripCalculations.duration);
   }
 
   function clearRoute() {
@@ -144,7 +133,11 @@ const MapPage: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   const handleYear = async () => {
-    if (form.values.carYear > 1960 && form.values.carYear <= currentYear) {
+    if (
+      isNumber(form.values.carYear) &&
+      form.values.carYear > 1960 &&
+      form.values.carYear <= currentYear
+    ) {
       setModels([]);
       onSearchMakeChange('');
       onSearchModelChange('');
@@ -161,7 +154,7 @@ const MapPage: React.FC = () => {
   const handleMake = async () => {
     onSearchModelChange('');
     try {
-      const models = await getCarModels(form.values.carYear, searchMakeValue);
+      const models = await getCarModels(form.values.carYear!, searchMakeValue);
       setModels(models);
     } catch {
       setModels([]);
@@ -179,9 +172,9 @@ const MapPage: React.FC = () => {
                 values.origin,
                 values.destination,
                 searchMakeValue,
-                yearValue,
+                yearValue!,
                 searchModelValue,
-                values.consumption == null ? undefined : values.consumption
+                values.consumptions == null ? undefined : values.consumptions
               );
             })}
           >
@@ -218,17 +211,20 @@ const MapPage: React.FC = () => {
               </div>
             </div>
             {/* Form section about finding the emissions of the car */}
-            <Title order={5} mt="sm">
-              The emissions of your car
+            <Title order={5} my="sm">
+              Vehicle Information
             </Title>
             <Divider mt={0} />
+            <i className="info-consumption">
+              Provide either info about the vehicle or give the consumption directly
+            </i>
             <NumberInput
               mt="sm"
               label="Car Year"
               placeholder="E.g. 1985"
               min={1960}
               max={currentYear}
-              disabled={form.values.consumption != null}
+              disabled={form.values.consumptions !== undefined}
               {...form.getInputProps('carYear')}
             />
             <div className="double-line">
@@ -238,7 +234,7 @@ const MapPage: React.FC = () => {
                   label="Car Make:"
                   searchable
                   clearable
-                  disabled={makes.length === 0 || form.values.consumption != null}
+                  disabled={makes.length === 0 || form.values.consumptions != null}
                   data={makes}
                   onSearchChange={onSearchMakeChange}
                   searchValue={searchMakeValue}
@@ -250,7 +246,7 @@ const MapPage: React.FC = () => {
                   label="Car model:"
                   searchable
                   clearable
-                  disabled={models.length === 0 || form.values.consumption != null}
+                  disabled={models.length === 0 || form.values.consumptions != null}
                   data={models}
                   onSearchChange={onSearchModelChange}
                   searchValue={searchModelValue}
@@ -263,9 +259,9 @@ const MapPage: React.FC = () => {
               placeholder="E.g. 5 (liters/100km)"
               min={0}
               max={100}
+              disabled={form.values.carYear != null}
               {...form.getInputProps('consumption')}
             />
-
             <div className="submit">
               <Button type="submit" mt="sm">
                 Submit
@@ -274,6 +270,7 @@ const MapPage: React.FC = () => {
           </form>
         </div>
       </div>
+
       <div className="overlay-calculations calculations">
         {distance && duration && emissions ? (
           <CalculationResultsBar distance={distance} emissions={emissions} duration={duration} />
@@ -287,4 +284,4 @@ const MapPage: React.FC = () => {
   );
 };
 
-export default MapPage;
+export default UserMapPage;
