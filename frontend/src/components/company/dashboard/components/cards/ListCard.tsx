@@ -24,6 +24,8 @@ const listItemStyle = {
 
 export interface Props {
     elements: Element[]
+    text: string;
+    textAfter: string;
 }
 
 interface Element {
@@ -37,7 +39,7 @@ interface Element {
 
 
 
-const ListCard: React.FC<Props> = ({ elements }) => {
+const ListCard: React.FC<Props> = ({ elements, text, textAfter }) => {
     return (
         <div className='list-card-wrapper'>
                 <div className='list-card-rows'>
@@ -85,7 +87,7 @@ const ListRows: React.FC<RowData> = (element) => {
                             <Grid item>
                                 <Grid container alignItems="center" justifyContent="space-between">
                                     <Grid item>
-                                        <Typography variant="subtitle1" color="inherit">
+                                        <Typography className="list-card-row-quantity" variant="subtitle1" color="inherit">
                                             {element.quantity}
                                         </Typography>
                                     </Grid>
@@ -94,7 +96,7 @@ const ListRows: React.FC<RowData> = (element) => {
                         </Grid>
                     </Grid>
                     <Grid item>
-                        <Typography variant="subtitle2" sx={{ color: 'success.dark' }}>
+                        <Typography className="list-card-row-quantity2" variant="subtitle2" >
                             {element.quantity2}
                         </Typography>
                     </Grid>
