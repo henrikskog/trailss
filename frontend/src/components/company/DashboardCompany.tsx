@@ -51,14 +51,11 @@ export default function DashboardCompany() {
     }
   }
 
-  const theme = createTheme();
 
   return (
-    <ThemeProvider theme={theme}>
       <div className="dashboard-user">
         <MenuBar isCompanyDashboard setContent={setContent} data={mockdataCompany} />
         <div className="dashboard-user-content">{renderSwitch(content)}</div>
       </div>
-    </ThemeProvider>
   );
 }

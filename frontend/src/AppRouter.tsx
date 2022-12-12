@@ -13,6 +13,7 @@ import Login from './components/user/auth/login/Login';
 import Register from './components/user/auth/register/Register';
 import Dashboard from './components/user/dashboard/Dashboard';
 import MapPage from './components/map-page/MapPage';
+import { createTheme, ThemeProvider } from '@mui/material';
 
 function AppRouter() {
   const { user } = useAuth();
@@ -45,7 +46,11 @@ function AppRouter() {
     return children;
   }
 
+  const theme = createTheme();
+
   return (
+
+    <ThemeProvider theme={theme}>
     <div className={location.pathname !== '/dashboard' ? 'main' : 'main-logged'}>
       <Routes>
         <Route path="*" element={<NotFound />} />
@@ -60,6 +65,7 @@ function AppRouter() {
         ))}
       </Routes>
     </div>
+</ThemeProvider>
   );
 }
 

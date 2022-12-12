@@ -1,10 +1,6 @@
 import Grid from '@mui/material/Grid';
-import MainCard from './cards/MainCard';
+import ListCard from '../../../shared/cards/ListCard';
 import "./BusinessTrips.scss";
-import Image from "./certificate-diploma.png"
-import ListCard from "./cards/ListCard"
-import ShortForm from '../../../landing/components/ShortForm';
-import Model from "../../../landing/media/carretera_ 1.png";
 import FooterDashboard from './FooterDashboard';
 
 
