@@ -1,8 +1,7 @@
 export class TemplateCompanyRoute {
-    origin: string;  
-    destination: string;  
-    distance: string;  
-    emissions: number;    
+    from: string;  
+    to: string;  
+    distance: number;  
     capacity: number;  
     employee: number;  
     date: Date;

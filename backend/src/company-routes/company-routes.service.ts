@@ -1,33 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Company, CompanyDocument } from 'src/company/company.schema';
-import { CreateCompanyRouteDto } from './dto/create-company-route.dto';
-import { UpdateCompanyRouteDto } from './dto/update-company-route.dto';
+import { CompanyRoute, CompanyRouteDocument } from './company-routes.schema';
+import { TemplateCompanyRoute } from './dto/template-company-route.dto';
 
 @Injectable()
 export class CompanyRoutesService {
   constructor(
     @InjectModel(Company.name) private readonly companyVehicleModel: Model<CompanyDocument>,
+    @InjectModel(CompanyRoute.name) private readonly companyRouteModel: Model<CompanyRouteDocument>
   ) { }
 
-  create(createCompanyRouteDto: CreateCompanyRouteDto) {
-    return 'This action adds a new companyRoute';
-  }
 
   findAll() {
-    return `This action returns all companyRoutes`;
+    return this.companyRouteModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} companyRoute`;
-  }
-
-  update(id: number, updateCompanyRouteDto: UpdateCompanyRouteDto) {
-    return `This action updates a #${id} companyRoute`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} companyRoute`;
+  findOne(id: string) {
+    return this.companyRouteModel.findById(id);
   }
 }

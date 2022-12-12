@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import { Model } from 'mongoose';
+import { TripsService, vehicleFuelSchema } from 'src/trips/trips.service';
 import { CompanyVehicle, CompanyVehicleDocument } from './company-vehicles.schema';
 import { CreateCompanyVehicleDto } from './dto/create-company-vehicle.dto';
 import { UpdateCompanyVehicleDto } from './dto/update-company-vehicle.dto';
@@ -9,6 +10,7 @@ import { UpdateCompanyVehicleDto } from './dto/update-company-vehicle.dto';
 export class CompanyVehiclesService {
   constructor(
     @InjectModel(CompanyVehicle.name) private readonly companyVehicleModel: Model<CompanyVehicleDocument>,
+    private readonly tripsService: TripsService
   ) { }
 
   async getFleet(company: any, id: string) {
@@ -23,10 +25,40 @@ export class CompanyVehiclesService {
     }
   }
 
+  async calculateTotalEmissions(vehicle: CreateCompanyVehicleDto | UpdateCompanyVehicleDto) {
+    for (let index = 0; index < vehicle.routes.length; index++) {
+      //parse the fuel type to enum
+      const fuelType = vehicleFuelSchema.safeParse(vehicle.type);
+
+      // Fuel types are restricted, therefore validate value
+      if (!fuelType.success) {
+        throw new BadRequestException("Illegal value given for fuel type");
+      }
+
+      // Calculate the emissions
+      const emissions = await this.tripsService.calculateTripEmissions(
+        vehicle.routes[index].distance,
+        fuelType.data,
+        vehicle.make,
+        vehicle.model,
+        vehicle.year,
+        vehicle.consumption
+      )
+      // Add the emissions to the vehicle
+      vehicle.emissions = emissions;
+      return vehicle;
+    }
+
+  }
+
   async create(company: any, fleetId: string, createCompanyVehicleDto: CreateCompanyVehicleDto) {
     const fleet = await this.getFleet(company, fleetId)
-    console.log(fleet)
-    const vehicle = await this.companyVehicleModel.create(createCompanyVehicleDto);
+
+    //calculate the emissions of a vehicle
+    const completedVehicle = await this.calculateTotalEmissions(createCompanyVehicleDto);
+
+    //la matraca buena
+    const vehicle = await this.companyVehicleModel.create(completedVehicle);
     fleet.vehicles.push(vehicle);
     fleet.save();
     return "Added a new vehicle to the fleet";
@@ -62,9 +94,10 @@ export class CompanyVehiclesService {
     try {
       const vehicle = fleet.vehicles.filter((vehicle) => vehicle.toString() == id);
 
-      if (!vehicle.length)
+      if (!vehicle.length) {
         throw new NotFoundException("No car with the given id was found");
-
+      }
+      updateCompanyVehicleDto = await this.calculateTotalEmissions(updateCompanyVehicleDto);
       await this.companyVehicleModel.findByIdAndUpdate(vehicle[0], updateCompanyVehicleDto);
       return "Vehicle updated successfully";
     } catch {
@@ -87,7 +120,6 @@ export class CompanyVehiclesService {
       return "Vehicle removed successfully";
     } catch {
       throw new NotFoundException("No car with the given arguments was found");
-
     }
   }
 }

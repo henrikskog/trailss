@@ -63,10 +63,7 @@ export class TripsService {
 
     const emissions = this.vehicleService.getEmissions(fuel.data, consumption);
 
-    // Round to one decimal place
-    const tripEmssions = Math.round(emissions * distance * 10) / 10;
-
-    return tripEmssions;
+    return emissions;
   }
 
   async create(user: any, createTripDto: CreateTripDto) {
