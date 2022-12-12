@@ -19,7 +19,7 @@ export class CompanyVehicle {
   year: string;
 
   @Prop()
-  emissions: number;
+  total_emissions: number;
   
   @Prop()
   consumption: number;

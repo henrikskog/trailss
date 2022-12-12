@@ -4,8 +4,6 @@ import { TripsService, VehicleFuelType } from "./trips.service";
 import { ApiTags } from '@nestjs/swagger';
 import { CreateTripDto } from "./dto/create-trip.dto";
 import { UpdateTripDto } from "./dto/update-trip.dto";
-import { AuthGuard } from "@nestjs/passport";
-import { JwtStrategy } from "src/auth/jwt.strategy";
 import { JwtAuthGuard } from "src/auth/jwt-auth-guard.guard";
 
 
@@ -20,7 +18,7 @@ export class TripsController {
    * Conditions for endpoint
    * - (Consumption) is not compatible with (car-make, car-model and car-model-year)
    */
-  @ApiQuery({ name: "distance", required: true, description: "Distance for the trip given in km" })
+  @ApiQuery({ name: "distance", required: true, description: "Distance of the trip" })
   @ApiQuery({ name: "fuel-type", required: true, description: "Type of fuel. (diesel, petrol, LPG)" })
   @ApiQuery({ name: "car-make", required: false, description: "E.g. volvo" })
   @ApiQuery({ name: "car-model", required: false, description: "E.g. XC90" })
@@ -29,7 +27,7 @@ export class TripsController {
   @ApiOperation({ summary: "Recieve the emissions of a trip" })
   @ApiResponse({ status: 200, description: "Grams CO2" })
   calculateEmissions(
-    @Query("distance", ParseIntPipe) distance: number,
+    @Query("distance") distance: number,
     @Query("fuel-type") fuelType: VehicleFuelType,
     @Query("car-make") make: string,
     @Query("car-model") model?: string,
@@ -65,13 +63,6 @@ export class TripsController {
   @ApiBearerAuth()
   findOne(@Request() req: any, @Param("id") id: string) {
     return this.tripsService.findOne(req.user, id);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Patch(":id")
-  @ApiBearerAuth()
-  update(@Request() req: any, @Param("id") id: string, @Body() updateTripDto: UpdateTripDto) {
-    return this.tripsService.update(req.user.trips, id, updateTripDto);
   }
 
   @UseGuards(JwtAuthGuard)

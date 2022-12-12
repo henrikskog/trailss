@@ -12,7 +12,7 @@ export default function TopPage() {
           <h1>For a More Sustainable Planet</h1>
         </div>
         <div className='toppage-left-button'>
-          <Button>Register</Button>
+          <Button className='button'>Register</Button>
         </div>
        </div>
        <div className='toppage-right'>

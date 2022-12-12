@@ -3,7 +3,6 @@ import '../landing/components/TopPage.scss';
 import "./SalesPage.scss"
 import Viewer from '../landing/components/Globe';
 import MidPage from '../landing/components/MidPage';
-import Form from '../user/trip/form/Form';
 import { Input, Tooltip, TextInput, Button } from '@mantine/core';
 import { IconAt, IconAlertCircle } from '@tabler/icons';
 import { useForm } from '@mantine/form';

@@ -12,6 +12,7 @@
     "@mantine/ds": "^5.6.3",
     "@mantine/form": "^5.6.3",
     "@mantine/hooks": "^5.6.3",
+    "@mantine/modals": "^5.6.3",
     "@mantine/notifications": "^5.6.3",
     "@mui/icons-material": "^5.10.16",
     "@mui/material": "^5.10.17",

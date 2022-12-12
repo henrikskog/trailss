@@ -28,7 +28,7 @@ export class TripsService {
    * Note: Gives the consumptions for the car with the minimum consumption should the API return multiple models
    *
    * Uses API: https://www.fueleconomy.gov/feg/ws/
-   * @param distance The distance of the trip
+   * @param distance The distance of the trip given in KM
    * @param make The make of the car used for the trip
    * @param model The model of the car used for the trip
    * @param year The year the car was made
@@ -63,14 +63,17 @@ export class TripsService {
 
     const emissions = this.vehicleService.getEmissions(fuel.data, consumption);
 
-    return emissions;
+    // Round to one decimal place
+    return Math.round(emissions * distance * 10) / 10;
   }
 
   async create(user: any, createTripDto: CreateTripDto) {
-    const trip = await this.tripModel.create(createTripDto);
+    // Calculate the emissions
+    const trip = await this.tripModel.create(createTripDto)
+
     user.trips.push(trip);
     user.save();
-    return trip;
+    return trip
   }
 
   async findAll(user: any) {
@@ -86,19 +89,6 @@ export class TripsService {
       throw new NotFoundException("No trip with the given arguments was found");
     }
     return trip[0];
-  }
-
-  async update(
-    tripsIds: [mongoose.Schema.Types.ObjectId],
-    id: string,
-    updateTripDto: UpdateTripDto
-  ) {
-    const trip = tripsIds.filter((trip) => trip.toString() == id);
-    if (!trip.length) {
-      throw new NotFoundException("No trip with the given id was found");
-    }
-    await this.tripModel.findByIdAndUpdate(trip[0], updateTripDto);
-    return "Trip updated successfully";
   }
 
   async remove(user: any, id: string) {

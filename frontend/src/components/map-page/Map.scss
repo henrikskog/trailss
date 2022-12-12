@@ -1,6 +1,6 @@
-@import "../../../general-variables.scss";
+@import "../../general-variables.scss";
 
-.container {
+.map-container {
     position: relative;
     display: flex;
     iframe {
@@ -14,7 +14,7 @@
     }
 
     .overlay-left {
-        top: 60%;
+        top: 50%;
         transform: translateY(-50%);
         left: 10px;
         position: absolute;

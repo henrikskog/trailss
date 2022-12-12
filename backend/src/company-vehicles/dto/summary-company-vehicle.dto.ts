@@ -3,7 +3,7 @@ export class SummaryCompanyVehicleDto{
     make: string;
     model: string;
     year: number;
-    emissions: number;
+    total_emissions: number;
     consumption: number;
     capacity: number;
 }

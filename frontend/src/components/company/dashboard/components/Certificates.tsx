@@ -2,6 +2,7 @@ import Grid from '@mui/material/Grid';
 import MainCard from '../../../shared/cards/MainCard';
 import "./Certificates.scss";
 import Image from "./certificate-diploma.png"
+import FooterDashboard from './FooterDashboard';
 
 export default function Certificates() {
     return (
@@ -20,8 +21,8 @@ export default function Certificates() {
                         <img className="image" src={Image} />
                     </div>
                 </Grid>
-                <Grid item xs={6} md={6} className="test33" alignItems="center">
-                    <div className='bottom-text'>
+                <Grid item xs={6} md={6} className="bottom-grid" alignItems="center">
+                    <div className='box bottom-text'>
                         <h2>Need a more personalized certificate?</h2>
                         <p>Contact us at</p>
                         <h3>contact@trailss.com</h3>
@@ -29,6 +30,7 @@ export default function Certificates() {
                 </Grid>
 
             </Grid>
+            <FooterDashboard/>
         </div>
     );
 }

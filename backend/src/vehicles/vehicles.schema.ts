@@ -24,7 +24,7 @@ export class Vehicle {
   emissions: number;
 
   @Prop()
-  consumption: string;
+  consumption: number;
 
   @Prop()
   capacity: number;

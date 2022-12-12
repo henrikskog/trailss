@@ -1,0 +1,18 @@
+@import "../../../../general-variables.scss";
+
+.box {
+    display: flex;
+    position: relative;
+    z-index: 3;
+
+    .card-content {
+        margin:1rem
+    }
+    h1 {
+        color: gray;
+    }
+    p {
+        color: gray;
+        font-weight: 700;
+    }
+}
