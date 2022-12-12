@@ -1,16 +1,11 @@
-import { IconCar } from '@tabler/icons';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import MainCard from '../../../shared/cards/MainCard';
 import ListCard from "../../../shared/cards/ListCard";
+import MainCard from '../../../shared/cards/MainCard';
 
-import './Home.scss';
-import { Typography } from '@mui/material';
 import BajaAreaChartCard from '../../../shared/cards/BajaAreaChart';
 import SmallCard from '../../../shared/cards/SmallCard';
 import TableCard from '../../../shared/cards/TableCard';
+import './Home.scss';
 
 const series = [{
   name: 'series1',

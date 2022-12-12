@@ -1,95 +1,113 @@
-import { Button, Divider, Input, LoadingOverlay, Select, Table } from '@mantine/core';
-import { IconCheck, IconEdit, IconX } from '@tabler/icons';
+import { Button, Divider, LoadingOverlay, Table } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
+import { IconEdit, IconX } from '@tabler/icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 import { useState } from 'react';
-import { getCarMakes, getCarModels } from '../../../../api/getCarInfo';
-import useAuth from '../../../user/auth/AuthContext/AuthProvider';
+import { z } from 'zod';
 import './Cars.scss';
+import EditCarRow from './EditCar';
 
-interface Car {
-  _id?: number;
-  name: string;
-  make: string;
-  model: string;
-  year: number;
-  color: string;
-  licensePlate: string;
-  mileage: number;
-  status: string;
-}
+const CarSchema = z.object({
+  _id: z.optional(z.string()),
+  name: z.string(),
+  make: z.string(),
+  model: z.string(),
+  year: z.number(),
+  color: z.optional(z.string()),
+  licensePlate: z.optional(z.string()),
+  mileage: z.optional(z.number()),
+  status: z.optional(z.string()),
+});
+
+export type Car = z.infer<typeof CarSchema>;
+
+export const getCars = async (): Promise<Car[]> => {
+  const response = await axios.get(`${process.env.REACT_APP_API_ROOT}/vehicles`);
+
+  const responseData = z.array(z.any()).parse(response.data);
+
+  const result = responseData.filter((car) => {
+    const parsedCar = CarSchema.safeParse(car);
+    if(parsedCar.success) {
+      return true;
+    }
+    console.error("Recieved a car from the backend with unexpected properties: ", parsedCar.error);
+    return false
+  })
+
+
+
+  return result
+};
+
+export const postCar = async (car: Car): Promise<Car> => {
+  delete car._id;
+  const response = await axios.post(`${process.env.REACT_APP_API_ROOT}/vehicles`, car);
+
+  return CarSchema.parse(response.data);
+};
 
 export default function Cars() {
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [addButtonEnabled, setAddButtonEnabled] = useState<boolean>(true);
 
-  const [carName, setCarName] = useState<string>('');
-  const [carMake, setCarMake] = useState<string>('');
-  const [carModel, setCarModel] = useState<string>('');
-  const [carYear, setCarYear] = useState<number>(2022);
-  const [carColor, setCarColor] = useState<string>('');
-  const [carLicensePlate, setCarLicensePlate] = useState<string>('');
-  const [carMileage, setCarMileage] = useState<number>(0);
-  const [carStatus, setCarStatus] = useState<string>('');
-
-  const { authFetch } = useAuth();
+  const [showCreateNewCar, setShowCreateNewCar] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
 
-  const { data: autoCompleteMakes, isLoading: isLoadingMakes } = useQuery({
-    queryKey: ['makes-autocomplete'],
-    queryFn: () => getCarMakes(2000),
-  });
-  const { data: autoCompleteModels, isLoading: isLoadingModels } = useQuery({
-    queryKey: ['models-autocomplete', carMake],
-    queryFn: () => (carMake == '' ? [] : getCarModels(2000, carMake)),
-  });
-
-  const getCars = async () => {
-    type CarsApiResponse = Car[];
-
-    const response = (await authFetch(
-      'http://localhost:5000/vehicles',
-      undefined
-    )) as CarsApiResponse;
-    return response;
-  };
-
   const { data, isLoading, error, isError } = useQuery({ queryKey: ['cars'], queryFn: getCars });
 
-  const postCar = async (car: Car) => {
-    const response = await authFetch('http://localhost:5000/vehicles', {
-      method: 'POST',
-      body: JSON.stringify(car),
-    });
-
-    setSelectedCar(response as Car);
-
-    return response;
-  };
-
   const deleteCar = async (carId: string | number) => {
-    const response = await authFetch('http://localhost:5000/vehicles/' + carId, {
-      method: 'DELETE',
-    });
+    const response = await axios.delete(`${process.env.REACT_APP_API_ROOT}/vehicles/` + carId);
 
     return response;
   };
 
   const updateCar = async (car: Car) => {
-    const response = await authFetch('http://localhost:5000/vehicles/' + car._id, {
-      method: 'PATCH',
-      body: JSON.stringify(car),
-    });
+    const response = await axios.patch(
+      `${process.env.REACT_APP_API_ROOT}/vehicles/` + car._id,
+      car
+    );
 
     return response;
   };
 
-  // Mutations
-  const postCarMutation = useMutation({
+  const newCarMutation = useMutation({
     mutationFn: postCar,
+    onMutate: async (car) => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['cars'] });
+
+      // Snapshot the previous value
+      const prevCars = queryClient.getQueryData<Car[]>(['cars']);
+
+      if (prevCars) {
+        // Optimistically update to the new value
+        queryClient.setQueryData<Car[]>(['cars'], [...prevCars, car]);
+      }
+
+      // Return a context object with the snapshotted value
+      return { prevCars };
+    },
     onSuccess: () => {
       // Invalidate and refetch
       console.log('onSuccess');
+    },
+
+    onError: (error, newCar, context) => {
+      if (context?.prevCars) {
+        showNotification({
+          title: 'Could not create car',
+          message: 'Please try again later',
+          color: 'red',
+        });
+        queryClient.setQueryData<Car[]>(['cars'], context.prevCars);
+      }
+    },
+
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['cars'] });
     },
   });
@@ -166,146 +184,35 @@ export default function Cars() {
     },
   });
 
-  function setInputStates(car: Car) {
-    setCarName(car.name);
-    setCarModel(car.model);
-    setCarYear(car.year);
-    setCarColor(car.color);
-    setCarLicensePlate(car.licensePlate);
-    setCarMileage(car.mileage);
-    setCarStatus(car.status);
-  }
-
-  function displayCars(cars: Car[]) {
-    return (
-      <Table verticalSpacing="sm" striped highlightOnHover className="vehicle-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Make</th>
-            <th>Model</th>
-            <th>Year</th>
-            <th>Color</th>
-            <th>License Plate</th>
-            <th>Mileage</th>
-            <th>Status</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>{displayCarRows(cars)}</tbody>
-      </Table>
-    );
-  }
-
-  function saveCar() {
-    if (selectedCar == null) {
-      return;
-    }
-
-    const newCar: Car = {
-      _id: selectedCar._id,
-      name: carName,
-      make: carMake,
-      model: carModel,
-      year: carYear,
-      color: carColor,
-      licensePlate: carLicensePlate,
-      mileage: carMileage,
-      status: carStatus,
-    };
-
-    updateCarMutation.mutate(newCar);
-
-    setSelectedCar(null);
-    setInputStates(newEmptyCar());
-    setAddButtonEnabled(true);
-  }
-
-  const displaySelectedCar = () => {
-    if (selectedCar == null) {
-      return;
-    }
-
-    return (
-      <tr key={selectedCar._id}>
-        <td>
-          <Input value={carName} onChange={(event: any) => setCarName(event.target.value)} />
-        </td>
-        <td>
-          <Select
-            searchable
-            clearable
-            data={autoCompleteMakes ?? []}
-            onSearchChange={setCarMake}
-            searchValue={carMake}
-          />
-        </td>
-        <td>
-          <Select
-            searchable
-            clearable
-            data={autoCompleteModels ?? []}
-            onSearchChange={setCarModel}
-            searchValue={carModel}
-          />
-        </td>
-        <td>
-          <Input value={carYear} onChange={(event: any) => setCarYear(event.target.value)} />
-        </td>
-        <td>
-          <Input value={carColor} onChange={(event: any) => setCarColor(event.target.value)} />
-        </td>
-        <td>
-          <Input
-            value={carLicensePlate}
-            onChange={(event: any) => setCarLicensePlate(event.target.value)}
-          />
-        </td>
-        <td>
-          <Input value={carMileage} onChange={(event: any) => setCarMileage(event.target.value)} />
-        </td>
-        <td>
-          <Input value={carStatus} onChange={(event: any) => setCarStatus(event.target.value)} />
-        </td>
-        <td>
-          <IconCheck onClick={saveCar} className="hover-cursor"></IconCheck>
-          <IconX
-            onClick={() => {
-              if (!selectedCar._id) {
-                console.log('Car has no id, deleting from state');
-                return;
-              }
-              setSelectedCar(null);
-              deleteCarMutation.mutate(selectedCar._id);
-              setAddButtonEnabled(true);
-            }}
-            className="hover-cursor"
-          />
-        </td>
-      </tr>
-    );
-  };
-
   function displayCarRows(cars: Car[]) {
     return cars.map((car) => {
-      if (car._id === selectedCar?._id) {
-        return displaySelectedCar();
+      if (selectedCar?._id && selectedCar._id === car._id) {
+        return (
+          <EditCarRow
+            id={selectedCar._id}
+            initialValues={selectedCar}
+            onSave={(newCar) => {
+              setSelectedCar(null);
+              updateCarMutation.mutate({ ...newCar, _id: selectedCar._id });
+            }}
+            onExit={() => setSelectedCar(null)}
+          />
+        );
       } else {
         return (
           <tr key={car._id}>
-            <td>{car.name}</td>
-            <td>{car.make}</td>
-            <td>{car.model}</td>
-            <td>{car.year}</td>
-            <td>{car.color}</td>
-            <td>{car.licensePlate}</td>
-            <td>{car.mileage}</td>
-            <td>{car.status}</td>
+            <td>{car.name ? car.name : '-'}</td>
+            <td>{car.make ? car.make : '-'}</td>
+            <td>{car.model ? car.model : '-'}</td>
+            <td>{car.year ? car.year : '-'}</td>
+            <td>{car.color ? car.color : '-'}</td>
+            <td>{car.licensePlate ? car.licensePlate : '-'}</td>
+            <td>{car.mileage ? car.mileage : '-'}</td>
+            <td>{car.status ? car.status : '-'}</td>
             <td>
               <IconEdit
                 className="hover-cursor"
                 onClick={() => {
-                  setInputStates(car);
                   setSelectedCar(car);
                 }}
               />
@@ -328,52 +235,64 @@ export default function Cars() {
     });
   }
 
-  // Function that adds a new empty car to a fleet
-  const newEmptyCar = () => ({
-    name: '',
-    model: '',
-    make: '',
-    year: 0,
-    color: '',
-    licensePlate: '',
-    mileage: 0,
-    status: '',
-  });
-
   const addCar = () => {
-    const newCar = newEmptyCar();
-
-    postCarMutation.mutate(newCar);
-
-    setSelectedCar(newCar);
-
+    setShowCreateNewCar(true);
     setAddButtonEnabled(false);
   };
 
   return (
-    <div>
-      <div className="container">
-        <div className="table">
-          <h2>Your cars</h2>
-          <Divider my={'lg'} />
-          {isError ? (
-            <div>
-              <p>There was an error loading your cars</p>
-              <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['cars'] })}>
-                Retry
-              </Button>
-            </div>
-          ) : isLoading ? (
-            <div>
-              <LoadingOverlay visible></LoadingOverlay>
-            </div>
-          ) : (
-            displayCars(data)
-          )}
-          <Button onClick={addCar} disabled={!addButtonEnabled}>
-            Add new car
-          </Button>
-        </div>
+    <div className="container">
+      <div className="table">
+        <h2>Your cars</h2>
+        <Divider my={'lg'} />
+        {isError ? (
+          <div>
+            <p>There was an error loading your cars</p>
+            <Button onClick={() => queryClient.invalidateQueries({ queryKey: ['cars'] })}>
+              Retry
+            </Button>
+          </div>
+        ) : isLoading ? (
+          <div>
+            <LoadingOverlay visible></LoadingOverlay>
+          </div>
+        ) : (
+          <Table verticalSpacing="sm" striped highlightOnHover className="vehicle-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Color</th>
+                <th>License Plate</th>
+                <th>Mileage</th>
+                <th>Status</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {displayCarRows(data)}
+              {showCreateNewCar && (
+                <EditCarRow
+                  id={data.length.toString()}
+                  onSave={(newCar) => {
+                    newCarMutation.mutate(newCar);
+                    setShowCreateNewCar(false);
+                    setAddButtonEnabled(true);
+                  }}
+                  onExit={() => {
+                    setShowCreateNewCar(false);
+                    setAddButtonEnabled(true);
+                  }}
+                />
+              )}
+            </tbody>
+          </Table>
+        )}
+        <Button onClick={addCar} disabled={!addButtonEnabled}>
+          Add new car
+        </Button>
       </div>
     </div>
   );

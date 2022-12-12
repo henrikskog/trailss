@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { Vehicle } from 'src/vehicles/vehicles.schema';
 import { z } from 'zod';
 
@@ -24,7 +24,7 @@ export class Trip {
   distance: number;
 
   @Prop()
-  total_emissions: number;
+  duration: number;
 
   @Prop()
   date: Date;
@@ -33,7 +33,19 @@ export class Trip {
   passengers: number;
 
   @Prop()
-  vehicle: Vehicle;
+  car: Vehicle;
+
+  @Prop()
+  total_emissions: number;
+
+  @Prop()
+  carModel?: string;
+
+  @Prop()
+  carMake?: string;
+
+  @Prop()
+  carYear?: number;
 
 }
 

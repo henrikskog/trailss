@@ -6,9 +6,10 @@
         height: 100vh;
     }
 
-    button {
-        background-color: $blue!important;
+    .button {
+        background-color: $blue;
     }
+
     .landing-spacer{
         height: 25vh;
         background-color: $principal-color;

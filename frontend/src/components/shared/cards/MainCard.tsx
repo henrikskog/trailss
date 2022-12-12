@@ -1,19 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './MainCard.scss';
 
 
-import {
-    TablerIcon,
-    IconHome2,
-    IconCalendarStats,
-    IconUser,
-    IconLogout,
-    IconSwitchHorizontal,
-    IconCar,
-    IconPlaneDeparture,
-    IconCertificate,
-    IconChartBar,
-} from '@tabler/icons';
 
 type MyProps = {
     title?: string,
@@ -28,16 +16,16 @@ const MainCard: React.FC<MyProps> = (props) => {
 
     return (
         <div className='card-content'>
-            {propEntries.map(([key, value]) => {
+            {propEntries.map(([key, value], i) => {
                 let element;
                 if (key == "title") {
-                    element = <h1>{value}</h1>;
+                    element = <h1 key={i}>{value}</h1>;
                 } else if (key == "mainStat") {
-                    element = <h2>{value}</h2>
+                    element = <h2 key={i}>{value}</h2>
                 } else if (key == "change") {
-                    element = <h3>{percentage}</h3>
+                    element = <h3 key={i}>{percentage}</h3>
                 } else if (key == "description") {
-                    element = <p>{value}</p>
+                    element = <p key={i}>{value}</p>
                 }
                 return element
             })}

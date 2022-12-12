@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './MidPage.scss';
 import Snippet from '../media/environment.svg';
 import Camino from './Camino';
+import { Button } from '@mantine/core';
 
 export default function MidPage() {
 
@@ -21,8 +22,9 @@ export default function MidPage() {
           <br />
 
           <br />
-          <a href='https://github.com/INVES-Blockchain-UPV/sbcerts-smartcontracts/blob/main/contracts/erc721sb.sol' target="_blank"
-            rel="noopener noreferrer">Learn More . . .</a>
+          <Button type="submit" mt="sm" className='button'>
+            Learn More
+          </Button>
         </div>
       </div>      
     </div>

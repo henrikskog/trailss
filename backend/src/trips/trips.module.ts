@@ -6,7 +6,6 @@ import { VehiclesModule } from "src/vehicles/vehicles.module";
 import { Trip, TripSchema } from "./trips.schema";
 import { VehiclesService } from "src/vehicles/vehicles.service";
 import { HttpModule } from "@nestjs/axios";
-import { CompanyVehiclesModule } from "src/company-vehicles/company-vehicles.module";
 
 @Module({
   imports: [

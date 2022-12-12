@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import './UserSettings.scss';
 import { Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import useAuth from '../auth/AuthContext/AuthProvider';
+import './UserSettings.scss';
 
 export default function UserSettings() {
   const { user } = useAuth();
@@ -18,15 +17,16 @@ export default function UserSettings() {
   });
 
   return (
-    <div className='user-settings'>
+    <div className="user-settings">
       <h4>You and Trailss</h4>
-      <div className='user-settings-form'>
-        <form
-          className="form"
-          onSubmit={form.onSubmit((values: any) => console.log("abuela"))}
-        >
+      <div className="user-settings-form">
+        <form className="form" onSubmit={form.onSubmit((values: any) => console.log('abuela'))}>
           <TextInput label="Change username:" {...form.getInputProps('username')} mb={'sm'} />
-          <TextInput label="Change password:" placeholder="*********" {...form.getInputProps('password')} />
+          <TextInput
+            label="Change password:"
+            placeholder="*********"
+            {...form.getInputProps('password')}
+          />
         </form>
         {/* <div className='change-user'>
             <h4>Change username</h4>

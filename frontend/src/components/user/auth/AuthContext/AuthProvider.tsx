@@ -1,8 +1,9 @@
+import { showNotification } from '@mantine/notifications';
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
+import { removeAxiosAuthToken } from '../../../../api/axiosConfig';
 import useLocalStorage from '../../../shared/hooks/useLocalStorage';
 import { JwtTokenResponse, RegisteredUserResponse, User } from '../../types';
-import { showNotification } from '@mantine/notifications';
 
 type FetchParams = [RequestInfo | URL, RequestInit | undefined];
 
@@ -26,9 +27,6 @@ interface AuthContext {
 
   login: (email: string, password: string) => void;
 
-  // TODO: Add actual functionality to this function
-  loginCompany: (username: string, password: string) => void;
-
   register: (email: string, name: string, password: string) => void;
   logout: () => void;
   authFetch: (...fetchParams: FetchParams) => Promise<unknown>;
@@ -46,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   // Functions that send requests to the backend
   // TODO: add error checking for API calls (if backend not available)
   const authApi = () => {
-    const API_ROOT = 'http://localhost:5000';
+    const REACT_APP_API_ROOT = 'http://localhost:5000';
     const LOGIN_PART = '/user/login';
     const REGISTER_PART = '/user/register';
 
@@ -60,12 +58,9 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
     };
 
     return {
-      loginCompany: async () => {
-        navigate('/dashboardCompany');
-      },
       login: async ({ username, password }: LoginParams): Promise<string | null> => {
         const response = await fetch(
-          API_ROOT + LOGIN_PART + `?username=${username}&password=${password}`
+          REACT_APP_API_ROOT + LOGIN_PART + `?username=${username}&password=${password}`
         );
 
         const data = await response.json();
@@ -83,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
         username,
         password,
       }: RegisterParams): Promise<RegisteredUserResponse | null> => {
-        const response = await fetch(API_ROOT + REGISTER_PART, {
+        const response = await fetch(REACT_APP_API_ROOT + REGISTER_PART, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -171,7 +166,10 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   }
 
   function logout() {
+    console.log('logging out')
+    removeAxiosAuthToken()
     setUser(null);
+    navigate('/');
   }
 
   // Make the provider update only when it should.
@@ -192,7 +190,6 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
       register,
       logout,
       authFetch: authApi().authFetch,
-      loginCompany: authApi().loginCompany,
     }),
     [user, authLoading, authError]
   );

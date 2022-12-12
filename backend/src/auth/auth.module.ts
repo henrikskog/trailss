@@ -16,7 +16,7 @@ import { JwtStrategy } from "./jwt.strategy";
     PassportModule,
     JwtModule.register({
       secret: "" + process.env.SECRET_KEY,
-      signOptions: { expiresIn: "3600s" },
+      signOptions: { expiresIn: "604800s" }, // expires in 7 days
     }),
     MongooseModule.forFeature([{ name: "user", schema: UserSchema }]),
   ],

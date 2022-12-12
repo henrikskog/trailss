@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { InjectRepository } from "@nestjs/typeorm";
 import mongoose, { Model } from "mongoose";
 import { z } from "zod";
 import { VehiclesService } from "../vehicles/vehicles.service";
@@ -29,7 +28,7 @@ export class TripsService {
    * Note: Gives the consumptions for the car with the minimum consumption should the API return multiple models
    *
    * Uses API: https://www.fueleconomy.gov/feg/ws/
-   * @param distance The distance of the trip
+   * @param distance The distance of the trip given in KM
    * @param make The make of the car used for the trip
    * @param model The model of the car used for the trip
    * @param year The year the car was made
@@ -68,40 +67,13 @@ export class TripsService {
     return Math.round(emissions * distance * 10) / 10;
   }
 
-  async calculateTotalEmissions(tripDto: CreateTripDto | UpdateTripDto) {
-    const vehicle = tripDto.vehicle;
-
-    //parse the fuel type to enum
-    const fuelType = vehicleFuelSchema.safeParse(vehicle.type);
-    // Fuel types are restricted, therefore validate value      
-    if (!fuelType.success) {
-        throw new BadRequestException("Illegal value give for fuel type");
-    }
-    
-      // Calculate the emissions
-    const emissions = await this.calculateTripEmissions(
-      tripDto.distance,
-      fuelType.data,
-      vehicle.make,
-      vehicle.model,
-      vehicle.year,
-      vehicle.consumption
-    )
-      // Add the emissions to the vehicle
-    tripDto.total_emissions = emissions;
-    return tripDto;
-  }
-
-
   async create(user: any, createTripDto: CreateTripDto) {
     // Calculate the emissions
-    const userTrip = await this.calculateTotalEmissions(createTripDto)
-    // Create the trip
-    const trip = await this.tripModel.create(userTrip)
+    const trip = await this.tripModel.create(createTripDto)
 
     user.trips.push(trip);
     user.save();
-    return "Created a new trip";
+    return trip
   }
 
   async findAll(user: any) {
@@ -117,23 +89,6 @@ export class TripsService {
       throw new NotFoundException("No trip with the given arguments was found");
     }
     return trip[0];
-  }
-
-  async update(
-    tripsIds: [mongoose.Schema.Types.ObjectId],
-    id: string,
-    updateTripDto: UpdateTripDto
-  ) {
-    const trip = tripsIds.filter((trip) => trip.toString() == id);
-    if (!trip.length) {
-      throw new NotFoundException("No trip with the given id was found");
-    }
-
-    // Calculate the emissions
-    const userTrip = await this.calculateTotalEmissions(updateTripDto)
-
-    await this.tripModel.findByIdAndUpdate(trip[0], userTrip);
-    return "Trip updated successfully";
   }
 
   async remove(user: any, id: string) {
