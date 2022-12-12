@@ -1,11 +1,16 @@
+import { IconCar } from '@tabler/icons';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import ListCard from "../../../shared/cards/ListCard";
-import MainCard from '../../../shared/cards/MainCard';
+import MainCard from '../../../../shared/cards/MainCard';
+import ListCard from "../../../../shared/cards/ListCard";
 
-import BajaAreaChartCard from '../../../shared/cards/BajaAreaChart';
-import SmallCard from '../../../shared/cards/SmallCard';
-import TableCard from '../../../shared/cards/TableCard';
 import './Home.scss';
+import { Typography } from '@mui/material';
+import BajaAreaChartCard from '../../../../shared/cards/BajaAreaChart';
+import SmallCard from '../../../../shared/cards/SmallCard';
+import TableCard from '../../../../shared/cards/TableCard';
 
 const series = [{
   name: 'series1',
@@ -156,19 +161,19 @@ const Home: React.FC = () => {
         </Grid>
         <Grid item xs={6} md={3}>
           <div className='box blue-box'>
-          <SmallCard title="Active Fleets" number="5" subtitle="You have 5 fleets being tracked" />
+          <SmallCard title="Distance tracked" number="6321 km" subtitle="You have tracked emissions on 63241 km" />
 
           </div>
         </Grid>
         <Grid item xs={6} md={3}>
           <div className='box'>
-          <SmallCard title="Active vehicles" number="60" subtitle="You have 60 vehicles being tracked" />
+          <SmallCard title="Cars" number="2" subtitle="You have 2 vehicles being tracked" />
 
           </div>
         </Grid>
         <Grid item xs={6} md={3}>
           <div className='box'>
-          <SmallCard title="Business trips" number="1500 Kg" subtitle="Your business trips emitted 1500kg" />
+          <SmallCard title="Last trip emissions" number="1500 Kg" subtitle="Your business trips emitted 1500kg" />
 
           </div>
         </Grid>
@@ -180,19 +185,19 @@ const Home: React.FC = () => {
           </div>
         </Grid>
         <Grid item xs={12} md={4}>
-          <h3 className='inside-title'>Fleets</h3>
+          <h3 className='inside-title'>Cars</h3>
           <div className='box big-box'>
             <ListCard elements={fleets.slice(0, 5)} text="Emitted" textAfter='kg'></ListCard>
         </div>
       </Grid>
       <Grid item xs={12} md={8}>
-        <h3 className='inside-title'>Business trips</h3>
+        <h3 className='inside-title'>Trips</h3>
         <div className='box bigger-box'>
           <TableCard trips={trips}/>
         </div>
       </Grid>
       <Grid item xs={12} md={4}>
-        <h3 className='inside-title'>Certificates</h3>
+        <h3 className='inside-title'>Community</h3>
         <div className='box bigger-box'>
           <MainCard mainStat={5} description="vehicles" title="Total, in your fleets" />
         </div>
