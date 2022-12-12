@@ -14,10 +14,10 @@ const CarSchema = z.object({
   make: z.string(),
   model: z.string(),
   year: z.number(),
-  color: z.string(),
-  licensePlate: z.string(),
-  mileage: z.number(),
-  status: z.string(),
+  color: z.optional(z.string()),
+  licensePlate: z.optional(z.string()),
+  mileage: z.optional(z.number()),
+  status: z.optional(z.string()),
 });
 
 export type Car = z.infer<typeof CarSchema>;
@@ -25,9 +25,20 @@ export type Car = z.infer<typeof CarSchema>;
 export const getCars = async (): Promise<Car[]> => {
   const response = await axios.get(`${process.env.REACT_APP_API_ROOT}/vehicles`);
 
-  const ResultSchema = z.array(CarSchema);
+  const responseData = z.array(z.any()).parse(response.data);
 
-  return ResultSchema.parse(response.data);
+  const result = responseData.filter((car) => {
+    const parsedCar = CarSchema.safeParse(car);
+    if(parsedCar.success) {
+      return true;
+    }
+    console.error("Recieved a car from the backend with unexpected properties: ", parsedCar.error);
+    return false
+  })
+
+
+
+  return result
 };
 
 export const postCar = async (car: Car): Promise<Car> => {
