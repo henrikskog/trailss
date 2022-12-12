@@ -1,6 +1,6 @@
 
 import { Grid, Container } from '@mui/material';
-import BajaAreaChartCard from 'src/shared/cards/BajaAreaChart';
+import BajaAreaChartCard from "../../../shared/cards/BajaAreaChart";
 
 const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
 
