@@ -28,7 +28,7 @@ export class TripsService {
    * Note: Gives the consumptions for the car with the minimum consumption should the API return multiple models
    *
    * Uses API: https://www.fueleconomy.gov/feg/ws/
-   * @param distance The distance of the trip
+   * @param distance The distance of the trip given in KM
    * @param make The make of the car used for the trip
    * @param model The model of the car used for the trip
    * @param year The year the car was made

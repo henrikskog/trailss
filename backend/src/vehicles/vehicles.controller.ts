@@ -4,7 +4,9 @@ import {
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiParam,
   ApiQuery,
+  ApiResponse,
   ApiTags
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/jwt-auth-guard.guard";
@@ -16,6 +18,21 @@ import { VehiclesService } from "./vehicles.service";
 @Controller("vehicles")
 export class VehiclesController {
   constructor(private readonly vehiclesService: VehiclesService) {}
+
+
+  @Get("calculate-consumptions")
+  @ApiQuery({ name: "car-make", required: false, description: "E.g. volvo" })
+  @ApiQuery({ name: "car-model", required: false, description: "E.g. XC90" })
+  @ApiQuery({ name: "car-model-year", required: false, description: "E.g. 2020" })
+  @ApiOperation({ summary: "Recieve the emissions of a trip" })
+  @ApiResponse({ status: 200, description: "Grams CO2" })
+  calculateConsumptions(
+    @Query("car-make") make: string,
+    @Query("car-model") model: string,
+    @Query("car-model-year") year: number)
+  {
+    return this.vehiclesService.fetchFuelConsumption(make, model, year);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -56,21 +73,4 @@ export class VehiclesController {
     return this.vehiclesService.remove(req.user, id);
   }
 
-  @Get("calculate-consumptions")
-  @ApiQuery({ name: "car-make", required: true, description: "E.g. volvo" })
-  @ApiQuery({ name: "car-model", required: true, description: "E.g. XC90" })
-  @ApiQuery({
-    name: "car-model-year",
-    required: true,
-    description: "E.g. 2020",
-  })
-
-  @ApiOperation({ summary: "Recieve the consumptions of a vehicle" })
-  calculateEmissions(
-    @Query("car-make") make: string,
-    @Query("car-model") model: string,
-    @Query("car-model-year") year: number
-  ) {
-    return this.vehiclesService.fetchFuelConsumption(make, model, year);
-  }
 }
