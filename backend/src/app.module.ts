@@ -9,9 +9,10 @@ import { CompanyModule } from './company/company.module';
 import { AuthCompanyModule } from './authCompany/auth-company.module';
 import { CompanyRoutesModule } from './company-routes/company-routes.module';
 import { CompanyVehiclesModule } from './company-vehicles/company-vehicles.module';
-import { FleetsModule } from './fleets/fleets.module';
-import { AppService } from './app.service';
+import { FleetsModule } from './fleets/fleets.module';import { AppService } from './app.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AppController } from './app.controller';
+import { BusinessTripModule } from './business-trip/business-trip.module';
 
 
 const createMongoConnectionString = () => `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER_URL}/halla?retryWrites=true&w=majority`
@@ -30,8 +31,11 @@ const createMongoConnectionString = () => `mongodb+srv://${process.env.DB_USER}:
     CompanyModule,
     FleetsModule,
     CompanyVehiclesModule,
-    CompanyRoutesModule
+    CompanyRoutesModule,
+    BusinessTripModule
+
   ],
+  controllers: [AppController],
   providers: [AppService]
 })
 export class AppModule {}

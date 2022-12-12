@@ -2,9 +2,9 @@ import { PartialType } from '@nestjs/swagger';
 import { CreateCompanyRouteDto } from './create-company-route.dto';
 
 export class UpdateCompanyRouteDto extends PartialType(CreateCompanyRouteDto) {
-    origin: string;  
-    destination: string;  
-    distance: string;  
+    from: string;  
+    to: string;  
+    distance: number;  
     emissions: number;    
     capacity: number;  
     employee: number;  

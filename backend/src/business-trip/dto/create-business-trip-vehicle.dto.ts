@@ -1,12 +1,12 @@
 import { TemplateCompanyRoute } from "src/company-routes/dto/template-company-route.dto";
 
-export class CreateCompanyVehicleDto{
+export class CreateBusinessTripVehicleDto{
     type: string;
-    make: string;
+    brand: string;
     model: string;
-    year: number;
     emissions: number;
     consumption: number;
-    capacity: number;
-    routes: TemplateCompanyRoute[];
+    year: number;
+    route: TemplateCompanyRoute;
+    passengers: string[];
 }

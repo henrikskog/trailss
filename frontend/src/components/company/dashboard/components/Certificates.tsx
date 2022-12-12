@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid';
-import MainCard from './cards/MainCard';
+import MainCard from '../../../shared/cards/MainCard';
 import "./Certificates.scss";
 import Image from "./certificate-diploma.png"
 
