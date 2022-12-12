@@ -19,7 +19,7 @@ export const getVehicleConsumptions = async ({
   carModelYear,
 }: GetConsumptionParams): Promise<number> => {
   const data = await axios.get(
-    `http://localhost:5000/vehicles/calculate-consumptions?&car-make=${carMake}&car-model=${carModel}&car-model-year=${carModelYear}`
+    `http://localhost:5000/vehicles/calculate-consumptions?car-make=${carMake}&car-model=${carModel}&car-model-year=${carModelYear}`
   );
   return z.object({ data: z.number() }).parse(data).data;
 };

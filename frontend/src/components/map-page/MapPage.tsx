@@ -62,7 +62,6 @@ const UserMapPage: React.FC = () => {
     },
   });
 
-  const [userCar, setUserCar] = useState<string>('');
   const [makes, setMakes] = useState<string[]>([]);
   const [models, setModels] = useState<string[]>([]);
   const [yearValue] = useDebouncedValue(form.values.carYear, 200);
@@ -87,8 +86,10 @@ const UserMapPage: React.FC = () => {
       return;
     }
 
+    console.log(consumptions)
     if (!consumptions) {
       try {
+        console.log(carMake, carYear, carModel)
         consumptions = await getVehicleConsumptions({ carMake, carModelYear: carYear, carModel });
       } catch (error) {
         showGoogleMapsError('Could not calculate the consumptions for this car');
@@ -113,6 +114,7 @@ const UserMapPage: React.FC = () => {
     setDirectionsResponse(results);
     setDistance(tripCalculations.distance);
     setDuration(tripCalculations.duration);
+    setEmissions(tripCalculations.emissions)
   }
 
   function clearRoute() {
@@ -168,13 +170,14 @@ const UserMapPage: React.FC = () => {
           <form
             className="form"
             onSubmit={form.onSubmit((values) => {
+              console.log(values)
               onSubmit(
                 values.origin,
                 values.destination,
                 searchMakeValue,
                 yearValue!,
                 searchModelValue,
-                values.consumptions == null ? undefined : values.consumptions
+                values.consumptions ? values.consumptions : undefined
               );
             })}
           >
@@ -260,7 +263,7 @@ const UserMapPage: React.FC = () => {
               min={0}
               max={100}
               disabled={form.values.carYear != null}
-              {...form.getInputProps('consumption')}
+              {...form.getInputProps('consumptions')}
             />
             <div className="submit">
               <Button type="submit" mt="sm">

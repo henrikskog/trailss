@@ -161,6 +161,7 @@ export default function Cars() {
 
   function setInputStates(car: Car) {
     setCarName(car.name);
+    setCarMake(car.make);
     setCarModel(car.model);
     setCarYear(car.year);
     setCarColor(car.color);
@@ -301,14 +302,14 @@ export default function Cars() {
       } else {
         return (
           <tr key={car._id}>
-            <td>{car.name}</td>
-            <td>{car.make}</td>
-            <td>{car.model}</td>
-            <td>{car.year}</td>
-            <td>{car.color}</td>
-            <td>{car.licensePlate}</td>
-            <td>{car.mileage}</td>
-            <td>{car.status}</td>
+            <td>{car.name ? car.name : "-"}</td>
+            <td>{car.make ? car.make : "-"}</td>
+            <td>{car.model ? car.model : "-"}</td>
+            <td>{car.year ? car.year : "-"}</td>
+            <td>{car.color ? car.color : "-"}</td>
+            <td>{car.licensePlate ? car.licensePlate : "-"}</td>
+            <td>{car.mileage ? car.mileage : "-"}</td>
+            <td>{car.status ? car.status : "-"}</td>
             <td>
               <IconEdit
                 className="hover-cursor"

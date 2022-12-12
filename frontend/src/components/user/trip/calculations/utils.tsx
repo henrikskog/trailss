@@ -15,6 +15,7 @@ export const formatMeters = (meters: number) => {
 
 // Convert from grams to kilograms, round to 0 decimal place, add 'kg' to the end and add points to separate thousands. If under a kilo, just show grams.
 export const formatGrams = (emissions: number) => {
+  console.log(emissions)
   const kg = Math.floor(emissions / 1000);
   const grams = emissions % 1000;
   const kgString = kg.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');

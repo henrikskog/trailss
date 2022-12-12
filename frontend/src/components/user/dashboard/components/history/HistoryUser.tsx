@@ -3,7 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { getTripsFromDB, Trip } from '../../../../../api/newTrip';
-import { formatDate, formatGrams, formatMeters, formatSeconds } from "../../../trip/calculations/utils";
+import {
+  formatDate,
+  formatGrams,
+  formatMeters,
+  formatSeconds,
+} from '../../../trip/calculations/utils';
 import './HistoryUser.scss';
 
 const useStyles = createStyles((theme) => ({
@@ -74,12 +79,17 @@ export default function HistoryUser() {
       <h1>Your trips</h1>
       <div className="history-user-table">
         <ScrollArea style={{ width: '100%', height: '65vh' }}>
-          {isLoading 
-          ? <div>LOADING...</div> 
-          : isError 
-            ? <div>An error occured: <i>{error.message}</i></div>
-            : showData(data) 
-          }
+          {isLoading ? (
+            <div>LOADING...</div>
+          ) : isError ? (
+            <div>
+              An error occured: <i>{error.message}</i>
+            </div>
+          ) : data.length === 0 ? (
+            <div>You have no trips yet</div>
+          ) : (
+            showData(data)
+          )}
         </ScrollArea>
       </div>
     </div>

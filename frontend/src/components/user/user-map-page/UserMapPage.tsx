@@ -44,8 +44,8 @@ const UserMapPage: React.FC = () => {
 
   const form = useForm({
     initialValues: {
-      origin: state?.origin || 'Sarpsborg',
-      destination: state?.destination || 'Fredrikstad',
+      origin: state?.origin || '',
+      destination: state?.destination || '',
       date: state?.date || new Date(),
       passengers: 1,
       carYear: undefined,
@@ -96,19 +96,46 @@ const UserMapPage: React.FC = () => {
       return;
     }
 
-    if (!consumptions) {
+    // FIND CAR CONSUMPTIONS
+
+    let finalConsumption = consumptions;
+    if (showUsersSavedCars) {
+      const userSavedCar = cars?.find((car) => car.name == userCar);
+
+      if (!userSavedCar || !userSavedCar.make || !userSavedCar.year || !userSavedCar.model) {
+        showGoogleMapsError(
+          'Could not calculate the consumptions for the chosen car. Make sure it has all the required information!'
+        );
+        return;
+      }
+
       try {
-        consumptions = await getVehicleConsumptions({ carMake, carModelYear: carYear, carModel });
+        finalConsumption = await getVehicleConsumptions({
+          carMake: userSavedCar.make,
+          carModelYear: userSavedCar.year,
+          carModel: userSavedCar.model,
+        });
       } catch (error) {
         showGoogleMapsError('Could not calculate the consumptions for this car');
         return;
       }
+    } else {
+      if (!consumptions) {
+        try {
+          finalConsumption = await getVehicleConsumptions({ carMake, carModelYear: carYear, carModel });
+        } catch (error) {
+          showGoogleMapsError('Could not calculate the consumptions for this car');
+          return;
+        }
+      } else {
+        finalConsumption = consumptions;
+      }
     }
 
-    let tripCalculations;
+    let finalTripCalculations;
 
     try {
-      tripCalculations = await extractTripInformation(results, consumptions);
+      finalTripCalculations = await extractTripInformation(results, finalConsumption);
     } catch (error) {
       if (error instanceof TripCalculationError) {
         showGoogleMapsError(error.getErrorMessage());
@@ -120,10 +147,12 @@ const UserMapPage: React.FC = () => {
     }
 
     setDirectionsResponse(results);
-    setDistance(tripCalculations.distance);
-    setDuration(tripCalculations.duration);
+    setDistance(finalTripCalculations.distance);
+    setDuration(finalTripCalculations.duration);
+    setEmissions(finalTripCalculations.emissions);
 
-    if (carMake && carYear && carModel) {
+    // Prompt to save car if searching with a custom car!
+    if (!showUsersSavedCars && carMake && carYear && carModel) {
       openConfirmModal(SaveCarModal({ carMake, carYear, carModel }));
     }
 

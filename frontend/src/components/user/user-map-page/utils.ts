@@ -40,7 +40,7 @@ export const extractTripInformation = async (
 
   try {
     const calculatedEmissions = await getEmissions({
-      distance: resultDistance,
+      distance: resultDistance / 1000, // convert from meters to km
       fuelType: 'petrol',
       consumptions: consumptions,
     });
