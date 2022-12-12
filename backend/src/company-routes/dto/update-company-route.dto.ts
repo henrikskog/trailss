@@ -7,6 +7,6 @@ export class UpdateCompanyRouteDto extends PartialType(CreateCompanyRouteDto) {
     distance: number;  
     emissions: number;    
     capacity: number;  
-    employee: number;  
+    employee: string;  
     date: Date;
 }

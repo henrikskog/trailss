@@ -6,7 +6,7 @@ export class CreateCompanyRouteDto {
     to: string;
     distance: number;
     capacity: number;
-    employee: number;
+    employee: string;
     date: Date;
     vehicle: CompanyVehicle;
     company: mongoose.Schema.Types.ObjectId;

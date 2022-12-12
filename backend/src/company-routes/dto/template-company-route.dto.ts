@@ -3,7 +3,7 @@ export class TemplateCompanyRoute {
     to: string;  
     distance: number;  
     capacity: number;  
-    employee: number;  
+    employee: string;  
     date: Date;
     frequency: number[];
 }

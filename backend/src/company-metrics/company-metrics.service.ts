@@ -90,7 +90,10 @@ export class CompanyMetricsService {
             const tripName = trip.name
             tripVehicles.forEach(tripVehicle => {
                 const tripEmissions = tripVehicle.total_emissions;
-                emissionsMonth.push({ tripName, tripVehicle, tripEmissions })
+                tripVehicle.forEach(route => {
+                    const tripDay = route.date.getDate()
+                    emissionsMonth.push({ tripName, tripDay, tripVehicle, tripEmissions })
+                });
             });
         });
         return emissionsMonth;
@@ -106,7 +109,11 @@ export class CompanyMetricsService {
             const tripName = trip.name
             tripVehicles.forEach(tripVehicle => {
                 const tripEmissions = tripVehicle.total_emissions;
-                emissionsYear.push({ tripName, tripVehicle, tripEmissions })
+                tripVehicle.forEach(route => {
+                    const tripDay = route.date.getDate()
+                    const tripMonth = route.date.getMonth()
+                    emissionsYear.push({ tripName, tripDay, tripMonth, tripVehicle, tripEmissions })
+                });
             });
         });
     }

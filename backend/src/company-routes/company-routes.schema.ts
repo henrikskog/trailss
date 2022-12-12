@@ -24,7 +24,7 @@ export class CompanyRoute {
   capacity: number;
 
   @Prop()
-  employee: number;
+  employee: string;
 
   @Prop()
   date: Date;

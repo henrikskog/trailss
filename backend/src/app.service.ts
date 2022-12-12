@@ -49,7 +49,6 @@ export class AppService {
                     }
                 }
                 )
-                console.log("tu abuela muerta")
             } catch {
                 return 
             }
