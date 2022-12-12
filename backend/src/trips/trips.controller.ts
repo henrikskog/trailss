@@ -66,13 +66,6 @@ export class TripsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(":id")
-  @ApiBearerAuth()
-  update(@Request() req: any, @Param("id") id: string, @Body() updateTripDto: UpdateTripDto) {
-    return this.tripsService.update(req.user.trips, id, updateTripDto);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Delete(":id")
   @ApiBearerAuth()
   remove(@Request() req: any, @Param("id") id: string) {
