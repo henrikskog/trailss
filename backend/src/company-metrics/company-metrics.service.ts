@@ -5,7 +5,7 @@ export class CompanyMetricsService {
     constructor() { }
 
     async getAllFleetTrips(company: any) {
-        const trips = await company.populate("trips").then((p) => p.trips);
+        const trips = await company.populate("fleets").then((p) => p.trips);
         if (!trips.length) {
             throw new NotFoundException("No trips yet");
         }
@@ -86,12 +86,13 @@ export class CompanyMetricsService {
 
 
         monthTrips.forEach(trip => {
-            const tripEmissions = trip.total_emissions;
-            const tripDay = trip.date.getDate()
-            emissionsMonth.push({ tripDay, tripEmissions })
+            const tripVehicles = trip.vehicles;
+            const tripName = trip.name
+            tripVehicles.forEach(tripVehicle => {
+                const tripEmissions = tripVehicle.total_emissions;
+                emissionsMonth.push({ tripName, tripVehicle, tripEmissions })
+            });
         });
-        console.log(year)
-        console.log(emissionsMonth)
         return emissionsMonth;
     }
 
@@ -101,10 +102,12 @@ export class CompanyMetricsService {
         const yearTrips = await this.getYearFleetTrips(company, year)
 
         yearTrips.forEach(trip => {
-            const tripEmissions = trip.total_emissions;
-            const tripDay = trip.date.getDate();
-            const tripMonth = trip.date.getMonth();
-            emissionsYear.push({ tripDay, tripMonth, tripEmissions })
+            const tripVehicles = trip.vehicles;
+            const tripName = trip.name
+            tripVehicles.forEach(tripVehicle => {
+                const tripEmissions = tripVehicle.total_emissions;
+                emissionsYear.push({ tripName, tripVehicle, tripEmissions })
+            });
         });
     }
 
@@ -124,8 +127,6 @@ export class CompanyMetricsService {
                 emissionsMonth.push({ tripName, tripDay, tripVehicle, tripEmissions })
             });
         });
-        console.log(year)
-        console.log(emissionsMonth)
         return emissionsMonth;
     }
 
