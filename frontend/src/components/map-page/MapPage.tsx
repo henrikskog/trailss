@@ -35,8 +35,8 @@ const UserMapPage: React.FC = () => {
 
   const form = useForm({
     initialValues: {
-      origin: state?.origin || 'Sarpsborg',
-      destination: state?.destination || 'Fredrikstad',
+      origin: state?.origin || '',
+      destination: state?.destination || '',
       date: state?.date || new Date(),
       passengers: 1,
       carYear: undefined,
