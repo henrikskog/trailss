@@ -1,0 +1,14 @@
+@import "../../../general-variables.scss";
+
+.card-content {
+    padding: $boxPadding;
+    h1 {
+        color: gray;
+    }
+    
+    p {
+        color: gray;
+        font-weight: 700;
+    }
+}
+

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^4.8.0",
     "@chakra-ui/react": "^2.3.6",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -12,6 +13,8 @@
     "@mantine/form": "^5.6.3",
     "@mantine/hooks": "^5.6.3",
     "@mantine/notifications": "^5.6.3",
+    "@mui/icons-material": "^5.10.16",
+    "@mui/material": "^5.10.17",
     "@react-google-maps/api": "^2.13.1",
     "@react-three/drei": "^9.34.4",
     "@react-three/fiber": "^8.8.10",
@@ -21,16 +24,18 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/google-map-react": "^2.1.7",
-    "@types/jest": "^27.5.2",
     "@types/node": "^16.11.59",
     "@types/react": "^18.0.20",
     "@types/react-dom": "^18.0.6",
+    "@types/react-test-renderer": "^18.0.0",
+    "apexcharts": "^3.36.3",
     "axios": "^1.1.3",
     "dayjs": "^1.11.6",
     "framer-motion": "^7.6.2",
     "google-map-react": "^2.2.0",
     "node-sass": "^7.0.3",
     "react": "^18.2.0",
+    "react-apexcharts": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.37.0",
     "react-icons": "^4.6.0",
@@ -44,7 +49,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject",
     "lint": "eslint --fix --ext .js,.ts,.tsx ./src --ignore-path .gitignore",
     "format": "npm run prettier -- --write"
@@ -67,8 +72,16 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    }
+  },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.18.6",
     "@types/googlemaps": "^3.43.3",
+    "@types/jest": "^29.2.4",
+    "enzyme": "^3.11.0",
     "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
@@ -77,6 +90,9 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "sass": "^1.55.0"
+    "jest": "^29.3.1",
+    "react-test-renderer": "^18.2.0",
+    "sass": "^1.55.0",
+    "ts-jest": "^29.0.3"
   }
 }

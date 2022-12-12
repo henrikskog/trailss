@@ -1,0 +1,63 @@
+@import "../../general-variables.scss";
+
+.dashboard-user {
+    height: 100vh;
+}
+
+.dashboard-user-content {
+    font-family: 'Roboto', sans-serif;
+    background-color: #FAFAFB;
+    min-height: 100vh;
+    overflow-y: scroll;
+
+    .box {
+        display: flex;
+        min-height: 150px;
+        max-height: 150px;
+        background-color: white;
+        box-shadow: $boxShadow;
+        border-radius: $borderRadiusSmall;
+        h4 {
+            color: rgb(70, 70, 70);
+        }
+    }
+
+    .purple-box {
+        background-color: $principal-color;
+        color: white!important;
+        h4 {
+            color: white!important;
+        }
+    }
+    .blue-box {
+        background-color: $blue;
+        color: white;
+        h4 {
+            color: white!important;
+        }
+    }
+
+    .big-box {
+        height: 420px;
+        max-height: 420px;
+    }
+
+    .bigger-box{
+        height: 460px!important;
+        max-height: fit-content!important;
+    }
+
+    .multiple-box {
+        display: flex;
+        flex-direction: column;
+        gap: 1.4em;
+
+        .box {
+            flex: 1;
+        }
+    }
+    button{
+        font-weight: 600;
+        color: $blue!important;
+    }
+}

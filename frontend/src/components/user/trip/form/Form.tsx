@@ -9,7 +9,7 @@ import './Form.scss';
 import { getCarMakes, getCarModels } from '../../../../api/getCarInfo';
 import useAuth from '../../auth/AuthContext/AuthProvider';
 
-interface Props {
+export interface Props {
   calculateRoute: (
     origin: string,
     destination: string,

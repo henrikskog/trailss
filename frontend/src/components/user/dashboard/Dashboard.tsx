@@ -3,6 +3,7 @@ import './Dashboard.scss';
 import MenuBar from './components/menubar/MenuBar';
 import Map  from "../../shared/map/Map"
 import useAuth from '../auth/AuthContext/AuthProvider';
+import Home from './components/home/Home';
 import HistoryUser from './components/history/HistoryUser';
 import UserSettings from '../settings/UserSettings';
 
@@ -19,6 +20,7 @@ export default function Dashboard() {
 
 const mockdataUser = [
     { icon: IconHome2, label: 'Home' },
+    { icon: IconHome2, label: 'Map' },
     { icon: IconCalendarStats, label: 'History' },
     { icon: IconUser, label: 'Account' },
     { icon: IconCar, label: 'Cars' },
@@ -27,6 +29,8 @@ const mockdataUser = [
     function renderSwitch(param: string) {
         switch (param) {
             case 'Home':
+                return <Home />;
+            case 'Map':
                 return <Map />;
             case 'History':
                 return <HistoryUser />;

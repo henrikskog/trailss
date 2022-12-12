@@ -1,0 +1,20 @@
+@import "../../../general-variables.scss";
+
+.table-card-paper {
+    cursor: pointer;
+    margin: $boxPadding $boxPadding 0.2em $boxPadding;
+    width: 100%;
+
+    box-shadow: none !important;
+    .MuiTableCell-footer{
+        border-bottom: 0;
+    }
+    .MuiTableRow-head{
+        .MuiTableCell-stickyHeader{
+            font-weight: 600!important;
+            color: $blue!important;
+            font-size: $fontSizeTextSmall;
+            background-color: transparent!important;
+        }
+    }
+}

@@ -1,0 +1,30 @@
+@import "../../../general-variables.scss";
+
+
+.list-card-wrapper{
+    padding: $boxPadding;
+    width: 100%;
+
+    .list-card-rows{
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 8px;
+    }
+
+    .list-card-row{
+        flex: 1;
+    }
+    .view-all-button{
+        display: flex;
+        justify-content: center;    
+    }
+    .list-card-row-quantity{
+        color: $principal-color;
+        padding: 0 6px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+    .list-card-row-quantity2{
+        font-size: $fontSizeTextSmaller;
+    }
+}
