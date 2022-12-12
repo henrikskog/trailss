@@ -22,7 +22,7 @@ export default function MidPage() {
           <br />
 
           <br />
-          <Button type="submit" mt="sm">
+          <Button type="submit" mt="sm" className='button'>
             Learn More
           </Button>
         </div>
