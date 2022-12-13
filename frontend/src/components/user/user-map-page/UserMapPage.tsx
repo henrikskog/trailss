@@ -87,6 +87,7 @@ const UserMapPage: React.FC = () => {
     consumptions?: number
   ) {
     let results: google.maps.DirectionsResult;
+    console.log("Triggered onsubit")
 
     try {
       results = await googleMapsTripsCalculation(origin, destination);
@@ -367,7 +368,7 @@ const UserMapPage: React.FC = () => {
               {showSaveTrip && (
                 <Button
                   className="save-button"
-                  type="submit"
+                  type="button"
                   mt="sm"
                   onClick={saveTrip}
                   disabled={emissions == null || distance == null || duration == null}
