@@ -205,7 +205,8 @@ const Home: React.FC = () => {
         <Grid item xs={12} md={4}>
           <h3 className='inside-title'>Cars</h3>
           <div className='box big-box'>
-            <ListCard elements={parseVehicles(cars!.slice(0, 5))}></ListCard>
+            {!isLoading && !isError && cars && cars.length > 0 && 
+            <ListCard elements={parseVehicles(cars!.slice(0, 5))}></ListCard>}
         </div>
       </Grid>
       <Grid item xs={12} md={8}>
