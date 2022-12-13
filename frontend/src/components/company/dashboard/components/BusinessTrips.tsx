@@ -7,31 +7,31 @@ import FooterDashboard from './FooterDashboard';
 
 const businesstrips = [
     {
-        id: 1,
+        id: "1",
         name: "Meeting",
         origin: "Valencia",
         destination: "Cullera"
     },
     {
-        id: 1,
+        id: "1",
         name: "Dinner",
         origin: "Valencia",
         destination: "Xativa"
     },
     {
-        id: 1,
+        id: "1",
         name: "Project",
         origin: "Valencia",
         destination: "Madrid"
     },
     {
-        id: 1,
+        id: "1",
         name: "Meeting",
         origin: "Valencia",
         destination: "Madrid"
     },
     {
-        id: 1,
+        id: "1",
         name: "Meeting",
         origin: "Valencia",
         destination: "Barcelona"
@@ -58,7 +58,7 @@ export default function BusinessTrips() {
                     </Grid>
                     <Grid item xs={12} md={3}>
                         <div className='box'>
-                            <ListCard elements={businesstrips.slice(0, 5)} text={'text'} textAfter={'textAfter'}></ListCard>
+                            <ListCard elements={businesstrips.slice(0, 5)} ></ListCard>
                         </div>
                     </Grid>
                 </Grid>

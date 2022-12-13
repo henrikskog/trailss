@@ -17,65 +17,24 @@ const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
 //create an array of 10 fleets with id name and two quantities
 const fleets = [
   {
-    id: 1,
+    id: "1",
     name: "Cars of employees",
-    quantity: 3,
-    quantity2: 4
+    quantity: "3",
+    quantity2: "4"
   },
   {
-    id: 2,
+    id: "2",
     name: "Trucks",
-    quantity: 3,
-    quantity2: 4
+    quantity: "3",
+    quantity2: "4"
   },
   {
-    id: 3,
+    id: "3",
     name: "Bajaj Finery",
-    quantity: 3,
-    quantity2: 4
+    quantity: "3",
+    quantity2: "4"
   },
-  {
-    id: 4,
-    name: "Bajaj Finery",
-    quantity: 3,
-    quantity2: 4
-  },
-  {
-    id: 5,
-    name: "Bajaj Finery",
-    quantity: 3,
-    quantity2: 4
-  },
-  {
-    id: 6,
-    name: "Bajaj Finery",
-    quantity: 3,
-    quantity2: 4
-  },
-  {
-    id: 7,
-    name: "Bajaj Finery",
-    quantity: 3,
-    quantity2: 4
-  },
-  {
-    id: 8,
-    name: "Bajaj Finery",
-    quantity: 3,
-    quantity2: 4
-  },
-  {
-    id: 9,
-    name: "Bajaj Finery",
-    quantity: 3,
-    quantity2: 4
-  },
-  {
-    id: 10,
-    name: "Bajaj Finery",
-    quantity: 3,
-    quantity2: 4
-  },
+
 ];
 
 //create an array of 10 trips with name emissions number and date
@@ -182,7 +141,7 @@ const Home: React.FC = () => {
         <Grid item xs={12} md={4}>
           <h3 className='inside-title'>Fleets</h3>
           <div className='box big-box'>
-            <ListCard elements={fleets.slice(0, 5)} text="Emitted" textAfter='kg'></ListCard>
+            <ListCard elements={fleets.slice(0, 5)}></ListCard>
         </div>
       </Grid>
       <Grid item xs={12} md={8}>

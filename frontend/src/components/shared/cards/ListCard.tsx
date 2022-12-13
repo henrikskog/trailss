@@ -24,22 +24,20 @@ const listItemStyle = {
 
 export interface Props {
     elements: Element[]
-    text: string;
-    textAfter: string;
 }
 
 interface Element {
-    id: number;
+    id?: string;
     name: string;
-    quantity?: number;
-    quantity2?: number;
+    quantity?: string;
+    quantity2?: string;
     origin?: string;
     destination?: string;
 }
 
 
 
-const ListCard: React.FC<Props> = ({ elements, text, textAfter }) => {
+const ListCard: React.FC<Props> = ({ elements}) => {
     return (
         <div className='list-card-wrapper'>
                 <div className='list-card-rows'>

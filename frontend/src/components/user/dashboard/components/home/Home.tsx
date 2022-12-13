@@ -11,6 +11,8 @@ import { Typography } from '@mui/material';
 import BajaAreaChartCard from '../../../../shared/cards/BajaAreaChart';
 import SmallCard from '../../../../shared/cards/SmallCard';
 import TableCard from '../../../../shared/cards/TableCard';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getAllUserVehicles, UserVehicle } from '../../../../../api/userVehiclesAPI';
 
 const series = [{
   name: 'series1',
@@ -148,6 +150,22 @@ const trips = [
 ];
 
 const Home: React.FC = () => {
+
+  const queryClient = useQueryClient();
+
+  const { data: cars, isLoading, error, isError } = useQuery({ queryKey: ['userVehicles'], queryFn: getAllUserVehicles });
+
+  const parseVehicles = (vehicles: UserVehicle[]) => {
+    const parsedVehicles = vehicles.map((vehicle) => ({
+      id: vehicle._id,
+      name: vehicle.name,
+      quantity2: `${vehicle.make} ${vehicle.model} ${vehicle.year}`,
+      quantity: vehicle.status
+    }))
+    console.log(parsedVehicles);
+    return parsedVehicles;
+  }
+
   return (
     <div className='company-home-wrapper'>
       <Grid container rowSpacing={2} columnSpacing={{ xs: 1.5, sm: 2, md: 3 }}>
@@ -167,7 +185,7 @@ const Home: React.FC = () => {
         </Grid>
         <Grid item xs={6} md={3}>
           <div className='box'>
-          <SmallCard title="Cars" number="2" subtitle="You have 2 vehicles being tracked" />
+          <SmallCard title="Cars" number={`${cars?.length}`} subtitle={`You have ${cars?.length} vehicles being tracked`} />
 
           </div>
         </Grid>
@@ -187,7 +205,7 @@ const Home: React.FC = () => {
         <Grid item xs={12} md={4}>
           <h3 className='inside-title'>Cars</h3>
           <div className='box big-box'>
-            <ListCard elements={fleets.slice(0, 5)} text="Emitted" textAfter='kg'></ListCard>
+            <ListCard elements={parseVehicles(cars!.slice(0, 5))}></ListCard>
         </div>
       </Grid>
       <Grid item xs={12} md={8}>
