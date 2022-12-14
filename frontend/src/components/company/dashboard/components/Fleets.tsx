@@ -11,7 +11,6 @@ import ListCard from '../../../shared/cards/ListCard';
 import TableCard from '../../../shared/cards/TableCard';
 import MainCard from '../../../shared/cards/MainCard';
 import FleetsTableCard from '../../../shared/cards/FleetsTableCard';
-import CarsTableCard from '../../../shared/cards/CarsTableCard';
 
 interface Car {
   id: number;
