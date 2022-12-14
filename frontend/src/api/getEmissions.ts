@@ -19,7 +19,7 @@ export const getVehicleConsumptions = async ({
   carModelYear,
 }: GetConsumptionParams): Promise<number> => {
   const data = await axios.get(
-    `http://localhost:5000/vehicles/calculate-consumptions?car-make=${carMake}&car-model=${carModel}&car-model-year=${carModelYear}`
+    `${process.env.REACT_APP_API_ROOT}/vehicles/calculate-consumptions?car-make=${carMake}&car-model=${carModel}&car-model-year=${carModelYear}`
   );
   return z.object({ data: z.number() }).parse(data).data;
 };
@@ -33,7 +33,7 @@ export const getEmissions = async ({
 
   // } else if (consumptions !== 0) {
   data = await axios.get(
-    `http://localhost:5000/trips/calculate?distance=${distance}&fuel-type=${fuelType}&consumptions=${consumptions}`
+    `${process.env.REACT_APP_API_ROOT}/trips/calculate?distance=${distance}&fuel-type=${fuelType}&consumptions=${consumptions}`
   );
   // } else {
   //   throw new Error('Missing required parameters');
