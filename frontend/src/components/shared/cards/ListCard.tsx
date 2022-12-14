@@ -87,7 +87,7 @@ const ListRows: React.FC<RowData> = (element) => {
                                 <Grid container alignItems="center" justifyContent="space-between">
                                     <Grid item>
                                         <Typography className="list-card-row-quantity" variant="subtitle1" color="inherit">
-                                            {element.quantity}
+                                            {element?.quantity ? element.quantity : element.destination}
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -96,7 +96,7 @@ const ListRows: React.FC<RowData> = (element) => {
                     </Grid>
                     <Grid item>
                         <Typography className="list-card-row-quantity2" variant="subtitle2" >
-                            {element.quantity2}
+                            {element?.quantity2 ? element?.quantity2 : "Origin: " + element.origin}
                         </Typography>
                     </Grid>
                 </Grid>
