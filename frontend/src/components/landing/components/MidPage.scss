@@ -13,7 +13,7 @@
         color: $principal-color;
 
         margin-right: 10%;
-        text-align: right;
+        text-align: left;
         flex: 2;
         display: flex;
         flex-direction: column;
@@ -23,7 +23,7 @@
     .landing-midpage-left-title {
         margin-bottom: 5%;
 
-        font-size: $fontSizeTitle1;
+        font-size: $fontSizeTitle1 - 1.5;
         color: $blue;
         font-weight: $fontWeightBold;
 

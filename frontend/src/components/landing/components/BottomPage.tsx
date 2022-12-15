@@ -12,13 +12,13 @@ export default function BottomPage() {
             </div>
             <div className='landing-bottom-cards'>
                 <div className='cards'>
-                    <Card svg={userIcon}  title='Create an account' description='Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima eligendi saepe nulla sed ' />
+                    <Card svg={userIcon}  title='Create an account' description='Get your free account by registering in just a few clicks!' />
                 </div>
                 <div className='cards center'>
-                    <Card svg={statsIcon} title='Keep track' description='Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima eligendi saepe nulla sed cum off' />
+                    <Card svg={statsIcon} title='Keep track' description='Gain full knowledge about all your statistics, histories and more at any time!' />
                 </div>
                 <div className='cards'>
-                    <Card svg={checkIcon} title='Check your footprint' description='Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima eligendi saepe nulla sed ' />
+                    <Card svg={checkIcon} title='Check your footprint' description='See the possibilites you have to check and reduce your carbon footprint regularly!' />
                 </div>
             </div>
         </div>

@@ -13,12 +13,10 @@ export default function MidPage() {
       </div>
       <div className='landing-midpage-left'>
         <div className='landing-midpage-left-title'>
-          Lorem Ipsum
+          What is it about?
         </div>
         <div className='landing-midpage-left-text'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus nam debitis nihil reprehenderit deserunt, aut qui. Dicta quas earum esse dolorum voluptates. Dolore qui rem sunt earum quia ea porro?
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-
+            Are you concerned about climate change? So are we. Greenhouse gas emissions from burning fossil fuels and deforestation continue driving global warming at a dangerously fast rate. If we want to avoid the most devastating effects of climate change, we have to act right now. This is why we created trailss, an easy-to-use carbon footprint tracker which allows you to reduce your emissions wherever you go. Try trailss yourself for free and see the difference you can make!
           <br />
 
           <br />

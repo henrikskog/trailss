@@ -17,7 +17,7 @@ export default function Landing() {
         <MidPage />
       </div>
       <div className='landing-spacer'>
-        <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos hic perspiciatis quia qui saepe sit amet consectetur adipisicing elit. Eos hic perspiciatis quia qui saepe</h3>
+        <h3>Did you know that trailss also supports carbon footprint tracking for companies? Register your company, calculate its emissions and obtain official certificates to show that you align with the values of your customers!</h3>
       </div>
       <div className='landing-bottom'>
         <BottomPage />
