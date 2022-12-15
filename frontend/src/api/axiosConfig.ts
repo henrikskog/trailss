@@ -4,10 +4,7 @@ import axios from 'axios';
 export const setAxiosAuthToken = (token: string) => {
   console.log('setting axios auth token');
   axios.interceptors.request.use((config) => {
-    if (config.url?.includes('localhost')) {
-      config.headers!.Authorization = `Bearer ${token}`;
-    }
-
+    config.headers!.Authorization = `Bearer ${token}`;
     return config;
   });
 };

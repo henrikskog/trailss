@@ -17,7 +17,7 @@ export type UserVehicle = z.infer<typeof UserVehicleSchema>;
 
 
 export const getAllUserVehicles = async (): Promise<UserVehicle[]> => {
-  const response = await axios.get('http://localhost:5000/vehicles/');
+  const response = await axios.get(`${process.env.REACT_APP_API_ROOT}/vehicles/`);
   const responseData = z.array(z.any()).parse(response.data);
 
   const result = responseData.filter((car) => {

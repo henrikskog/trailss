@@ -5,9 +5,10 @@ import Home from './components/home/Home';
 import MenuBar from './components/menubar/MenuBar';
 import './Dashboard.scss';
 
-import { IconCalendarStats, IconCar, IconHome2, IconMap, IconUser } from '@tabler/icons';
+import { IconChartBar, IconCalendarStats, IconCar, IconHome2, IconMap, IconUser } from '@tabler/icons';
 import Cars from '../../company/dashboard/components/Cars';
 import UserMapPage from '../user-map-page/UserMapPage';
+import Statistics from './components/statistics/Statistics';
 
 export default function Dashboard() {
   const [content, setContent] = useState('Home');
@@ -16,8 +17,9 @@ export default function Dashboard() {
     { icon: IconHome2, label: 'Home' },
     { icon: IconMap, label: 'Map' },
     { icon: IconCalendarStats, label: 'History' },
-    { icon: IconUser, label: 'Account' },
     { icon: IconCar, label: 'Cars' },
+    { icon: IconChartBar, label: 'Statistics'},
+    { icon: IconUser, label: 'Account' }
   ];
 
   function renderSwitch(param: string) {
@@ -32,6 +34,8 @@ export default function Dashboard() {
         return <UserSettings />;
       case 'Cars':
         return <Cars />;
+      case 'Statistics':
+        return <Statistics />
     }
   }
   return (

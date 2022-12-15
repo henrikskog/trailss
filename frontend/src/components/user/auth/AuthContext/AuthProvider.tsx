@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   // Functions that send requests to the backend
   // TODO: add error checking for API calls (if backend not available)
   const authApi = () => {
-    const REACT_APP_API_ROOT = 'http://localhost:5000';
+    const REACT_APP_API_ROOT = process.env.REACT_APP_API_ROOT;
     const LOGIN_PART = '/user/login';
     const REGISTER_PART = '/user/register';
 

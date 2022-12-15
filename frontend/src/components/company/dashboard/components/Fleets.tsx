@@ -3,8 +3,14 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Fleets.scss';
 import Grid from '@mui/material/Grid';
-import Model from "../../../landing/media/carretera_ 1.png";
-import FooterDashboard from "./FooterDashboard";
+import Model from '../../../landing/media/carretera_ 1.png';
+import FooterDashboard from './FooterDashboard';
+import SmallCard from '../../../shared/cards/SmallCard';
+import BajaAreaChartCard from '../../../shared/cards/BajaAreaChart';
+import ListCard from '../../../shared/cards/ListCard';
+import TableCard from '../../../shared/cards/TableCard';
+import MainCard from '../../../shared/cards/MainCard';
+import FleetsTableCard from '../../../shared/cards/FleetsTableCard';
 
 interface Car {
   id: number;
@@ -69,107 +75,25 @@ const cars: Car[] = [
 ];
 
 const fleetsTestData: Fleet[] = [
-  { name: 'Cars of employees', cars: cars.slice(0, 2), id: 1 },
-  { name: 'Transport trailers', cars: cars.slice(2, 4), id: 2 },
-];
+  { name: 'Cars of employees', cars: cars.slice(0, 2) },
+  { name: 'Transport trailers', cars: cars.slice(2, 4) },
+  { name: 'Manager cars', cars: cars.slice(1, 3) },
+].map((fleet, i) => ({ ...fleet, number: fleet.cars.length, id: i }));
 
 export default function Fleet() {
-  const [activeFleet, setActiveFleet] = useState<{ name: string; cars: Car[]; id: number } | null>(
-    null
-  );
-  const [fleets, setFleets] = useState<Fleet[]>(fleetsTestData);
-  // ToDo: replace by database access?
-  // ToDo: think about better table header names
-
-  // Function that adds a new empty car to a fleet
-  const addCar = (fleet: Fleet) => {
-    const newCar: Car = {
-      id: fleet.cars.length,
-      name: '',
-      model: '',
-      year: 0,
-      color: '',
-      licensePlate: '',
-      mileage: 0,
-      status: '',
-    };
-
-    const newFleet = {
-      ...fleet,
-      cars: [...fleet.cars, newCar],
-    };
-
-    const newFleets = fleets.map((f) => (f.id === fleet.id ? newFleet : f));
-
-    setFleets(JSON.parse(JSON.stringify(newFleets)));
-  };
-
-  // REQUIREMENTS:
-  // the idea was to have on the left side the table, containing all the registered cars
-  // on the right side we have the editor. Clicking on any car in the table opens the car in the editor
-  // and the car be modified from there. Maybe it should allow for adding stops beside the origin/destination as well
-  // maybe below the Editor have the option of adding new cars by clicking on a button
-
   return (
-    // <div className='main-container'>
-      <div className='company-home-wrapper'>
-        <Grid container rowSpacing={4} columnSpacing={{ xs: 1.5, sm: 2, md: 3 }} justifyContent="space-evenly" alignItems={"start"}>
-          <Grid item xs={12}>
-            <h1>Fleets</h1>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <div className='box'>
-              <h2>Your fleets</h2>
-              <Table verticalSpacing="sm" striped highlightOnHover>
-                <th>Name</th>
-                <th>Number of cars</th>
-                <tbody>
-                  {fleets.map((fleet) => (
-                    <tr key={fleet.id} onClick={() => setActiveFleet(fleet)}>
-                      <td>{fleet.name}</td>
-                      <td>{fleet.cars.length}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </div>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <div className="box">
-              <div>
-                <h2>Edit fleet</h2>
-              </div>
-              {activeFleet !== null && (
-                <div>
-                  <h2>{activeFleet.name}</h2>
-                  <Table verticalSpacing="sm" striped highlightOnHover>
-                    <th>Car name</th>
-                    <th>Car model</th>
-                    <th>Edit</th>
-                    <tbody>
-                      {activeFleet.cars.map((car) => (
-                        <tr key={car.id}>
-                          <td>{car.name}</td>
-                          <td>{car.model}</td>
-                          <td>
-                            <Button onClick={() => console.log('edit')}>Edit</Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-
-
-                  <Button className="newCarButton" onClick={() => addCar(activeFleet)}>
-                    Add a new car
-                  </Button>
-                </div>
-              )}
+    <>
+      <div className="company-home-wrapper">
+        <Grid container rowSpacing={2} columnSpacing={{ xs: 1.5, sm: 2, md: 3 }}>
+          <Grid item xs={12} md={12}>
+            <h3 className="inside-title">Your fleets</h3>
+            <div className="box bigger-box">
+              <FleetsTableCard fleets={fleetsTestData} />
             </div>
           </Grid>
         </Grid>
-        <FooterDashboard/>
+        <FooterDashboard />
       </div>
-      
+    </>
   );
 }
