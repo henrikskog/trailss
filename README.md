@@ -1,6 +1,6 @@
 # Trailss
 
-Website for finding the carbon emmisions of trips. Made in the subject Software Project Engineering at UPV, the University of Valencia. 
+Website for finding the carbon emissions of trips. Made in the subject Software Project Engineering at UPV, the University of Valencia. 
 
 Live demo: [here](https://trailss.vercel.app/)
 
